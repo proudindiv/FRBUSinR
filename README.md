@@ -11,7 +11,7 @@ Study of FRB/US model packages from the Federal Reserve (and perhaps port to R l
 
 Github: [proudindiv/FRBUSinR](https://github.com/proudindiv/FRBUSinR):
 
-Unfortunately, EViews is propritary software and hence not readily accessible.  My thought is to explore the information provided by the Federal Reserve using the open source R-language and other freely available tools for truly reproducable results.
+Unfortunately, EViews is propritary software and hence not readily accessible.  My thought is to explore the information provided by the Federal Reserve using the open source R-language and other freely available tools for truly reproducible results.
 
 My project is at [proudindiv/FRBUSinR](https://github.com/proudindiv/FRBUSinR) on [github](https://github.com).  I hope to produce something that attracts others to participate.
 
