@@ -15,4 +15,4 @@ Unfortunately, EViews is propritary software and hence not readily accessible.  
 
 My project is at [proudindiv/FRBUSinR](https://github.com/proudindiv/FRBUSinR) on [github](https://github.com) with my current results described in the [frbus.pdf](https://docs.google.com/viewer?url=https://raw.githubusercontent.com/proudindiv/FRBUSinR/ReverseEngineer/frbus.pdf) file.  I hope to produce something that attracts others to participate.
 
-Gary Young
+Gary Young *
