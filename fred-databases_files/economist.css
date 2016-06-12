@@ -1,0 +1,71 @@
+.content-2columns-main h2 {font-size: 1.2em !important;font-weight:bold;font-size:1.1em !important}
+/* .content-2columns-main h3 {font-size: 1em !important; font-weight:normal; color:#666; font-style: italic;} */
+h3 {font-size: 1em !important; font-weight:normal; color:#666; font-style: italic;} 
+.role {display:block;float:left;font-weight:normal;cursor:pointer;cursor:hand;padding:.25em 1em;margin: .5em 0;font-size:.8em;letter-spacing:1px;border-right:1px solid #666;text-transform: uppercase}
+.role:hover {background: #6E7E9F;color:#FFF;}
+.toggle-roles {background:#D1D1D4; !important;margin:.5em 0;}
+.economist {float:left; padding: 1em; border-bottom:1px solid #DDD; margin:0; height:110px}
+.economist:hover {background:#E1E9F0;}
+#leadership {background:url(/images/research-economists-background.png) top left repeat-x;}
+#recent-hires { background:#E1E9F0}
+#leadership, #recent-hires {box-shadow: 3px 3px 4px rgb(102, 102, 102); padding:0; padding-bottom: 10px; margin-bottom: 1em;}
+#leadership .economist, #recent-hires .economist {border:0;}
+#leadership .economist {}
+#leadership>h2 span, #recent-hires>h2 span {margin: 0; background: none repeat scroll 0% 0% rgb(121, 139, 176); line-height:22px; padding: 3px 2em; box-shadow: 3px 3px 4px rgb(102, 102, 102); font-size:.8em;color:#FFF; text-transform:uppercase;letter-spacing:1px; font-weight:normal; }
+.visiting-scholar {height: inherit; display:none;}
+.economist-emeritus {height: inherit;display:none;}
+
+.profile-pic {background: #EEEEEE url(economist-sprite-2x.png) top left no-repeat;background-size:658px 1300px;-moz-background-size:658px 1300px;-webkit-background-size:658px 1300px;float:left; margin-right: 10px; margin-top: -10px; }
+.profile-pic-anderson{ background-position: 0 0; width: 68px; height: 100px; }
+.profile-pic-andolfatto{ background-position: 0 -150px; width: 68px; height: 100px; }
+.profile-pic-azariadis{ background-position: 0 -300px; width: 68px; height: 100px; }
+.profile-pic-badel{ background-position: 0 -450px; width: 68px; height: 100px; }
+.profile-pic-bandyopadhyay{ background-position: 0 -600px; width: 68px; height: 100px; }
+.profile-pic-berentsen{ background-position: 0 -750px; width: 68px; height: 100px; }
+.profile-pic-boldrin{ background-position: 0 -900px; width: 68px; height: 100px; }
+.profile-pic-bullard{ background-position: -117px 0; width: 68px; height: 100px; }
+.profile-pic-canon{ background-position: -117px -150px; width: 68px; height: 100px; }
+.profile-pic-chien{ background-position: -117px -300px; width: 68px; height: 100px; } 
+.profile-pic-cho {background-position: -119px -1200px; width: 66px; height: 92px; }
+.profile-pic-contessi{ background-position: -117px -450px; width: 68px; height: 100px; } 
+.profile-pic-coughlin{ background-position: -117px -600px; width: 68px; height: 100px; } 
+.profile-pic-dicecio{ background-position: -117px -750px; width: 68px; height: 100px; } 
+.profile-pic-dupor{ background-position: -586px -600px; width: 68px; height: 100px; } 
+.profile-pic-garriga{ background-position: -117px -900px; width: 68px; height: 100px; } 
+.profile-pic-gavin{ background-position: -235px 0; width: 68px; height: 100px; }
+.profile-pic-gayle{ background-position: -471px -1050px; width: 68px; height: 100px; } 
+.profile-pic-golan{ background-position: -592px -1050px; width: 68px; height: 100px; } 
+.profile-pic-gu{ background-position: -235px -150px; width: 68px; height: 100px; } 
+.profile-pic-hernndezmurillo{ background-position: -235px -300px; width: 68px; height: 100px; } 
+.profile-pic-juvenal{ background-position: -235px -450px; width: 68px; height: 100px; } 
+.profile-pic-kliesen{ background-position: -235px -600px; width: 68px; height: 100px; } 
+.profile-pic-levine{ background-position: -235px -750px; width: 68px; height: 100px; } 
+.profile-pic-manuelli{ background-position: -235px -900px; width: 68px; height: 100px; } 
+.profile-pic-martin{ background-position: -350px 0; width: 68px; height: 100px; } 
+.profile-pic-mccracken{ background-position: -350px -150px; width: 68px; height: 100px; } 
+.profile-pic-meyer{ background-position: -350px -300px; width: 68px; height: 100px; } 
+.profile-pic-mongenaranjo{ background-position: -350px -450px; width: 68px; height: 100px; } 
+.profile-pic-neely{ background-position: -350px -600px; width: 68px; height: 100px; } 
+.profile-pic-otrok{ background-position: -350px -750px; width: 68px; height: 100px; } 
+.profile-pic-owyang{ background-position: -350px -900px; width: 68px; height: 100px; } 
+.profile-pic-peraltaalva{ background-position: -468px 0; width: 68px; height: 100px; } 
+.profile-pic-ravikumar{ background-position: -468px -150px; width: 68px; height: 100px; } 
+.profile-pic-santacreu{ background-position: 0 -1050px; width: 68px; height: 100px; } 
+.profile-pic-sengupta{ background-position: -468px -300px; width: 68px; height: 100px; } 
+.profile-pic-shin{ background-position: -468px -450px; width: 68px; height: 100px; } 
+.profile-pic-snchez{ background-position: -468px -600px; width: 68px; height: 100px; } 
+.profile-pic-thornton{ background-position: -468px -750px; width: 68px; height: 100px; } 
+.profile-pic-restrepo {background-position: -590px -750px; width: 68px; height: 100px; }
+.profile-pic-roys {background-position: 0 -1200px; width: 68px; height: 100px; }
+.profile-pic-vandenbroucke {background-position: -119px -1049px; width: 68px; height: 100px; }
+.profile-pic-waller{ background-position: -472px -900px; width: 68px; height: 100px; } 
+.profile-pic-dvorkin {background-position: -590px -900px; width: 68px; height: 100px; }
+.profile-pic-wang{ background-position: -350px -1050px; width: 68px; height: 100px; } 
+.profile-pic-wen{ background-position: -586px 0; width: 68px; height: 100px; } 
+.profile-pic-wheelock{ background-position: -586px -150px; width: 68px; height: 100px; } 
+.profile-pic-wiczer{ background-position: -586px -300px; width: 68px; height: 100px; } 
+.profile-pic-zimmermann{ background-position: -586px -450px; width: 68px; height: 100px; } 
+.profile-pic-williamson {background-position: -236px -1050px; width:68px; height:100px; }
+
+ul.list-inline a { padding:0; margin:0 }
+ul.list-inline li { height: 20px; }

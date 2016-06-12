@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html class=" js flexbox flexboxlegacy canvas canvastext webgl no-touch geolocation postmessage no-websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients no-cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths" lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title></title>
+<meta name="description" content="Home page for Michael W. McCracken, Assistant Vice-President, Federal Reserve Bank of St. Louis">
+<meta name="keywords" content="Michael W. McCracken, McCracken, Michael McCracken, Assistant Vice-President">
+<link rel="stylesheet" href="fred-databases_files/bootstrap.css">
+<link rel="stylesheet" href="fred-databases_files/reset.css">
+<link rel="stylesheet" href="fred-databases_files/styles.css">
+<link rel="stylesheet" href="fred-databases_files/economist.css">
+<!--[if IE]>
+<link rel="stylesheet" href="/css/ie.css" />
+<![endif]-->
+<link rel="stylesheet" href="fred-databases_files/font-awesome.css">
+<!--[if gt IE 8]><!-->
+<script src="fred-databases_files/linkid.js" async="" type="text/javascript"></script><script src="fred-databases_files/analytics.js" async=""></script><script src="fred-databases_files/gtm.js" async=""></script><script src="fred-databases_files/respond.js"></script>
+<!--<![endif]-->
+<script src="fred-databases_files/jquery.js"></script>
+
+        
+    
+<script>
+    $(document).ready(function() {
+        $(document).tooltip(); // Initialize admin key tool tips
+
+        $("div#sortable").sortable({
+            placeholder : 'sortable-placeholder',
+            items       : '> p:not([class="right"])'
+        });
+
+        $('div#sortable').on('color', function() {
+            $('p.seperator-bottom:not(.selected)').slice(5).css('background-color', '#F2F5A9');
+            $('p.seperator-bottom:not(.selected)').slice(0,5).css('background-color', '#FFFFFF');
+        });
+
+        $('div#not-sortable').change(function() {
+            // Clone model span (control) and assign one to each citation. Determine the control's class
+            $('span.editmode').first().clone().insertBefore('div#not-sortable p');
+            $('span.editmode + p.selected').prev().addClass('glyphicon-minus').removeClass('glyphicon-plus');
+            $('span.editmode + p:not(.selected)').prev().addClass('glyphicon-plus').removeClass('glyphicon-minus');
+            $(this).trigger('color');
+
+            // Remove un-needed spans
+            $('span.editmode + span.editmode').prev().remove();
+            $('span.editmode + br').prev().remove();
+            $('span.editmode + input').prev().remove();
+            $('span.editmode + p:not([id])').css('clear', 'both').prev().remove();
+
+            // Remove +/- controls for items not yet in database, and align these items with the others
+            $('span.editmode + p:not([id])').css('clear','both').prev().remove();
+
+        }).change().trigger('color');
+
+        $('div#sortable').on('sortupdate remove', function(event) {
+            $('div#sortable').change();
+        });
+    });
+
+    function redrawControls(elem) {
+        var citation = $(elem).next();
+        var icon = $(elem);
+        citation.toggleClass('selected');
+        $('div#not-sortable').change();
+    }
+
+    function submitSelections() {
+        var selections = [];
+        selections['citations'] = [];
+        var parentDivId = '';
+        var payload;
+
+        // ADD TO or REMOVE FROM "Selected Publications" page
+        $('div#not-sortable p.selected').each(function() {
+            parentDivId = $(this).parent()[0].id;
+
+            var jsonObj = {
+                'id'             : this.id,
+                'author_id'      : "796",
+                'classification' : (parentDivId == 'sortable') ? '' : 'selected'
+            };
+            selections['citations'].push(jsonObj);
+
+            var id = ('#'+this.id).replace(':', '\\:');
+            $(id).remove();
+        });
+
+        payload = JSON.stringify(selections['citations']);
+        $.post('', {'data':payload}, function(data) {
+            $('#results').html(data).css('display', 'inline');
+        });
+
+        // REORDER the "Selected Publications" page
+        var orderings=[];
+        orderings['citations'] = [];
+        var i = 1;
+        $('div#sortable > p:not([class="right"])').each(function() {
+            var jsonObj = {
+                'position'  : i++,
+                'author_id' : "796",
+                'id'        : this.id
+            };
+            orderings['citations'].push(jsonObj);
+        });
+
+        payload = JSON.stringify(orderings['citations']);
+        $.post('', {'data':payload}, function(data) {
+            console.log(data);
+            $('#results').html(data).css('display', 'inline');
+        });
+
+        redrawControls(null);
+    }
+</script>
+
+<style>
+    body {
+        font-size: 76%;
+    }
+    #results {
+        font-size: 14px;
+        display: none;
+        color: red;
+        padding: 10px 0 10px 0;
+        margin-bottom: 5px;
+        margin-left:20px;
+    }
+    input[type="button"].editmode {
+        background-color: #94E9BF;
+    }
+    span.editmode {
+        float: right;
+    }
+    .editmode {
+        display: initial;
+    }
+    .not-editmode {
+        display: none;
+    }
+    p.selected {
+        background-color: #F7D0DC !important;
+    }
+    p.toggle {
+        background-color: #F7D0DC;
+    }
+    p.noshow {
+        background-color: #F2F5A9;
+    }
+    p.show {
+        background-color: #FFFFFF;
+    }
+    div.key p {
+        float: left;
+        border-style: solid;
+        border-width: 1px;
+        height: 40px;
+        width: 40px;
+        padding: 0;
+        margin-bottom: 5px;
+    }
+    div.key p + p {
+        margin-left: 20px;
+    }
+    .ui-tooltip {
+        font-size: 10pt;
+        font-family: Calibri;
+    }
+    .sortable-placeholder {
+        background-color: black;
+        opacity: 0.1;
+        height: 75px;
+    }
+</style>
+<link href="fred-databases_files/socialwidgets.css" type="text/css" rel="stylesheet"></head>
+<body>
+
+    
+
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<script>
+  dataLayer = [];
+</script>
+
+<!-- Google Tag Manager -->
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-52PLNR"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-52PLNR');</script>
+<!-- End Google Tag Manager -->
+
+<!--googleoff: snippet-->
+<a href="#content-container" class="sr-only sr-only-focusable">Skip to main content</a>
+<!--googleon: snippet-->
+<a name="top" id="top"></a>
+<!--[if lt IE 7 ]> <div id="container" class="ie6 container"><![endif]-->
+<!--[if IE 7 ]> <div id="container" class="ie7 container"><![endif]-->
+<!--[if IE 8 ]> <div id="container" class="ie8 container"><![endif]-->
+<!--[if IE 9 ]> <div id="container" class="ie9 container"><![endif]-->
+<!--[if IE]> <div id="container" class="ie container"><![endif]-->
+<!--[if !(IE)]><!--> <div id="container" class="container"><!--<![endif]-->
+<div id="header" class="col-xs-12">
+    <div>
+    <div class="col-xs-11 col-sm-12 col-md-8 header-logo">
+        <a href="https://research.stlouisfed.org/"><img src="fred-databases_files/masthead-2x.png" id="logo" alt="Economic Research - Federal Reserve Bank of St. Louis" class="hidden-xs"><span style="margin-top:6px;" class="visible-xs" id="logo-replacement">Economic Research <span>Federal Reserve Bank of St. Louis</span></span></a>
+    </div>
+    <div id="head-right" class="col-xs-1 col-sm-12 col-md-4" style="padding-right: 5px; padding-left: 0;text-align: right;">
+        <span class="visible-xs-block">
+            <a class="btn btn-default btn-sm" data-parent="#research-nav" data-toggle="collapse" data-target="#nav-inner" href="#" style="margin-top:10px;">
+            <i class="fa fa-bars"></i></a>
+        </span>
+        <div class="hidden-xs" id="signin-wrap">
+            <div id="user-nav">
+                <ul style="display: block;" class="signedout">
+                    <li><a href="https://research.stlouisfed.org/useraccount/">My Account</a></li>
+                    <li><a href="https://research.stlouisfed.org/useraccount/register">Register</a></li>
+                    <li>
+                        <a href="https://research.stlouisfed.org/useraccount/login" class="signin">Sign in</a>
+                        <div id="signin_menu" style="display:none">
+                            <form method="post" id="signin" action="https://research.stlouisfed.org/useraccount/login/secure">
+                                <p>
+                                    <label for="user-email">Email</label>
+                                    <input id="user-email" name="form[email]" value="proudindiv@gmail.com" title="email" type="text">
+                                </p>
+                                <p>
+                                    <label for="user-password">Password</label>
+                                    <input id="user-password" name="form[password]" value="" title="password" autocomplete="off" type="password">
+                                </p>
+                                <p class="remember">
+                                    <input id="signin_submit" value="Sign in" type="submit">
+                                    <span class="checkbox">
+                                        <label for="remember">
+                                            <input id="remember" name="form[stay_logged_in]" value="1" type="checkbox">
+                                            Remember me
+                                        </label>
+                                    </span>
+                                </p>
+                                <p class="forgot"> <a href="https://research.stlouisfed.org/useraccount/forgotpassword/step1">Forgot your password?</a></p>
+                                <p><a href="https://research.stlouisfed.org/useraccount/learnmore">Learn More</a></p>
+                            </form>
+                        </div>
+                    </li>
+                </ul>
+                <ul style="display: none;" class="signedin">
+                    <li>
+                        <a href="https://research.stlouisfed.org/useraccount/" class="my-account-link">My Account <i class="fa fa-angle-double-down"></i></a>
+                        <div class="my-account-menu" style="display:none">
+                            <p><a href="https://research.stlouisfed.org/useraccount/fredgraph"><i class="fa fa-fw fa-list"></i> My Graphs</a></p>
+                            <p><a href="https://research.stlouisfed.org/useraccount/datalists"><i class="fa fa-fw fa-file"></i> My Data Lists</a></p>
+                            <p><a href="https://research.stlouisfed.org/useraccount/dashboard"><i class="fa fa-fw fa-th-large"></i> My Dashboards</a></p>
+                            <p><a href="https://research.stlouisfed.org/useraccount/"><i class="fa fa-fw fa-home"></i>Account Home</a></p>
+                            <div class="my-fred-favorites">
+                                <p style="color:#999;text-transform:uppercase;font-size:0.8em">My Favorites</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li><a href="https://research.stlouisfed.org/useraccount/logout" class="signout">Sign out</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <form action="/ssi/search.php" id="head-search-form" class="hidden-xs col-md-12">
+        <div id="head-search-container">
+            <span class="ui-helper-hidden-accessible" aria-live="polite" role="status"></span><input value="Search " id="head-search" name="q" class="js-placeholder placeholder ui-autocomplete-input" title="Search " type="text"><button type="submit" class="pull-right" id="head-search-button">&nbsp;</button>
+        </div>
+        </form>
+    </div>
+</div>
+</div>
+
+<style>
+.navbar-nav>li>a {line-height: inherit;}
+#nav-accordion .panel { border: none; }
+#nav-accordion .panel-body { padding: inherit; }
+#nav-accordion.panel-group { margin-bottom: inherit; }
+</style>
+
+<nav class="col-xs-12 navbar" id="research-nav" role="navigation">
+<div id="nav-inner" class="navbar-collapse collapse" style="padding-left: 0; padding-right: 0;">
+
+   <form action="/ssi/search.php" id="nav-search-form" class="visible-xs-block col-xs-12" style="margin-top: 8px;margin-bottom: 4px;">
+       <div class="input-group" id="nav-search-container">
+           <input class="form-control" id="nav-search" name="q" placeholder="Search " type="text">
+           <span class="input-group-btn">
+               <button type="submit" class="btn btn-default" id="nav-search-button"><i class="fa fa-search"></i></button>
+           </span>
+       </div>
+   </form>
+
+   <ul id="main-nav" class="navbar navbar-nav col-xs-12">
+        <li>
+            <a href="https://research.stlouisfed.org/fred2/" id="fred-link">FRED<span class="trademark">®</span> Economic Data</a>
+        </li>
+        <li class="visible-xs">
+            <a href="https://research.stlouisfed.org/useraccount/">My Account</a>
+        </li>
+        <li>
+            <a href="https://research.stlouisfed.org/info-services.html">Information Services</a>
+        </li>
+        <li>
+            <a href="https://research.stlouisfed.org/publications/" id="publications-link">Publications</a>
+        </li>
+        <li>
+            <a href="https://research.stlouisfed.org/wp/" id="workingpapers-link">Working Papers</a>
+        </li>
+        <li>
+            <a href="https://research.stlouisfed.org/econ/" id="economist-link">Economists</a>
+        </li>
+        <li>
+            <a href="https://research.stlouisfed.org/about.html">About</a>
+        </li>
+        <li class="hidden-xs hidden-sm navbar-right" style="border:0">
+            <a href="http://stlouisfed.org/" style="color:#ccc;">St. Louis Fed Home</a>
+        </li>
+    </ul>
+</div>
+</nav>
+
+
+<div style="padding-left: 10px; padding-right: 10px;" class="clear" id="content-container">
+
+
+<!--BEGIN CONTENT-->
+<div id="content-2columns-left" class="col-sm-3 col-xs-12 content-2columns-left row">
+    <div class="visible-xs-block">
+        <h1>Michael W. McCracken</h1>
+        <p>Assistant Vice-President</p>
+    </div>
+
+    <div class="col-xs-4 col-sm-12 side-block" style="padding-right: 0px;">
+                <img src="fred-databases_files/MikeMcCracken.jpg" class="img-responsive" alt="Michael W. McCracken">
+        
+        <p class="padtop"><a href="https://research.stlouisfed.org/econ/mccracken/vita">Standard Vita <i class="fa fa-file-pdf-o"></i></a></p>
+
+        
+        
+                <p><a href="http://ideas.repec.org//e/pmc81.html" target="_blank">IDEAS <i class="fa fa-external-link-square"></i></a></p>
+        
+        
+    </div>
+<div class="col-xs-8 col-sm-12 side-block text-left" style="font-size: 12px; margin: 0; padding:1em">
+
+<div class="education">
+<h2>Education</h2>
+<div class="ed">
+    <p class="deg">Ph.D. Economics<br>University of Wisconsin-Madison<br>1998</p>
+</div>
+<div class="ed">
+    <p class="deg">B.S. Mathematics<br>University of Kansas<br>1989</p>
+</div>
+
+</div>
+
+<div>
+<div class="contact-info">
+    <h2>Contact Info</h2>
+    <div>
+              <div class="ph">Phone: <span class="nowrap">(314) 444-8594</span></div>
+       
+              <div class="fx">Fax: <span class="nowrap">(314) 444-8731</span></div>
+       
+              <div class="eml">Email: <a href="mailto:Michael.W.McCracken@stls.frb.org">Michael.W.McCracken@<br>stls.frb.org</a></div>
+           </div>
+</div>
+<br>
+
+    <div class="bank-contact-info">
+    <div class="divi">Research Division</div>
+    <div class="co">Federal Reserve Bank of St. Louis</div>
+    <div class="addr">P.O. Box 442</div>
+    <div class="cty">St. Louis, MO 63166-0442</div>
+</div>    <div class="media-inquiries">
+    <p><b>For media inquiries contact:</b><br>
+       Laura Girresch<br>
+       <a href="mailto:mediainquiries@stls.frb.org">mediainquiries@stls.frb.org</a><br>
+       Office: <span class="nowrap">(314) 444-6166</span><br>
+       Cell: <span class="nowrap">(314) 348-3639</span><br>
+</p></div>
+
+
+</div>
+</div>
+</div>
+<div class="col-xs-12 col-sm-9 content-2columns-main">
+    <div class="hidden-xs">
+        <p id="breadcrumbs"><a href="https://research.stlouisfed.org/">Home</a> &gt;  <a href="https://research.stlouisfed.org/econ/">Economists</a> &gt;  <a href="https://research.stlouisfed.org/econ/mccracken/">
+                            Michael W. McCracken
+                    </a></p>
+        <h1>Michael W. McCracken</h1>
+        <p>Assistant Vice-President</p>
+    </div>
+
+        <!--Used for retirement notifications, manual redirects, etc.-->
+    <!-- test here -->
+    <div>
+    <br>
+    <h2>FRED-MD and FRED-QD: Monthly and Quarterly Databases for Macroeconomic Research</h2>
+    <div class="col-xs-12 row">
+        <p>FRED-MD and FRED-QD are large macroeconomic databases 
+designed for the empirical analysis of “big data.” The datasets of 
+monthly and quarterly observations mimic the coverage of datasets 
+already used in the literature, but they add three appealing
+            features. They are updated in real-time through the FRED 
+database. They are publicly accessible, facilitating the replication of 
+empirical work. And they relieve the researcher of the task of 
+incorporating data changes and revisions (a task
+            accomplished by the data desk at the Federal Reserve Bank of
+ St. Louis).</p>
+        <p>The accompanying paper shows that factors extracted from the 
+FRED-MD dataset share the same predictive content as those based on the 
+various vintages of the so-called Stock-Watson data. In addition, it 
+suggests that diffusion indexes constructed
+            as the partial sum of the factor estimates can potentially 
+be useful for the study of business cycle chronology.</p>
+
+        <p><a href="https://research.stlouisfed.org/wp/more/2015-012" class="icon-pdf">Working Paper</a>
+            <span><a href="https://research.stlouisfed.org/econ/mccracken/fred-databases/Appendix_Tables_Update.pdf" class="icon-pdf">FRED-MD Updated Appendix</a></span>
+            </p><p>The monthly and quarterly databases are listed below by release date. MATLAB code is also available to analyze the data.</p>
+            <p><a href="https://research.stlouisfed.org/econ/mccracken/fred-databases/fred-databases_code.zip" class="icon-zip">FRED-Databases code (.zip  <!--#fsize virtual=" v" -->)</a></p>
+            <p>A beta-version of FRED-QD has been published. FRED-QD is a
+ quarterly frequency companion to FRED-MD. It is designed to emulate the
+ dataset used in "Disentangling the Channels of the 2007-2009 Recession"
+ by Stock and Watson (2012, NBER WP No.
+                18094) but also contains several additional series. 
+Comments or suggestions are welcome.</p>
+            <p><a href="https://research.stlouisfed.org/econ/mccracken/fred-databases/FRED-QD_appendix_v6.pdf" class="icon-pdf">FRED-QD Appendix</a></p>
+    </div>
+
+    <div class="col-xs-6">
+        <table class="table table-striped ">
+            <thead>
+                <tr>
+                    <th>
+                        Monthly Data                         <span style="float:right;"><a href="https://research.stlouisfed.org/econ/mccracken/fred-databases/fredmdchanges.pdf" target="_blank">Changes to FRED-MD</a></span>                     </th>
+                </tr>
+            </thead>
+            <tbody>
+                                <tr>
+                                        <td><a href="https://research.stlouisfed.org/econ/mccracken/fred-databases/monthly/current.csv" download="current.csv" class="icon-zip">2016-02 (current)</a></td>
+                                    </tr>
+                                <tr>
+                                        <td><a href="https://research.stlouisfed.org/econ/mccracken/fred-databases/monthly/2016-01.csv" download="2016-01.csv" class="icon-zip">2016-01</a></td>
+                                    </tr>
+                                <tr>
+                                        <td><a href="https://research.stlouisfed.org/econ/mccracken/fred-databases/monthly/2015-12.csv" download="2015-12.csv" class="icon-zip">2015-12</a></td>
+                                    </tr>
+                                <tr>
+                                        <td><a href="https://research.stlouisfed.org/econ/mccracken/fred-databases/monthly/2015-11.csv" download="2015-11.csv" class="icon-zip">2015-11</a></td>
+                                    </tr>
+                                <tr>
+                                        <td><a href="https://research.stlouisfed.org/econ/mccracken/fred-databases/monthly/2015-10.csv" download="2015-10.csv" class="icon-zip">2015-10</a></td>
+                                    </tr>
+                                <tr>
+                                        <td><a href="https://research.stlouisfed.org/econ/mccracken/fred-databases/monthly/2015-09.csv" download="2015-09.csv" class="icon-zip">2015-09</a></td>
+                                    </tr>
+                                <tr>
+                                        <td><a href="https://research.stlouisfed.org/econ/mccracken/fred-databases/monthly/2015-08.csv" download="2015-08.csv" class="icon-zip">2015-08</a></td>
+                                    </tr>
+                                <tr>
+                                        <td><a href="https://research.stlouisfed.org/econ/mccracken/fred-databases/monthly/2015-07.csv" download="2015-07.csv" class="icon-zip">2015-07</a></td>
+                                    </tr>
+                                <tr>
+                                        <td><a href="https://research.stlouisfed.org/econ/mccracken/fred-databases/monthly/2015-06.csv" download="2015-06.csv" class="icon-zip">2015-06</a></td>
+                                    </tr>
+                                <tr>
+                                        <td><a href="https://research.stlouisfed.org/econ/mccracken/fred-databases/monthly/2015-05.csv" download="2015-05.csv" class="icon-zip">2015-05</a></td>
+                                    </tr>
+                                <tr>
+                                        <td><a href="https://research.stlouisfed.org/econ/mccracken/fred-databases/monthly/2015-04.csv" download="2015-04.csv" class="icon-zip">2015-04</a></td>
+                                    </tr>
+                                <tr>
+                                        <td><a href="https://research.stlouisfed.org/econ/mccracken/fred-databases/monthly/2015-03.csv" download="2015-03.csv" class="icon-zip">2015-03</a></td>
+                                    </tr>
+                                <tr>
+                                        <td><a href="https://research.stlouisfed.org/econ/mccracken/fred-databases/monthly/2015-02.csv" download="2015-02.csv" class="icon-zip">2015-02</a></td>
+                                    </tr>
+                                <tr>
+                                        <td><a href="https://research.stlouisfed.org/econ/mccracken/fred-databases/monthly/2015-01.csv" download="2015-01.csv" class="icon-zip">2015-01</a></td>
+                                    </tr>
+                            </tbody>
+        </table>
+    </div>
+    <div class="col-xs-6">
+        <table class="table table-striped ">
+            <thead>
+                <tr>
+                    <th>Quarterly Data</th>
+                </tr>
+            </thead>
+            <tbody>
+                                <tr>
+                                        <td><a href="https://research.stlouisfed.org/econ/mccracken/fred-databases/quarterly/2015-11.csv" download="2015-11.csv" class="icon-zip">2015-11 (beta-version)</a></td>
+                                    </tr>
+                            </tbody>
+        </table>
+    </div>
+
+    <p class="right">&nbsp;</p>
+<br><br>
+</div> <!-- End sortable -->
+
+</div>
+
+<!--END CONTENT-->
+    <br class="clear">
+       <div class="hide hidden-xs recently-viewed row" style="padding-left: 55px;">
+      <h4>Recently Viewed Series</h4>
+      <ul class="thumbnails">
+          <li class="col-xs-1 col-sm-2 hide"><a href="" class="thumbnail"><img src="" alt=""></a><span></span></li>
+          <li class="col-xs-1 col-sm-2 hide"><a href="" class="thumbnail"><img src="" alt=""></a><span></span></li>
+          <li class="col-xs-1 col-sm-2 hide"><a href="" class="thumbnail"><img src="" alt=""></a><span></span></li>
+          <li class="col-xs-1 col-sm-2 hide"><a href="" class="thumbnail"><img src="" alt=""></a><span></span></li>
+          <li class="col-xs-1 col-sm-2 hide"><a href="" class="thumbnail"><img src="" alt=""></a><span></span></li>
+      </ul>
+   </div>
+
+
+
+</div>
+
+    <div id="footer" class="hidden-print row ">
+        <a name="foot-search-a" class="xs-anchor"></a>
+       <form action="/ssi/search.php" id="foot-search-form" class="visible-xs-block col-xs-12">
+           <div id="foot-search-container">
+               <input value="Search " id="foot-search" name="q" class="js-placeholder placeholder" title="Search " type="text"><button type="submit" class="pull-right" id="foot-search-button">&nbsp;</button>
+           </div>
+       </form>
+
+       
+        <div class="col-xs-12 col-sm-2">
+            <ul>
+                <li class="footer-section-header">SERVICES</li>
+                <li><a href="https://research.stlouisfed.org/fred2/">FRED®</a></li>
+                <li><a href="https://alfred.stlouisfed.org/">ALFRED®</a></li>
+                <li><a href="https://geofred.stlouisfed.org/">GeoFRED®</a></li>
+                <li><a href="https://cassidi.stlouisfed.org/">CASSIDI®</a></li>
+                <li><a href="https://fraser.stlouisfed.org/">FRASER®</a></li>
+                <li><a href="https://ideas.repec.org/">IDEAS</a></li>
+            </ul>
+        </div>
+
+        <div class="col-xs-12 col-sm-2 col-md-3">
+            <ul>
+                <li class="footer-section-header">RESEARCH</li>
+                <li><a href="https://research.stlouisfed.org/regecon/">Eighth District Economy</a></li>
+                <li><a href="https://research.stlouisfed.org/wp/">Working Papers</a></li>
+                <li><a href="https://research.stlouisfed.org/conferences/">Events</a></li>
+                <li><a href="https://research.stlouisfed.org/publications/">Publications</a></li>
+                <li><a href="https://research.stlouisfed.org/resources.html">Other Resources</a></li>
+            </ul>
+        </div>
+
+        <div class="col-xs-12 col-sm-3">
+            <ul>
+                <li class="footer-section-header">TOOLS</li>
+                <li><a href="https://research.stlouisfed.org/fred-mobile/">FRED Mobile Apps</a></li>
+                <li><a href="https://research.stlouisfed.org/fred-addin/">FRED Add-In for Excel®</a></li>
+                <li><a href="https://fredqa.stlouisfed.org/2012/12/20/embedded-fred-a-widget-just-for-you/">Embeddable FRED Widget</a></li>
+                <li><a href="https://research.stlouisfed.org/docs/api/">Developer/APIs</a></li>
+                <li><a href="https://research.stlouisfed.org/apps/econwise/">EconWise iPad App</a></li>
+            </ul>
+        </div>
+        <div class="col-xs-12 col-sm-2 ">
+            <ul>
+                <li class="footer-section-header">ABOUT</li>
+                <li><a href="https://research.stlouisfed.org/jobopps/">Careers</a></li>
+                <li><a href="https://research.stlouisfed.org/contactus/">Contact</a></li>
+                <li><a href="https://research.stlouisfed.org/rss/">RSS</a></li>
+                <li><a href="https://research.stlouisfed.org/privacy.html">Privacy</a></li>
+                <li><a href="https://research.stlouisfed.org/legal.html">Legal</a></li>
+            </ul>
+        </div>
+        <div class="col-xs-12 col-sm-3 col-md-2">
+            <ul>
+                <li class="footer-section-header">OUR SITES</li>
+                <li><a href="http://stlouisfed.org/">St. Louis Fed</a></li>
+                <li><a href="http://federalreserveonline.org/">Federal Reserve System</a></li>
+                <li><a href="https://research.stlouisfed.org/">Research Division</a></li>
+                <li><a href="http://www.stlouisfed.org/education/">Education Resources</a></li>
+            </ul>
+        </div>
+            </div>
+
+        <div class="footer2 hidden-print row">
+        <div class="col-xs-12 col-sm-3">
+            <h3>Need Help?</h3>
+            <div>
+                <a href="https://research.stlouisfed.org/contactus/email_research_webmaster.php">Questions or Comments</a>
+            </div>
+
+            <div style="padding: 10px 0;">
+                <a href="https://research.stlouisfed.org/fred2/help-faq/">FRED FAQs</a>
+            </div>
+
+            <div style="padding: 10px 0;">
+                <a href="https://research.stlouisfed.org/help.html">General FAQs</a>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-6">
+            <div class="col-xs-12">
+                <h3>Subscribe to our newsletter</h3>
+                <form role="form" class="form-horizontal" action="//federalreservebankofstlouis.createsend.com/t/t/s/pkiil/" method="post" style="padding:0;margin:0">
+                    <div>
+                        <div class="col-xs-12" style="padding-left: 0;">
+                            <div class="input-group">
+                                <input id="cm-email" name="cm-pkiil-pkiil" placeholder="Email" class="form-control" type="text">
+                                <span class="input-group-btn"><button type="submit" class="btn btn-default" style="color: #333;">Subscribe</button></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="clear:both;">
+                        <small class="hidden-xs hidden-sm"> Receive updates on published research, data news, and the latest econ information.</small>
+                    </div>
+                    <input name="cm-f-ttjlj" value="Research site footer" type="hidden">
+                </form>
+            </div>
+        </div>
+    <hr class="visible-xs-block">
+    <div class="col-xs-12 col-sm-2 col-sm-offset-1">
+        <h3>Follow us</h3>
+        <div class="col-xs-12" style="margin-bottom: 10px; padding-left: 0;">
+            <a href="http://bit.ly/9ngC3L"><img src="fred-databases_files/twitter-logo-h100-w100.png" alt="Twitter logo" width="25" height="25"></a>
+            <a href="http://bit.ly/19UjvkQ"><img src="fred-databases_files/gplus-logo-h50.png" alt="Google Plus logo" width="25" height="25"></a>
+            <a href="http://bit.ly/HeaderFB"><img src="fred-databases_files/facebook-logo-h100-w100.png" alt="Facebook logo" width="25" height="25"></a>
+            <a href="http://bit.ly/aY9TVF"><img src="fred-databases_files/youtube-logo-h100-w100.png" alt="YouTube logo" width="25" height="25"></a>
+            <a href="http://bit.ly/d056zL"><img src="fred-databases_files/linkedin-logo-h50.png" alt="LinkedIn logo" width="30" height="25"></a>
+        </div>
+
+    </div>
+</div>
+
+    <div class="hidden-print visible-xs-block">
+        <a style="margin: 5px; display: block; padding:5px 10px; text-align: center" href="#top">Back to Top</a>
+    </div>
+
+    <div id="footer-bottom">
+        <div id="address">
+            Federal Reserve Bank of St. Louis,
+            One Federal Reserve Bank Plaza,
+            St. Louis, MO 63102
+        </div>
+    </div>
+
+</div>
+<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-9926151-1', 'auto');
+      ga('require', 'linkid', 'linkid.js');
+      if (window.tags) {
+          ga('set', 'tags', tags);
+      }
+      ga('send', 'pageview');
+</script>
+<script src="fred-databases_files/gaAddons-universal.js"></script>
+<script src="fred-databases_files/jsapi"></script>
+<script src="fred-databases_files/modernizr.js"></script>
+<script src="fred-databases_files/jquery_002.js" type="text/javascript"></script>
+<script>window.jQuery || document.write('<script src="/js/jquery/jquery-1.11.1.min.js"><\/script>')</script>
+<script src="fred-databases_files/jquery-migrate-1.js" type="text/javascript"></script>
+<script src="fred-databases_files/jquery-ui.js" type="text/javascript"></script>
+<script>window.jQuery.ui || document.write('<script src="/js/jquery/ui-1.10.4/jquery-ui.min.js"><\/script>')</script>
+    <script src="fred-databases_files/bootstrap.js"></script>
+    <script>
+
+    $(function(){
+        var btn = $.fn.button.noConflict();
+        $.fn.btn = btn;
+    });
+    </script>
+<script src="fred-databases_files/jquery_004.js"></script>
+<script src="fred-databases_files/common.js"></script>
+<script src="fred-databases_files/jquery_003.js"></script>
+<script>
+$(function(){
+    $( ".no-touch #head-search" ).autocomplete({
+        source: function( request, response ) {
+            $.ajax({
+                url: "/ssi/search_ga_autosuggest.php",
+                dataType: "json",
+                data: {
+                    q:request.term,
+                    search_type:$('#search_type').val()
+                },
+                success: function( data ) {
+                    response( $.map( data.results, function( item ) {
+                        return {
+                            label: item.name,
+                            value: item.name
+                        }
+                    }));
+                }
+            });
+        },
+        minLength: 1,
+        select: function(event,ui) {
+            $('#head-search').val(ui.item.label);
+            $('#head-search-form').submit();
+        }
+    }).keydown(function(e) {
+        if (e.keyCode === 13) {
+            $("#head-search-form").submit();
+        }
+    });
+
+    $('#search-tabs div').buttonset();
+    $('#search-tabs input').change(function() {
+        $('#search-tabs').submit();
+    });
+
+    $(document).on('keyup', null, '/', function() {
+        $('#head-search').focus();
+    });
+});
+</script>
+
+
+<script src="fred-databases_files/bootstrap_002.js"></script>
+
+
+<ul style="display: none;" tabindex="0" id="ui-id-1" class="ui-autocomplete ui-front ui-menu ui-widget ui-widget-content ui-corner-all"></ul></body></html>
