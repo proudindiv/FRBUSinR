@@ -1,0 +1,35 @@
+\documentclass{book}
+\usepackage{noweb}
+\usepackage{hyperref}
+\hypersetup{final=true}
+\usepackage[toc,page]{appendix}
+\usepackage{multicol}
+\usepackage{framed}
+\usepackage{xcolor}
+\let\oldquote=\quote
+\let\endoldquote=\endquote
+\colorlet{shadecolor}{orange!15}
+\renewenvironment{quote}{\begin{shaded*}\begin{oldquote}}{\end{oldquote}\end{shaded*}}
+
+\title{Reverse Engineering the FRB/US Model in R}
+\author{Gary Young}
+
+\begin{document}
+\pagestyle{noweb}
+
+\maketitle
+
+\chapter{Introduction}
+
+I am starting to reverse engineer\footnote{The pdf was created with noweb, the literate programming tool: "noweb frbus.nw | pdflatex -synctex=1 -interaction=nonstopmode frbus.tex"} the Federal Reserve's \href{https://www.federalreserve.gov/econresdata/frbus/us-models-package.htm}{FRB/US model packages} to create my own version in the R Language.  I quote their
+\href{https://www.federalreserve.gov/econresdata/frbus/us-models-about.htm}{about page}:
+
+\begin{quote}
+The FRB/US model is a large-scale estimated general equilibrium model of the U.S. economy that has been in use at the Federal Reserve Board since 1996. The model is designed for detailed analysis of monetary and fiscal policies. One distinctive feature compared to dynamic stochastic general equilibrium (DSGE) models is the ability to switch between alternative assumptions about expectations formation of economic agents.  Another is the model’s level of detail: FRB/US contains all major components of the product and income sides of the U.S. national accounts.  Since its original development, the model has continuously undergone changes to cope with the evolving structure of the economy, including conceptual revisions to sectoral definitions of the national accounts.
+
+The article \href{https://www.federalreserve.gov/econresdata/notes/feds-notes/2014/a-tool-for-macroeconomic-policy-analysis.html}{"The FRB/US Model: A Tool for Macroeconomic Policy Analysis"} provides a brief overview of the structure of FRB/US, and presents some key properties of the model and some applications, code for which is included with the main FRB/US model package. The article \href{https://www.federalreserve.gov/econresdata/notes/feds-notes/2014/november-2014-update-of-the-frbus-model-20141121.html}{"November 2014 Update of the FRB/US Model"} presents some model properties of the most recently released version of FRB/US.
+\end{quote}
+
+This is an evolving document, where I will initially create the Fed's model files byte for byte and reverse engineer the structure of the model.  Then I plan to morph it into the \href{https://www.r-project.org/}{R software environment for statistical computing and graphics}, to use to create my own models.  I'm using the \href{https://en.wikipedia.org/wiki/Literate_programming}{literate programming} method of  \href{https://en.wikipedia.org/wiki/Donald_Knuth}{Donald Knuth} to combine the documentation with the actual code.
+
+\end{document}
