@@ -1,0 +1,1901 @@
+ceng: d( log(ceng), 0, 1 ) - ceng_aerr = _
+                     y_ceng(1) * (log(ceng(-1))-log(xg(-1)*veoa(-1))) _
+                   + y_ceng(2) * d( log(xg), 0, 1 ) _
+                   + y_ceng(3) * d( log(xg(-1)), 0, 1 ) _
+                   + y_ceng(4) * d( log(ceng(-1)), 0, 1 ) _
+                   + y_ceng(5) * d( log(veoa(-1)), 0, 1 ) _
+                   + y_ceng(6) * hgx(-1)/400 
+
+
+delrff: delrff - delrff_aerr = rff - rff(-1) 
+
+
+dmptlur: dmptlur - dmptlur_aerr = 1/(1+exp(y_dmptlur(1)*(lur-lurtrsh))) 
+
+
+dmptmax: dmptmax - dmptmax_aerr = (@recode((dmptlur)>(dmptpi),dmptlur,dmptpi)) 
+
+
+dmptpi: dmptpi - dmptpi_aerr = 1/(1+exp(y_dmptpi(1)*(zpic58-pitrsh))) 
+
+
+dmptr: dmptr - dmptr_aerr = (@recode((dmptmax)>(dmptr(-1)),dmptmax,dmptr(-1))) 
+
+
+dpadj: dpadj - dpadj_aerr - dpadj(-1) = y_dpadj(1) * dpgap(-1) 
+
+
+dpgap: dpgap - dpgap_aerr =  pipxnc/400 - ( _
+       .5 * (ehn/(xpn - ecnian)+ ehn(-1)/(xpn(-1) - ecnian(-1))) _
+               * d(log(phr*pxp), 0, 1) _
+     + .5 * (epdn/(xpn - ecnian)+ epdn(-1)/(xpn(-1) - ecnian(-1))) _
+               * d(log(ppdr*pxp), 0, 1) _
+     + .5 * (epin/(xpn - ecnian)+ epin(-1)/(xpn(-1) - ecnian(-1))) _
+               * d(log(ppir*pxp), 0, 1) _
+     + .5 * (epsn/(xpn - ecnian)+ epsn(-1)/(xpn(-1) - ecnian(-1))) _
+               * d(log(ppsr*pxp), 0, 1) _
+     + .5 * (egfon/(xpn - ecnian)+ egfon(-1)/(xpn(-1) - ecnian(-1))) _
+               * d(log(pgfor*pxp), 0, 1) _
+     + .5 * (egfin/(xpn - ecnian)+ egfin(-1)/(xpn(-1) - ecnian(-1))) _
+               * d(log(pgfir*pxp), 0, 1) _
+     + .5 * (egson/(xpn - ecnian)+ egson(-1)/(xpn(-1) - ecnian(-1))) _
+               * d(log(pgsor*pxp), 0, 1) _
+     + .5 * (egsin/(xpn - ecnian)+ egsin(-1)/(xpn(-1) - ecnian(-1))) _
+               * d(log(pgsir*pxp), 0, 1) _
+     + .5 * (exn/(xpn - ecnian)+ exn(-1)/(xpn(-1) - ecnian(-1))) _
+               * d(log(pxr*pxp), 0, 1)) 
+
+
+ec: log(ec) - ec_aerr = log(ec(-1)) +  _
+      .5 * (pcor*pcnia*eco/(ec*pcnia)  _
+         + pcor(-1)*pcnia(-1)*eco(-1)/(ec(-1)*pcnia(-1)))  _
+           * d(log(eco), 0, 1) _
+    + .5 * (pchr*pcnia*ech/(ec*pcnia)  _
+         + pchr(-1)*pcnia(-1)*ech(-1)/(ec(-1)*pcnia(-1)))  _
+           * d(log(ech), 0, 1) _
+    + .5 * ((pcdr*pcnia*yhpcd+pcdr*pcnia*jkcd)/(ec*pcnia)  _
+         + (pcdr(-1)*pcnia(-1)*yhpcd(-1)+pcdr(-1)*pcnia(-1)*jkcd(-1))/(ec(-1)*pcnia(-1)))  _
+           * d(log(yhpcd+jkcd), 0, 1) 
+
+
+ecd: d( log(ecd), 0, 1) - ecd_aerr  _
+                 = y_ecd(1) * log(qecd(-1)/ecd(-1)) _
+                 + y_ecd(2) * d( log(ecd(-1)), 0, 1) _
+                 + y_ecd(3) * zecd _
+                 + y_ecd(4) * zgapc2 / 400 
+
+
+ech: d( (ech)/kh(-1), 0, 1 ) - ech_aerr _
+                 = y_ech(1)  _
+                 + y_ech(2) * ech(-1)/kh(-2) _
+                 + y_ech(3) * d( ech(-1)/kh(-2), 0, 1 ) _
+                 + y_ech(4) * rrmet/100 
+
+
+ecnia: log(ecnia) - ecnia_aerr = log(ecnia(-1)) +  _
+      .5 * .01 * (pcor*pcnia*eco/ecnian  _
+         + pcor(-1)*pcnia(-1)*eco(-1)/ecnian(-1))  _
+           * d(log(eco), 0, 1) _
+    + .5 * .01 * (pcdr*pcnia*ecd/ecnian  _
+         + pcdr(-1)*pcnia(-1)*ecd(-1)/ecnian(-1))  _
+           * d(log(ecd), 0, 1) _
+    + .5 * .01 * (pchr*pcnia*ech/ecnian  _
+         + pchr(-1)*pcnia(-1)*ech(-1)/ecnian(-1))  _
+           * d(log(ech), 0, 1) 
+
+
+ecnian: ecnian - ecnian_aerr = .01*pcnia*ecnia 
+
+
+eco: d( log(eco), 0, 1) - eco_aerr  _
+                = (y_eco(1) * log(qeco(-1)/eco(-1)) _
+                + y_eco(2) * d(log(eco(-1)), 0, 1) _
+                + y_eco(3) * zeco) * (1-y_eco(4)) _
+                + y_eco(4) * (d(log(yhl+yht), 0, 1)) 
+
+
+egf: log(egf) - egf_aerr = log(egf(-1)) _
+     + .5 * (egfon/egfn + egfon(-1)/egfn(-1)) * d(log(egfo), 0, 1) _
+     + .5 * (egfin/egfn + egfin(-1)/egfn(-1)) * d(log(egfi), 0, 1) _
+     + .5 * (egfln/egfn + egfln(-1)/egfn(-1)) * d(log(egfl), 0, 1) 
+
+
+egfi: d( log(egfi), 0, 1 ) - egfi_aerr  _
+                   = y_egfi(1) _
+                   + y_egfi(2) * log(egfi(-1)/egfit(-1)) _
+                   +  ( y_egfi(3) *  d( log(egfi(-1)), 0, 1 ) +  y_egfi(4) *  d( log(egfi(-2)), 0, 1 ))  _
+                   + y_egfi(5) * d( log(egfit), 0, 1 ) _
+                   +  ( y_egfi(6) *  xgap2 +  y_egfi(7) *  xgap2(-1))  
+
+
+egfin: egfin - egfin_aerr = .01 * pxp * pgfir * egfi 
+
+
+egfit: d( log(egfit), 0, 1 ) - egfit_aerr  _
+                    = y_egfit(1) _
+                    + y_egfit(2) * log(.01*pgfir(-1)*pxp(-1)*egfit(-1)/xgdptn(-1)) _
+                    + y_egfit(3) * (hggdpt+hggdpt(-1)+hggdpt(-2)+hggdpt(-3)) / 1600 
+
+
+egfl: d( log(egfl), 0, 1 ) - egfl_aerr  _
+                   = y_egfl(1) _
+                   + y_egfl(2) * log(egfl(-1)/egflt(-1)) _
+                   +  ( y_egfl(3) *  d( log(egfl(-1)), 0, 1 ) +  y_egfl(4) *  d( log(egfl(-2)), 0, 1 ))  _
+                   + y_egfl(5) * d( log(egflt), 0, 1 ) _
+                   +  ( y_egfl(6) *  xgap2 +  y_egfl(7) *  xgap2(-1))  
+
+
+egfln: egfln - egfln_aerr = .01 * pgfl * egfl 
+
+
+egflt: d( log(egflt), 0, 1 ) - egflt_aerr  _
+                    = y_egflt(1) _
+                    + y_egflt(2) * log(.01*pgfl(-1)*egflt(-1)/xgdptn(-1)) _
+                    + y_egflt(3) * (hggdpt+hggdpt(-1)+hggdpt(-2)+hggdpt(-3)) / 1600 
+
+
+egfn: egfn - egfn_aerr = egfln + egfin + egfon 
+
+
+egfo: d( log(egfo), 0, 1 ) - egfo_aerr _
+                   = y_egfo(1) _
+                   + y_egfo(2) * log(egfo(-1)/egfot(-1)) _
+                   +  ( y_egfo(3) *  d( log(egfo(-1)), 0, 1 ) +  y_egfo(4) *  d( log(egfo(-2)), 0, 1 ))  _
+                   + y_egfo(5) * d( log(egfot), 0, 1 ) _
+                   +  ( y_egfo(6) *  xgap2 +  y_egfo(7) *  xgap2(-1))  
+
+
+egfon: egfon - egfon_aerr = .01 * pxp * pgfor * egfo 
+
+
+egfot: d( log(egfot), 0, 1 ) - egfot_aerr  _
+                    = y_egfot(1) _
+                    + y_egfot(2) * log(.01*pgfor(-1)*pxp(-1)*egfot(-1)/xgdptn(-1)) _
+                    + y_egfot(3) * (hggdpt+hggdpt(-1)+hggdpt(-2)+hggdpt(-3)) / 1600 
+
+
+egpdin: egpdin - egpdin_aerr = epdn + epsn + epin + ehn + ein 
+
+
+egs: log(egs) - egs_aerr = log(egs(-1)) _
+     + .5 * (egson/egsn + egson(-1)/egsn(-1)) * d(log(egso), 0, 1) _
+     + .5 * (egsin/egsn + egsin(-1)/egsn(-1)) * d(log(egsi), 0, 1) _
+     + .5 * (egsln/egsn + egsln(-1)/egsn(-1)) * d(log(egsl), 0, 1) 
+
+
+egsi: d( log(egsi), 0, 1 ) - egsi_aerr _
+                   = y_egsi(1) _
+                   + y_egsi(2) * log(egsi(-1)/egsit(-1)) _
+                   +  ( y_egsi(3) *  d( log(egsi(-1)), 0, 1 ) +  y_egsi(4) *  d( log(egsi(-2)), 0, 1 ))  _
+                   + y_egsi(5) * d( log(egsit), 0, 1 ) _
+                   +  ( y_egsi(6) *  xgap2 +  y_egsi(7) *  xgap2(-1))  
+
+
+egsin: egsin - egsin_aerr = .01 * pxp * pgsir * egsi 
+
+
+egsit: d( log(egsit), 0, 1 ) - egsit_aerr  _
+                    = y_egsit(1) _
+                    + y_egsit(2) * log(.01*pgsir(-1)*pxp(-1)*egsit(-1)/xgdptn(-1)) _
+                    + y_egsit(3) * (hggdpt+hggdpt(-1)+hggdpt(-2)+hggdpt(-3)) / 1600 
+
+
+egsl: d( log(egsl), 0, 1 ) - egsl_aerr _
+                   = y_egsl(1) _
+                   + y_egsl(2) * log(egsl(-1)/egslt(-1)) _
+                   +  ( y_egsl(3) *  d( log(egsl(-1)), 0, 1 ) +  y_egsl(4) *  d( log(egsl(-2)), 0, 1 ))  _
+                   + y_egsl(5) * d( log(egslt), 0, 1 ) _
+                   +  ( y_egsl(6) *  xgap2 +  y_egsl(7) *  xgap2(-1))  
+
+
+egsln: egsln - egsln_aerr = .01 * pgsl * egsl 
+
+
+egslt: d( log(egslt), 0, 1 ) - egslt_aerr  _
+                    = y_egslt(1) _
+                    + y_egslt(2) * log(.01*pgsl(-1)*egslt(-1)/xgdptn(-1)) _
+                    + y_egslt(3) * (hggdpt+hggdpt(-1)+hggdpt(-2)+hggdpt(-3)) / 1600 
+
+
+egsn: egsn - egsn_aerr = egsln + egsin + egson 
+
+
+egso: d( log(egso), 0, 1 ) - egso_aerr _
+                   = y_egso(1) _
+                   + y_egso(2) * log(egso(-1)/egsot(-1)) _
+                   +  ( y_egso(3) *  d( log(egso(-1)), 0, 1 ) +  y_egso(4) *  d( log(egso(-2)), 0, 1 ))  _
+                   + y_egso(5) * d( log(egsot), 0, 1 ) _
+                   +  ( y_egso(6) *  xgap2 +  y_egso(7) *  xgap2(-1))  
+
+
+egson: egson - egson_aerr = .01 * pxp * pgsor * egso 
+
+
+egsot: d( log(egsot), 0, 1 ) - egsot_aerr  _
+                    = y_egsot(1) _
+                    + y_egsot(2) * log(.01*pgsor(-1)*pxp(-1)*egsot(-1)/xgdptn(-1)) _
+                    + y_egsot(3) * (hggdpt+hggdpt(-1)+hggdpt(-2)+hggdpt(-3)) / 1600 
+
+
+eh: d( log(eh), 0, 1 ) - eh_aerr _
+                 = y_eh(1) * log(qeh(-1)/eh(-1)) _
+                 + y_eh(2) * d( log(eh(-1)), 0, 1 ) _
+                 + y_eh(3) * d( log(eh(-2)), 0, 1 ) _
+                 + y_eh(4) * zeh _
+                 + y_eh(5) * d( rme(-1), 0, 1 ) _
+                 + y_eh(6) * d83 * d( rme(-1), 0, 1 ) 
+
+
+ehn: ehn - ehn_aerr = .01 * phr * pxp * eh 
+
+
+ei: ei - ei_aerr = 4*d( ki, 0, 1 ) 
+
+
+ein: ein - ein_aerr = .01*pxp*pkir*ei 
+
+
+em: log(em) - em_aerr = log(em(-1))   _
+                  + .5 * (emon/emn + emon(-1)/emn(-1)) * d(log(emo), 0, 1) _
+                  + .5 * (empn/emn + empn(-1)/emn(-1)) * d(log(emp), 0, 1) 
+
+
+emn: emn - emn_aerr = emon + empn 
+
+
+emo: d( log(emo), 0, 1 ) - emo_aerr _
+                  =  y_emo(1) _
+                   + y_emo(2) * log(emo(-1)*(pmo(-1)/100)/(uemot(-1)*xgden(-1))) _
+                   + y_emo(3) * (xgap2-xgap2(-1))/100 _
+                   + y_emo(4) * (xgap2(-1)-xgap2(-2))/100 _
+                   + y_emo(5) * log(ddockm) _
+                   + y_emo(6) * log(ddockm/ddockm(-1)) 
+
+
+emon: emon - emon_aerr = .01 * pmo * emo 
+
+
+emp: emp - emp_aerr = uemp*(ceng-xeng) 
+
+
+empn: empn - empn_aerr = .01*pmp*emp 
+
+
+empt: d( log(empt), 0, 1) - empt_aerr  _
+                  = y_empt(1) * log(emp(-1)/empt(-1)) _
+                  + y_empt(2) * hgx/400 
+
+
+epd: d( log(epd), 0, 1 ) - epd_aerr = _
+ ( y_epd(1)*(log(qepd(-2)/epd(-2)))  _
+ +  ( y_epd(2) *  d( log(epd(-1)), 0, 1 ) +  y_epd(3) *  d( log(epd(-2)), 0, 1 ))  _
+ + zxbd(-1)  _
+ + zvpd(-1) )*(1-y_epd(4))  _
+ + y_epd(4) * (d( log(xbo(-1)), 0, 1 ) + hgvpd(-1)) 
+
+
+epdn: epdn - epdn_aerr = 0.01*ppdr*pxp*epd 
+
+
+epi: d( log(epi), 0, 1 ) - epi_aerr = _
+ ( y_epi(1)*(log(qepi(-2)/epi(-2)))  _
+ +  ( y_epi(2) *  d( log(epi(-1)), 0, 1 ) +  y_epi(3) *  d( log(epi(-2)), 0, 1 ))  _
+ + zxbi(-1)  _
+ + zvpi(-1) )*(1-y_epi(4))  _
+ + y_epi(4) * d( log(xbo(-1)), 0, 1 )  
+
+
+epin: epin - epin_aerr = 0.01*ppir*pxp*epi 
+
+
+eps: d( log(eps), 0, 1 ) - eps_aerr = _
+                    (y_eps(1) * log(qeps(-2)/eps(-2)) _
+                  +  ( y_eps(2) *  d( log(eps(-1)), 0, 1 ) +  y_eps(3) *  d( log(eps(-2)), 0, 1 ))  _
+                  + zxbs(-1) _
+                  + zvps(-1)) * (1-y_eps(4)) _
+                  + y_eps(4) * (d( log(xbo(-1)), 0, 1 )) _
+                  + y_eps(5) * d01q4 
+
+
+epsn: epsn - epsn_aerr = .01 * ppsr * pxp * eps 
+
+
+ex: d( log(ex), 0, 1 ) - ex_aerr _
+                 = y_ex(1)  _
+                 + y_ex(2) * log(ex(-1)*(pxr(-1)*pxp(-1)*fpx(-1))/(fgdp(-1)*fpc(-1))) _
+                 + y_ex(3) * (fxgap - fxgap(-1))/100 _
+                 + y_ex(4) * (fxgap(-1) - fxgap(-2))/100 _
+                 + y_ex(5) * ddockx 
+
+
+exn: exn - exn_aerr = .01*pxp*pxr*ex 
+
+
+fcbn: fcbn - fcbn_aerr = exn - emn + fynin + fcbrn 
+
+
+fcbrn: fcbrn - fcbrn_aerr = ufcbr*pxg*xgpot/100 
+
+
+fgdp: fgdp - fgdp_aerr = fgdpt*exp(fxgap/100) 
+
+
+fgdpt: d( log(fgdpt), 0, 1 ) - fgdpt_aerr  _
+                    = y_fgdpt(1) _
+                    + y_fgdpt(2) * log(fgdpt(-1)/xgdpt(-1)) _
+                    + y_fgdpt(3) * (hggdpt+hggdpt(-1)+hggdpt(-2)+hggdpt(-3)) / 1600 
+
+
+fnicn: d(fnicn, 0, 1)/xgdptn - fnicn_aerr = .54 * d( log(fpc), 0, 1)*fnicn(-1)/xgdptn _
+                                 - .67 * d( log(fpx), 0, 1)*fnicn(-1)/xgdptn  _
+                                 + rfnict 
+
+
+fniln: fniln - fniln_aerr = fnicn - fnin 
+
+
+fnin: d( fnin, 0, 1 ) - fnin_aerr = .25*fcbn  _
+                         + .54 * (d( log(fpc), 0, 1) * fnicn(-1)) _
+                         - .32 * (d( log(pgdp), 0, 1) * fniln(-1))   _
+                         - .67 * (d( log(fpx), 0, 1) * fnicn(-1)) _
+                         + .06 * (d( log(fpx), 0, 1) * fniln(-1))  _
+                         + fnirn 
+
+
+fnirn: fnirn - fnirn_aerr = ufnir * xgdpn 
+
+
+fpc: fpc - fpc_aerr = fpc(-1)*exp(fpic/400) 
+
+
+fpcm: fpcm - fpcm_aerr = ufpcm*fpc 
+
+
+fpi10: fpi10-fpi10_aerr = y_fpi10(1) * ( ( fpi10(-1) +  fpi10(-2) +  fpi10(-3) +  fpi10(-4))  / 4 ) _
+                 + y_fpi10(2) * fpitrg _
+                 + y_fpi10(3) * fxgap(-1) _
+                 +  ( y_fpi10(4) * d( log(poilr), 0, 1 ) +  y_fpi10(5) * d( log(poilr(-1)), 0, 1 ))  
+
+
+fpi10t: fpi10t-fpi10t_aerr = y_fpi10t(1) * fpi10t(-1) _
+                   + y_fpi10t(2) * fpi10 
+
+
+fpic: fpic-fpic_aerr = y_fpic(1) _
+               + y_fpic(2) * fpi10 _
+               + y_fpic(3) * fpic(-1) 
+
+
+fpx: fpx - fpx_aerr = fpxr*fpc/pcpi 
+
+
+fpxm: fpxm - fpxm_aerr = ufpxm*fpx*fpcm/fpc 
+
+
+fpxr: log(fpxr) - fpxr_aerr - log(fpxrr) = _
+                         y_fpxr(1)*(rg10e-zpi10f-frl10+fpi10t) _
+                       + y_fpxr(2)*(fnin/xgdpn) 
+
+
+fpxrr: d( log(fpxrr), 0, 1 ) - fpxrr_aerr _
+                    = y_fpxrr(1) * log(fpxrrt(-1)/fpxrr(-1)) _
+                    + y_fpxrr(2) * d( log(fpxrr(-1)), 0, 1 ) _
+                    + (1-y_fpxrr(2)) * d( log(fpxrrt), 0, 1 ) 
+
+
+frl10: frl10 - frl10(-1) - frl10_aerr = y_frl10(1) _
+                               + y_frl10(2) * (frl10(-1) - frs10(-1)) _
+                               + y_frl10(3) * (frl10(-1) - frl10(-2)) _
+                               + y_frl10(4) * (frs10 - frs10(-1)) _
+                               + y_frl10(5) * (fxgap - fxgap(-1)) 
+
+
+frs10: frs10 - frs10_aerr = dfmprr * (y_frs10(1) _
+                   + y_frs10(2) * frstar(-1) _
+                   + y_frs10(3) * ( ( fpi10 +  fpi10(-1) +  fpi10(-2) +  fpi10(-3))  / 4) _
+                   + y_frs10(4) * ( ( fpi10 +  fpi10(-1) +  fpi10(-2) +  fpi10(-3))  / 4 - fpitrg) _
+                   + y_frs10(5) * fxgap) _
+                   + (1-dfmprr) * (rfrs10 +  ( fpi10 +  fpi10(-1) +  fpi10(-2) +  fpi10(-3))  / 4) 
+
+
+frstar: frstar - frstar_aerr = y_frstar(1) * frstar(-1) _
+                     + y_frstar(2) * (frs10 -  ( fpi10 +  fpi10(-1) +  fpi10(-2) +  fpi10(-3))  / 4) 
+
+
+ftcin: ftcin - ftcin_aerr = uftcin * ynicpn 
+
+
+fxgap: fxgap - fxgap_aerr =  _
+                   + y_fxgap(1) * fxgap(-1) _
+                   + y_fxgap(2) * fxgap(-2) _
+                   + y_fxgap(3) * ( ( frs10(-1) _
+                     -(fpi10(-1)+fpi10(-2)+fpi10(-3)+fpi10(-4))/4 +  frs10(-2) _
+                     -(fpi10(-2)+fpi10(-3)+fpi10(-4)+fpi10(-5))/4 +  frs10(-3) _
+                     -(fpi10(-3)+fpi10(-4)+fpi10(-5)+fpi10(-6))/4) /3-frstar) _
+                   + y_fxgap(4) * xgap2(-1) 
+
+
+fynicn:  fynicn - fynicn_aerr = .01*rfynic*fnicn(-1)        
+
+
+fyniln:  fyniln - fyniln_aerr = .01*rfynil*fniln(-1)        
+
+
+fynin: fynin - fynin_aerr = fynicn - fyniln 
+
+
+gfdbtn: gfdbtn - gfdbtn_aerr = ugfdbt*(gfdbtn(-1) - .25*gfsrpn + .25*egfin _
+                              - .25*jygfgn - .25*jygfen) 
+
+
+gfintn: gfintn - gfintn_aerr = rgfint*gfdbtn(-1) 
+
+
+gfs: d( log(gfs), 0, 1 ) - gfs_aerr  _
+                  = y_gfs(1) _
+                  + y_gfs(2) * log(gfsn(-1)/xgdptn(-1)) _
+                  + y_gfs(3) * (hggdpt+hggdpt(-1)+hggdpt(-2)+hggdpt(-3)) / 1600 
+
+
+gfsn: gfsn - gfsn_aerr = .01*pgdp*gfs 
+
+
+gfsrpn: gfsrpn - gfsrpn_aerr = tfpn + tfcin + tfibn + tfsin + tfdiv _
+                   - egfln - egfon - gftn - gfintn _
+                   - gfsubn - gfsn 
+
+
+gfsub: d( log(gfsub), 0, 1 ) - gfsub_aerr  _
+                    = y_gfsub(1) _
+                    + y_gfsub(2) * log(gfsubn(-1)/xgdptn(-1)) _
+                    + y_gfsub(3) * (hggdpt+hggdpt(-1)+hggdpt(-2)+hggdpt(-3)) / 1600 
+
+
+gfsubn: gfsubn - gfsubn_aerr = .01*pgdp*gfsub 
+
+
+gft: gft - gft_aerr = (gftrd+gftrt)*xgdpt 
+
+
+gftn: gftn - gftn_aerr = .01*pgdp*gft 
+
+
+gftrd: gftrd - gftrd_aerr = y_gftrd(1) _
+                   + y_gftrd(2) * gftrd(-1) _
+                   + y_gftrd(3) * xgap2 
+
+
+gsdbtn: gsdbtn - gsdbtn_aerr = ugsdbt*(gsdbtn(-1) - .25*gssrpn + .25 * egsin _
+                              - .25*jygsgn - .25*jygsen) 
+
+
+gsintn: gsintn - gsintn_aerr = rgfint*gsdbtn(-1) + ugsint*xbn 
+
+
+gssrpn: gssrpn - gssrpn_aerr = tspn + tscin + tsibn + tssin + gfsn  _
+                     - egsln - egson - gstn - gsintn - gssubn 
+
+
+gssub: gssub - gssub_aerr = ugssub*xgdpt 
+
+
+gssubn: gssubn - gssubn_aerr = .01*pgdp*gssub 
+
+
+gst: gst - gst_aerr = (gstrd+gstrt)*xgdpt 
+
+
+gstn: gstn - gstn_aerr = .01*pgdp*gst 
+
+
+gstrd: gstrd - gstrd_aerr = y_gstrd(1) _
+                   + y_gstrd(2) * gstrd(-1) _
+                   + y_gstrd(3) * xgap2 
+
+
+hgemp: hgemp - hgemp_aerr = y_hgemp(1) * hgemp(-1) _
+                   + y_hgemp(2) * 400*log(emp/emp(-1)) 
+
+
+hggdp: hggdp - hggdp_aerr = 400*d( log(xgdp), 0, 1 ) 
+
+
+hggdpt: hggdpt - hggdpt_aerr = hxbt + huxb 
+
+
+hgpdr: hgpdr - hgpdr_aerr = y_hgpdr(1) * hgpdr(-1) _
+                     + y_hgpdr(2) * 400*log(ppdr/ppdr(-1)) 
+
+
+hgpir: hgpir - hgpir_aerr = y_hgpir(1) * hgpir(-1) _
+                     + y_hgpir(2) * 400*log(ppir/ppir(-1)) 
+
+
+hgpkir: hgpkir - hgpkir_aerr = y_hgpkir(1) * hgpkir(-1) _
+                     + y_hgpkir(2) * 400*log(pkir/pkir(-1)) 
+
+
+hgppsr: hgppsr - hgppsr_aerr = y_hgppsr(1) * hgppsr(-1) _
+                     + y_hgppsr(2) * 400*log(ppsr/ppsr(-1)) 
+
+
+hgvpd: hgvpd - hgvpd_aerr = y_hgvpd(1) * hgvpd(-1) _
+                     + y_hgvpd(2) * log(vpd/vpd(-1)) 
+
+
+hgvpi: hgvpi - hgvpi_aerr = y_hgvpi(1) * hgvpi(-1) _
+                     + y_hgvpi(2) * log(vpi/vpi(-1)) 
+
+
+hgvps: hgvps - hgvps_aerr = y_hgvps(1) * hgvps(-1) _
+                     + y_hgvps(2) * log(vps/vps(-1)) 
+
+
+hgx: hgx - hgx_aerr = (.7*(hlept + hqlww + 400*d( log(lqualt), 0, 1 )) + .265*hks _
+               + .035*400*d( log(veoa), 0, 1 ) + hmfpt)/.965 
+
+
+hgynid: hgynid - hgynid_aerr = 400*d( log((ynicpn-tfcin-tscin)*.5/pxg), 0, 1 ) 
+
+
+hks: hks - hks_aerr = 400 * (ykpdn * d( log(kpd), 0, 1 ) _
+                     +  ykpsn * d( log(kps), 0, 1 ) + ykin * d( log(ki), 0, 1 )) / _
+                     (ykpdn + ykpsn + ykin) + hksr 
+
+
+hlept: hlept - hlept_aerr = (1-dmpstb) * 400 *  _
+        (hqlfpr * n16 * (1-.01*lurnat-qleor) _
+      + d( n16, 0, 1) * qlfpr * (1-.01*lurnat-qleor) _
+      - d( left, 0, 1) _
+      - d( lest, 0, 1) ) _
+      /  ( leppot/2 +  leppot(-1)/2)  _
+      + dmpstb * 400 * d( log(n16), 0, 1 ) 
+
+
+hlprdt: hlprdt - hlprdt_aerr = hgx - hlept - hqlww 
+
+
+hmfpt: hmfpt - hmfpt_aerr = y_hmfpt(1) + y_hmfpt(2)*hmfpt(-1) 
+
+
+hqlfpr: hqlfpr - hqlfpr_aerr = y_hqlfpr(1) + y_hqlfpr(2)*hqlfpr(-1) 
+
+
+hqlww: hqlww - hqlww_aerr = y_hqlww(1) * hqlww(-1) + (1-y_hqlww(1)) * y_hqlww(2) 
+
+
+huqpct: huqpct - huqpct_aerr = y_huqpct(1) + y_huqpct(2)*huqpct(-1) 
+
+
+huxb: huxb - huxb_aerr = (1-dglprd) *(y_huxb(1) + y_huxb(2)*huxb(-1)) 
+
+
+hxbt: hxbt - hxbt_aerr = ( hgx  _
+  - .5 *(.035*empn/(.01*pceng*ceng) + .035*empn(-1)/(.01*pceng(-1)*ceng(-1))) * 400*d( log(empt), 0, 1 )) / _
+  (1 -  .5 *(.035*empn/(.01*pceng*ceng) + .035*empn(-1)/(.01*pceng(-1)*ceng(-1)))) 
+
+
+jccacn: jccacn - jccacn_aerr = ujccac*(jccan - jygfgn - jygfen - jygsgn - jygsen _
+                              -.01*jrh*phr(-1)*pxp(-1)*kh(-1)) 
+
+
+jccan: jccan - jccan_aerr = jygfgn + jygfen + jygsgn + jygsen + .01*ujcca*pxp(-1) _
+                   * (phr(-1)*kh(-1)*jrh + ppsr(-1)*kps(-1)*jrps _
+                     + pkpdr(-1)*kpd(-1)*jrpd) 
+
+
+jkcd: jkcd - jkcd_aerr = jrcd * kcd(-1) 
+
+
+jygfen: jygfen - jygfen_aerr = ujygfe *  (.01 * pgdp * xgdpt) 
+
+
+jygfgn: jygfgn - jygfgn_aerr = ujygfg *  (.01 * pgdp * xgdpt) 
+
+
+jygsen: jygsen - jygsen_aerr = ujygse *  (.01 * pgdp * xgdpt) 
+
+
+jygsgn: jygsgn - jygsgn_aerr = ujygsg *  (.01 * pgdp * xgdpt) 
+
+
+jyncn: jyncn - jyncn_aerr = jccan - jccacn - jygfgn - jygfen - jygsgn - jygsen 
+
+
+kcd: kcd - kcd_aerr = .25*ecd + (1-jrcd/4)*kcd(-1) 
+
+
+kh: kh - kh_aerr = .25*eh + (1-jrh/4)*kh(-1) 
+
+
+ki: d( log(ki), 0, 1 ) - ki_aerr _
+                 = y_ki(5) _
+                 + y_ki(1) * (log(qkir) - log(ki(-1)/xfs(-1))) _
+                 + y_ki(2) * (d( log(ki(-1)), 0, 1 ) - y_ki(5)) _
+                 + y_ki(3) * d( log(xfs(-1)), 0, 1 ) _
+                 + y_ki(4) * d( log(xfs(-2)), 0, 1 ) 
+
+
+kpd: kpd - kpd_aerr = 0.25 * epd + (1-jrpd/4) * kpd(-1) 
+
+
+kpi: kpi - kpi_aerr = 0.25 * epi + (1-jrpi/4) * kpi(-1) 
+
+
+kps: kps - kps_aerr = 0.25 * eps + (1-jrps/4) * kps(-1) 
+
+
+ks: log(ks) - ks_aerr = log(ks(-1)) + hks/400 
+
+
+lef: d( log(lef), 0, 1 ) - lef_aerr = d( log(ulef), 0, 1 )  _
+                        + d( log(egfl), 0, 1 )  _
+                  - dglprd*(d( log(lprdt), 0, 1 )) 
+
+
+left: left - left_aerr = y_left(1) * left(-1) * (hqlfpr+n16/n16(-1))  _
+                 + y_left(2) * lef 
+
+
+leh: leh - leh_aerr = lep + leo + les + lef 
+
+
+leo: log(leo) - leo_aerr = log(qleor*qlf) + y_leo(1)*log(leo(-1)/(qleor(-1)*qlf(-1))) _
+                                           + y_leo(2)*xgap2(-1) 
+
+
+lep: lep - lep_aerr = lhp / lww 
+
+
+leppot: leppot - leppot_aerr = qlf*(1-.01*lurnat - qleor) - left - lest 
+
+
+les: d( log(les), 0, 1 ) - les_aerr = d( log(ules), 0, 1 )  _
+                        + d( log(egsl), 0, 1 )  _
+                  - dglprd*(d( log(lprdt), 0, 1 )) 
+
+
+lest: lest - lest_aerr = y_lest(1) * lest(-1) * (hqlfpr+n16/n16(-1))  _
+                 + y_lest(2) * les 
+
+
+lf: lf - lf_aerr = lfpr * n16 
+
+
+lfpr: d( lfpr, 0, 1)  - lfpr_aerr = hqlfpr _
+                          + y_lfpr(1) * (qlfpr(-1) - lfpr(-1)) _
+                          + y_lfpr(2) * (lur(-1) - lurnat(-1)) 
+
+
+lhp: d( log(lhp), 0, 1 ) - lhp_aerr = _
+                    y_lhp(1) * (log(qlhp(-1)/lhp(-1))-d( log(mfpt), 0, 1 )/.965) _
+                  + y_lhp(2) * d( log(lhp(-1)), 0, 1 ) _
+                  + y_lhp(3) * zlhp _
+                  + y_lhp(4) * (d( log(xgo), 0, 1 ) - hlprdt(-1)/400 - d( hmfpt, 0, 1 )/(.965*400)) _
+                  + y_lhp(5) * (d( log(xgo(-1)), 0, 1 ) - hlprdt(-2)/400 - d( hmfpt(-1), 0, 1 )/(.965*400)) 
+
+
+lprdt: log(lprdt) - lprdt_aerr  = log(xgpot) - log(leppot) - log(qlww) 
+
+
+lur: lur - lur_aerr = 100*(1 - leh/lf) 
+
+
+lurbls: lurbls - lurbls_aerr = lur 
+
+
+lurnat: lurnat - lurnat_aerr = lurnat(-1) 
+
+
+lww: d( log(lww), 0, 1 ) - lww_aerr _
+                  = hqlww/400 _
+                  + y_lww(1) * log(qlww(-1)/lww(-1)) _
+                      + y_lww(2) * (d( log(lhp), 0, 1 ) - (hlept + hqlww)/400) 
+
+
+mei: log(mei) - mei_aerr = y_mei(1) * log(mei(-1)) 
+
+
+mep: log(mep) - mep_aerr = y_mep(1) * log(mep(-1)) 
+
+
+mfpt: log(mfpt) - mfpt_aerr = y_mfpt(1) + log(mfpt(-1)) + hmfpt/400 
+
+
+pcdr: d(log(pcdr), 0, 1) - pcdr_aerr = y_pcdr(1) _
+                             + y_pcdr(2)*d(log(pcdr(-1)), 0, 1) 
+
+
+pceng: pceng - pceng_aerr = pcengr*pxb 
+
+
+pcengr: d( log(pcengr), 0, 1 ) - pcengr_aerr _
+                     = y_pcengr(1) _
+                     + y_pcengr(2) * d( log(pcengr(-1)), 0, 1 ) _
+                     + y_pcengr(3) * log(pcengr(-1)) _
+                     + y_pcengr(4) * log(poilr(-1)) _
+                     + y_pcengr(5) * d( log(poilr), 0, 1 ) 
+
+
+pcer: d( log(pcer), 0, 1 ) - pcer_aerr _
+                   = y_pcer(1) * log((y_pcer(2) *pceng(-1) + (1-y_pcer(2))*pcxfe(-1))/(pcer(-1)*pcxfe(-1))) _
+                   + y_pcer(3) * d( log((y_pcer(2) *pceng + (1-y_pcer(2))*pcxfe)/pcxfe), 0, 1 ) _
+                   + y_pcer(4) * d( log((y_pcer(2) *pceng(-1) + (1-y_pcer(2))*pcxfe(-1))/pcxfe(-1)), 0, 1 ) 
+
+
+pcfr: d( log(pcfr), 0, 1 ) - pcfr_aerr _
+                   = y_pcfr(1) * log(pcfr(-1)/pcfrt(-1)) _
+                   + y_pcfr(2) _
+                   +  ( y_pcfr(3) *  d( log(pcfr(-1)), 0, 1 ) +  y_pcfr(4) *  d( log(pcfr(-2)), 0, 1 ) +  y_pcfr(5) *  d( log(pcfr(-3)), 0, 1 ))  _
+                   + y_pcfr(6) * d( log(pcfrt), 0, 1 ) 
+
+
+pchr: d(log(pchr), 0, 1) - pchr_aerr = y_pchr(1) _
+                             + y_pchr(2)*d(log(pchr(-1)), 0, 1) 
+
+
+pcnia: d( log(pcnia), 0, 1 ) - pcnia_aerr = picnia / 400 
+
+
+pcor: log(pcor) - log(pcor(-1)) - pcor_aerr =   _
+           (- .5 * .01 * (pcdr*pcnia*ecd/ecnian  _
+         + pcdr(-1)*pcnia(-1)*ecd(-1)/ecnian(-1)))  _
+         / (.5 * .01 * (pcor*pcnia*eco/ecnian  _
+         + pcor(-1)*pcnia(-1)*eco(-1)/ecnian(-1))) _
+           * d(log(pcdr), 0, 1) _
+    - .5 * .01 * (pchr*pcnia*ech/ecnian  _
+         + pchr(-1)*pcnia(-1)*ech(-1)/ecnian(-1))  _
+           * d(log(pchr), 0, 1) _
+    / (.5 * .01 * (pcor*pcnia*eco/ecnian  _
+         + pcor(-1)*pcnia(-1)*eco(-1)/ecnian(-1))) 
+
+
+pcpi: pcpi - pcpi_aerr = upcpi * exp(.025*log(pcer)) * pcnia 
+
+
+pcpix: pcpix - pcpix_aerr = upcpix * pcxfe 
+
+
+pcxfe: d(log(pcxfe), 0, 1) - pcxfe_aerr = picxfe/400 
+
+
+pgdp: pgdp - pgdp_aerr = 100*xgdpn/xgdp 
+
+
+pgfir: log(pgfir) - pgfir_aerr - log(pgfir(-1)) = y_pgfir(1) + pipxnc/400 + dpadj - d(log(pxp), 0, 1) 
+
+
+pgfl: d( log(pgfl), 0, 1 ) - pgfl_aerr = d( log(upgfl), 0, 1 )  _
+                        + d( log(pl), 0, 1 )  _
+                  - dglprd*(d( log(lprdt), 0, 1 )) 
+
+
+pgfor: log(pgfor) - pgfor_aerr - log(pgfor(-1)) = y_pgfor(1) + pipxnc/400 + dpadj - d(log(pxp), 0, 1) 
+
+
+pgsir: log(pgsir) - pgsir_aerr - log(pgsir(-1)) = y_pgsir(1) + pipxnc/400 + dpadj - d(log(pxp), 0, 1) 
+
+
+pgsl: d( log(pgsl), 0, 1 ) - pgsl_aerr = d( log(upgsl), 0, 1 )  _
+                        + d( log(pl), 0, 1 )  _
+                  - dglprd*(d( log(lprdt), 0, 1 )) 
+
+
+pgsor: log(pgsor) - pgsor_aerr - log(pgsor(-1)) = y_pgsor(1) + pipxnc/400 + dpadj - d(log(pxp), 0, 1) 
+
+
+phouse: d( log(phouse), 0, 1) - phouse_aerr = y_phouse(1) + y_phouse(2) * d( log(phouse(-1)), 0, 1) _
+                        + y_phouse(3) * log(phouse(-1)/(pchr(-1)*pcnia(-1))) 
+
+
+phr: log(phr) - phr_aerr - log(phr(-1)) = y_phr(1) + pipxnc/400 + dpadj - d(log(pxp), 0, 1) 
+
+
+pic4:             pic4 - pic4_aerr = 100*(pcnia/pcnia(-4) - 1) 
+
+
+picngr: picngr - picngr_aerr = (d( log(pceng/pxp(-1)), 0, 1 ) *  _
+                        ( pceng*ceng/(pxp*xp) +  pceng(-1)*ceng(-1)/(pxp(-1)*xp(-1)))  / 2 ) 
+
+
+picnia: picnia - picnia_aerr = picxfe _
+                     + ( ( ucfs +  ucfs(-1)) /2) * 400 * d(log(pcfr), 0, 1) _
+                     + ( ( uces +  uces(-1)) /2) * 400 * d(log(pcer), 0, 1) 
+
+
+picx4:             picx4 - picx4_aerr = 100*(pcxfe/pcxfe(-4) - 1) 
+
+
+picxfe: picxfe - picxfe_aerr = (y_picxfe(1)*picxfe(-1) _
+                     + y_picxfe(3)*zpicxfe _
+                     + (1-y_picxfe(3))*(1-y_picxfe(1))*ptr(-1) _
+                     + y_picxfe(2)*400*log(qpcnia(-1)/pcnia(-1))) / (1+y_picxfe(1)*y_picxfe(3)) 
+
+
+pieci: pieci - pieci_aerr = (.25*y_pieci(1)*((1-y_pieci(4))*(pieci(-1)+pieci(-2)+pieci(-3)) + pieci(-4)) _
+                     + y_pieci(4)*zpieci _
+                     + (1-y_pieci(4))*(1-y_pieci(1))*(ptr(-1) + hlprdt(-1) - 400*huqpct(-1)) _
+                     + y_pieci(2)*(lur(-1)-lurnat(-1)) _
+                     + y_pieci(3)*400*log(qpl(-1)/pl(-1))) / (1+.25*y_pieci(1)*y_pieci(4)) 
+
+
+pigdp: pigdp - pigdp_aerr = 400*d( log(pgdp), 0, 1 ) 
+
+
+pipl: pipl - pipl_aerr = pieci 
+
+
+pipxnc: pipxnc - pipxnc_aerr = picnia - 1.99 * 400 * huqpct _
+                     + y_pipxnc(1) * (pipxnc(-1) - picnia(-1) + 1.99 * 400 * huqpct(-1)) _
+                     + y_pipxnc(2) * (pipxnc(-2) - picnia(-2) + 1.99 * 400 * huqpct(-2)) _
+                     + y_pipxnc(3) * .5 * ( ( (emon/xpn) +  (emon(-1)/xpn(-1))) ) * 400 * d(log(fpxr), 0, 1)   
+
+
+pkpdr: pkpdr - pkpdr_aerr = upkpd * ppdr 
+
+
+pl: log(pl) - pl_aerr = log(pl(-1)) + pipl/400 
+
+
+plmin: plmin - plmin_aerr = plminr*.01*pl 
+
+
+pmo: d( log(pmo), 0, 1 ) - pmo_aerr = y_pmo(1) _
+                  + y_pmo(2) * (log(qpmo) + .64*log(fpcm(-1)/fpxm(-1)) + .36*log(pxb(-1)) _
+                           - log(pmo(-1))) _
+                  + y_pmo(3) * d( log(fpcm/fpxm), 0, 1 ) _
+                  + y_pmo(4) * d( log(pxb), 0, 1 ) 
+
+
+pmp: pmp - pmp_aerr = upmp*poil 
+
+
+poil: poil - poil_aerr = poilr*pxb 
+
+
+poilr: d( log(poilr), 0, 1 ) - poilr_aerr _
+                    = y_poilr(1) * log(poilr(-1)/poilrt(-1)) _
+                    + y_poilr(2) _
+                    + y_poilr(3) * d( log(poilr(-1)), 0, 1 ) _
+                    + y_poilr(4) * d( log(poilrt), 0, 1 ) 
+
+
+ppdr: log(ppdr) - ppdr_aerr - log(ppdr(-1)) = y_ppdr(1) + pipxnc/400 + dpadj - d(log(pxp), 0, 1) 
+
+
+ppir: log(ppir) - ppir_aerr - log(ppir(-1))  = pipxnc/400 + dpadj - d(log(pxp), 0, 1) 
+
+
+ppsr: log(ppsr) - ppsr_aerr - log(ppsr(-1)) = y_ppsr(1) + pipxnc/400 + dpadj - d(log(pxp), 0, 1) 
+
+
+ptr: ptr - ptr_aerr = y_ptr(1)*ptr(-1) + y_ptr(2)*picxfe(-1)+ y_ptr(3)*pitarg(-1) 
+
+
+pwstar: pwstar - pwstar_aerr = y_pwstar(1) + y_pwstar(2)*pwstar(-1) 
+
+
+pxb: pxb - pxb_aerr = upxb*pgdp 
+
+
+pxg: pxg - pxg_aerr = 100*xgn/xg 
+
+
+pxnc: d( log(pxnc), 0, 1 ) - pxnc_aerr = pipxnc/400 
+
+
+pxp: d( log(pxp), 0, 1 ) - pxp_aerr =  _
+       .5*( ecnian/xpn + ecnian(-1)/xpn(-1)) * d( log(pcnia), 0, 1) _
+     + .5*( (xpn-ecnian)/xpn + (xpn(-1)-ecnian(-1))/xpn(-1)) * d( log(pxnc), 0, 1) 
+
+
+pxr: log(pxr) - pxr_aerr - log(pxr(-1)) = y_pxr(1) + pipxnc/400 + dpadj - d(log(pxp), 0, 1) 
+
+
+qec: qec - qec_aerr = y_qec(1) * zyh  _
+               + y_qec(2) * (dcon*(zyh-zyht)) _
+               + y_qec(3) * zyht _
+               + y_qec(4) * zyhp _
+               + y_qec(5) * (wps+wpo) 
+
+
+qecd: qecd - qecd_aerr = qec _
+                 * (jrcd/4 + hggdpt/400 + y_qecd(1)*hgpcdr/400) _
+                 * exp(y_qecd(2) + y_qecd(3)*log(pcdr*rccd)) 
+
+
+qeco: log(qeco) - qeco_aerr = log(qec) - log(pcor) + y_qeco(1) 
+
+
+qeh: qeh - qeh_aerr = qec _
+               * (jrh/4 + hggdpt/400) _
+               * exp(y_qeh(1) - log(phr*pxp/pcnia) + y_qeh(2)*log(rcch)) 
+
+
+qepd: log(qepd) - qepd_aerr = y_qepd(1)  _
+                        + y_qepd(2) * log(xbo) _
+                        + y_qepd(3) * log(vpd) _
+                        + y_qepd(4) * log(hgx/100 + jrpd ) 
+
+
+qepi: log(qepi) - qepi_aerr = y_qepi(1)  _
+                        + y_qepi(2) * log(xbo) _
+                        + y_qepi(3) * log(vpi) _
+                        + y_qepi(4) * log(hgx/100 + jrpi ) 
+
+
+qeps: log(qeps) - qeps_aerr = y_qeps(1)  _
+                      + y_qeps(2) * log(xbo) _
+                      + y_qeps(3) * log(vps) _
+                      + y_qeps(4) * log(hgx/100 + jrps ) 
+
+
+qkir: log(qkir) - qkir_aerr = (1-dglprd)*y_qkir(1) + log(qkir(-1)) 
+
+
+qlep: qlep - qlep_aerr = lhp / qlww 
+
+
+qlf: qlf - qlf_aerr = qlfpr * n16 
+
+
+qlfpr: qlfpr - qlfpr_aerr = qlfpr(-1) + hqlfpr 
+
+
+qlhp: qlhp - qlhp_aerr = xgo/lprdt 
+
+
+qlww: log(qlww) - qlww_aerr = log(qlww(-1)) + hqlww(-1)/400 
+
+
+qpcnia: log(qpcnia) - qpcnia_aerr = log(qpxp) + log(uqpct) 
+
+
+qpl: log(qpl) - qpl_aerr = log(pl) + y_qpl(1) * log(pxg/qpxg) 
+
+
+qpmo: log(qpmo) - qpmo_aerr = log(qpmo(-1)) + y_qpmo(1) 
+
+
+qpxg: log(qpxg) - qpxg_aerr = log(pwstar) + y_qpxg(1) + y_qpxg(2)*log(pl/lprdt) 
+
+
+qpxnc: log(qpxnc) - qpxnc_aerr = log(pxnc)  _
+                        + y_qpxnc(1) * log(qpxp/pxp)  _
+                        + y_qpxnc(2) * log(qpcnia/pcnia) 
+
+
+qpxp: qpxp - qpxp_aerr = 100*(xpn + (.01*qpxg*xg-xgn))/xp 
+
+
+qynidn: log(qynidn) - qynidn_aerr = y_qynidn(1)  _
+                          + y_qynidn(2)*d79a  _
+                          + y_qynidn(3)*log((@recode((ynicpn-tfcin-tscin)>(.01),ynicpn-tfcin-tscin,.01))) 
+
+
+rbbb: rbbb - rbbb_aerr = ( ( (0.01*rbbbe + 1)^.5 - 1 ) * 200 ) 
+
+
+rbbbe: rbbbe - rbbbe_aerr = rbbbp + rg10e 
+
+
+rbbbp: rbbbp - rbbbp_aerr = y_rbbbp(1) _
+                   + y_rbbbp(2) * zgap10 _
+                   + y_rbbbp(3) * (rbbbp(-1) - y_rbbbp(4) - y_rbbbp(5)*zgap10(-1)) 
+
+
+rcar: rcar - rcar_aerr = y_rcar(1) _
+                 + y_rcar(2) * d79a _
+                 + y_rcar(3) * ((1-d79a)*t47) _
+                 + y_rcar(4) * rcar(-1) _
+                 +  ( y_rcar(5) *  rg5 +  y_rcar(6) *  rg5(-1))  
+
+
+rccd: rccd - rccd_aerr = (@recode((100*jrcd + rcar - zpi5)>( .01),100*jrcd + rcar - zpi5, .01)) 
+
+
+rcch: rcch - rcch_aerr = (@recode((100*jrh + (1-trfpm/100)*(rme+100*trspp) - zpi10)>( .1),100*jrh + (1-trfpm/100)*(rme+100*trspp) - zpi10, .1)) 
+
+
+rcgain: rcgain - rcgain_aerr = picx4 + y_rcgain(1) _
+                     + y_rcgain(2) * xgap2 _
+                     + y_rcgain(3) * (rcgain(-1) - picx4(-1) - y_rcgain(4)  _
+                     - y_rcgain(5) * xgap2(-1) ) 
+
+
+req: req - req_aerr = rg30e - zpic30 + reqp 
+
+
+reqp: reqp - reqp_aerr = y_reqp(1) + y_reqp(2) * rbbbp _
+                        + y_reqp(3) * (reqp(-1) - y_reqp(4) - y_reqp(5)*rbbbp(-1)) 
+
+
+rff: rff - rff_aerr = 36000*( (1+.01*rffe)^(1/365) - 1 ) 
+
+
+rffalt: rffalt - rffalt_aerr = y_rffalt(1) _
+                     + y_rffalt(2) * rff(-1) _
+                     + y_rffalt(3) * rff(-2) _
+                     + y_rffalt(4) * xgap2 _
+                     + y_rffalt(5) * xgap2(-1) _
+                     + y_rffalt(6) * ( ( picxfe +  picxfe(-1) +  picxfe(-2) +  picxfe(-3))  / 4 ) 
+
+
+rffe: rffe - rffe_aerr = (1-dmptrsh) * (@recode((rffrule)>( rffmin),rffrule, rffmin))  _
+                   + dmptrsh * (@recode(((dmptr(-1)*rffrule + (1-dmptr(-1))*rffmin))>( rffmin),(dmptr(-1)*rffrule + (1-dmptr(-1))*rffmin), rffmin)) 
+
+
+rffgen: rffgen - rffgen_aerr = y_rffgen(1) _
+                     +  ( y_rffgen(2) *  rffe(-1) +  y_rffgen(3) *  rffe(-2) +  y_rffgen(4) *  rffe(-3) +  y_rffgen(5) *  rffe(-4))  _
+                     +  ( y_rffgen(6) *  picnia +  y_rffgen(7) *  picnia(-1) +  y_rffgen(8) *  picnia(-2) +  y_rffgen(9) *  picnia(-3) +  y_rffgen(10) *  picnia(-4))  _
+                     +  ( y_rffgen(11) *  xgap2 +  y_rffgen(12) *  xgap2(-1) +  y_rffgen(13) *  xgap2(-2) +  y_rffgen(14) *  xgap2(-3) +  y_rffgen(15) *  xgap2(-4))  _
+                     +  ( y_rffgen(16) *  lur +  y_rffgen(17) *  lur(-1) +  y_rffgen(18) *  lur(-2) +  y_rffgen(19) *  lur(-3) +  y_rffgen(20) *  lur(-4))  _
+                     +  ( y_rffgen(21) *  pcnia +  y_rffgen(22) *  pcnia(-1) +  y_rffgen(23) *  pcnia(-2) +  y_rffgen(24) *  pcnia(-3) +  y_rffgen(25) *  pcnia(-4))  _
+                     +  ( y_rffgen(26) *  rstar +  y_rffgen(27) *  rstar(-1) +  y_rffgen(28) *  rstar(-2) +  y_rffgen(29) *  rstar(-3) +  y_rffgen(30) *  rstar(-4))  _
+                     +  ( y_rffgen(31) *  pitarg +  y_rffgen(32) *  pitarg(-1) +  y_rffgen(33) *  pitarg(-2) +  y_rffgen(34) *  pitarg(-3) +  y_rffgen(35) *  pitarg(-4))  _
+                     +  ( y_rffgen(36) *  lurnat +  y_rffgen(37) *  lurnat(-1) +  y_rffgen(38) *  lurnat(-2) +  y_rffgen(39) *  lurnat(-3) +  y_rffgen(40) *  lurnat(-4))  _
+                     +  ( y_rffgen(41) *  pcstar +  y_rffgen(42) *  pcstar(-1) +  y_rffgen(43) *  pcstar(-2) +  y_rffgen(44) *  pcstar(-3) +  y_rffgen(45) *  pcstar(-4))  _
+                     +  ( y_rffgen(46) *  picxfe +  y_rffgen(47) *  picxfe(-1) +  y_rffgen(48) *  picxfe(-2) +  y_rffgen(49) *  picxfe(-3) +  y_rffgen(50) *  picxfe(-4))  
+
+
+rffintay: rffintay - rffintay_aerr = y_rffintay(3) * rffe(-1) _
+                     + (1-y_rffintay(3)) * (rstar _
+                     +  ( picxfe +  picxfe(-1) +  picxfe(-2) +  picxfe(-3))  / 4  _
+                     + y_rffintay(1) * ( ( picxfe +  picxfe(-1) +  picxfe(-2) +  picxfe(-3))  / 4 -pitarg) _
+                     + y_rffintay(2) * xgap2) 
+
+
+rffrule: rffrule - rffrule_aerr =  (@recode((dmpex * 100 * ((1+rfffix/36000)^365-1) _
+                       + dmprr  * (rrfix +  ( picxfe +  picxfe(-1) +  picxfe(-2) +  picxfe(-3))  / 4 ) _
+                       + dmptay * rfftay  _
+                       + dmptlr * rfftlr  _
+                       + dmpintay * rffintay  _
+                       + dmpalt * 100*((1+rffalt/36000)^365-1) _
+                       + dmpgen * rffgen)>(rffmin),dmpex * 100 * ((1+rfffix/36000)^365-1) _
+                       + dmprr  * (rrfix +  ( picxfe +  picxfe(-1) +  picxfe(-2) +  picxfe(-3))  / 4 ) _
+                       + dmptay * rfftay  _
+                       + dmptlr * rfftlr  _
+                       + dmpintay * rffintay  _
+                       + dmpalt * 100*((1+rffalt/36000)^365-1) _
+                       + dmpgen * rffgen,rffmin)) 
+
+
+rfftay: rfftay - rfftay_aerr = rstar _
+                     +  ( picxfe +  picxfe(-1) +  picxfe(-2) +  picxfe(-3))  / 4  _
+                     + y_rfftay(1) * ( ( picxfe +  picxfe(-1) +  picxfe(-2) +  picxfe(-3))  / 4 -pitarg) _
+                     + y_rfftay(2) * xgap2 
+
+
+rfftlr: rfftlr - rfftlr_aerr = rstar  _
+                       + y_rfftlr(1) * pitarg _
+                       + y_rfftlr(2) * ( ( picxfe +  picxfe(-1) +  picxfe(-2) +  picxfe(-3)) ) _
+                       + y_rfftlr(3) * (lurnat + deuc * leuc - lur) 
+
+
+rfynic: d( rfynic, 0, 1 ) - rfynic_aerr = y_rfynic(1) _
+                + y_rfynic(2) * (rfynic(-1)-rfynil(-1)) _
+                + y_rfynic(3) * d( rfynic(-1), 0, 1 ) _
+                + y_rfynic(4) * d( rfynil, 0, 1 ) 
+
+
+rfynil: d( rfynil, 0, 1 ) - rfynil_aerr = y_rfynil(1) _
+                + y_rfynil(2) * rfynil(-1) _
+                + y_rfynil(3) * rg10(-1) _
+                + y_rfynil(4) * rtb(-1) _
+                + y_rfynil(5) * reqp(-1) _
+                + y_rfynil(6) * d( rfynil(-1), 0, 1 ) _
+                + y_rfynil(7) * d( rg10, 0, 1 ) _
+                + y_rfynil(8) * d( rtb, 0, 1 ) _
+                + y_rfynil(9) * d( reqp, 0, 1 ) 
+
+
+rg10: rg10 - rg10_aerr = (( (.01*rg10e + 1)^.5 - 1) * 200) 
+
+
+rg10e: rg10e - rg10e_aerr = zrff10 + rg10p 
+
+
+rg10p: rg10p - rg10p_aerr = y_rg10p(1) _
+                   + y_rg10p(2) * zgap10 _
+                   + y_rg10p(3) * d8095 _
+                   + y_rg10p(4) * (rg10p(-1) - y_rg10p(1)  - y_rg10p(2)*zgap10(-1) - y_rg10p(3)*d8095(-1)) 
+
+
+rg30: rg30 - rg30_aerr = (( (.01*rg30e + 1)^.5 - 1) * 200) 
+
+
+rg30e: rg30e - rg30e_aerr = zrff30 + rg30p 
+
+
+rg30p: rg30p - rg30p_aerr = y_rg30p(1) _
+                   + y_rg30p(2) * zgap30 _
+                   + y_rg30p(3) * d8095 _
+                   + y_rg30p(4) * (rg30p(-1) - y_rg30p(1) - y_rg30p(2)*zgap30(-1) - y_rg30p(3)*d8095(-1)) 
+
+
+rg5: rg5 - rg5_aerr = (( (.01*rg5e + 1)^.5 - 1) * 200) 
+
+
+rg5e: rg5e - rg5e_aerr = zrff5 + rg5p 
+
+
+rg5p: rg5p - rg5p_aerr = y_rg5p(1) _
+                 + y_rg5p(2) * zgap05 _
+                 + y_rg5p(3) * (rg5p(-1) - y_rg5p(1) - y_rg5p(2)*zgap05(-1)) 
+
+
+rgfint: rgfint - rgfint_aerr  _
+                = (y_rgfint(1) * rgfint(-1) + (1-y_rgfint(1))*rgw(-1))*(gfdbtn(-2)/gfdbtn(-1)) _
+                + rgw(-1)*(1-gfdbtn(-2)/gfdbtn(-1)) + y_rgfint(2) 
+
+
+rgw: rgw - rgw_aerr = y_rgw(1) * rtb _
+               + y_rgw(2) * rg5 _
+               + y_rgw(3) * rg10 _
+               + y_rgw(4) * rg30 
+
+
+rme: d( rme, 0, 1 ) - rme_aerr = y_rme(1) _
+               + y_rme(2) * d( rg10e, 0, 1) _
+               + y_rme(3) * d87 * d( rg10e, 0, 1) _
+               + y_rme(4) * (rg10e(-1)-rme(-1)) _
+               + y_rme(5) * d87 * (rg10e(-1)-rme(-1)) 
+
+
+rpd: rpd - rpd_aerr = 0.5*(7.2 + (1-trfcim)*(rg5e + rbbbe- rg10e) - zpib5) + 0.5*req 
+
+
+rrffe: rrffe - rrffe_aerr = rffe -  ( picxfe +  picxfe(-1) +  picxfe(-2) +  picxfe(-3))  / 4  
+
+
+rrmet: rrmet - rrmet_aerr = y_rrmet(1) * rrmet(-1) _
+                   + y_rrmet(2) * (rme-zpi10) 
+
+
+rrtr: rrtr - rrtr_aerr = y_rrtr(1) * rrtr(-1) _
+                 + y_rrtr(2) * rrffe 
+
+
+rspnia: rspnia - rspnia_aerr =  100 * yhsn / ydn 
+
+
+rstar: rstar - rstar_aerr = rstar(-1) _
+                   + y_rstar(1) * ((rrffe-rstar(-1))*drstar) 
+
+
+rtb: rtb - rtb_aerr = 36000/90 * (1-(.01*rtbe+1)^(-90/365)) 
+
+
+rtbe: rtbe - rtbe_aerr = y_rtbe(1) _
+                 +  ( y_rtbe(2) *  rtbe(-1) +  y_rtbe(3) *  rtbe(-2))  _
+                 +  ( y_rtbe(4) *  rffe +  y_rtbe(5) *  rffe(-1))  
+
+
+rtinv: rtinv - rtinv_aerr = (.01*rpd - .01*hgpkir) _
+                   * ( ( pxp*pkir +  pxp(-1)*pkir(-1)) /2)/pxb  
+
+
+rtpd: rtpd - rtpd_aerr = (.01*rpd + jrpd - .01*hgpdr) _
+                   * ((1-.01*tapdt-trfcim*(1-tapddp*.01*tapdt)*tapdd)/(1-trfcim)) _
+                   * ( ( pxp*pkpdr +  pxp(-1)*pkpdr(-1)) /2)/pxb  
+
+
+rtpi: rtpi - rtpi_aerr = (.01*rpd + jrpi - .01*hgpir) _
+                   * ( ( pxp*ppir +  pxp(-1)*ppir(-1)) /2)/pxb  
+
+
+rtps: rtps - rtps_aerr = (@recode(((.01*rpd + jrps - .01*hgppsr)  _
+                 * ((1-trfcim*tapsda)/(1-trfcim)) _
+                 * ( ( pxp*ppsr +  pxp(-1)*ppsr(-1)) /2)/pxb)>( .02),(.01*rpd + jrps - .01*hgppsr)  _
+                 * ((1-trfcim*tapsda)/(1-trfcim)) _
+                 * ( ( pxp*ppsr +  pxp(-1)*ppsr(-1)) /2)/pxb, .02)) 
+
+
+rtr: rtr - rtr_aerr = rrtr + ptr 
+
+
+tapdd: tapdd - tapdd_aerr = .5 * d2003 + .5 * d2003 * (2.0 / (2.0 + .01 * tapds * (rpd + zpib5))) _
+                     + .3 * d2002 + .7 * d2002 * (2.0 / (2.0 + .01 * tapds * (rpd + zpib5))) _
+                     + (d87 - d2002 - d2003) * (2.0 / (2.0 + .01 * tapds * (rpd + zpib5))) _
+                     + (d81-d87) * (1.5 / (1.5 + .01 * tapds * (rpd + zpib5))) _
+                     + (1-d81) _
+                           * (((1-tapdad)*(1-exp(-(.01*tapds*(rpd+zpib5)))) _
+                                     /(.01*tapds*(rpd+zpib5))) _
+                               + tapdad *2*(1-(1-exp(-(.01*tapds*(rpd+zpib5)))) _
+                                    /(.01*tapds*(rpd+zpib5))) _
+                                    /(.01 * tapds * (rpd + zpib5))) 
+
+
+tapsda: tapsda - tapsda_aerr = (1-tapsad)*(1-exp(-0.01*(rpd+zpib5)*tapssl))/ _
+                     (0.01*(rpd+zpib5)*tapssl) + _
+                     tapsad*(1-d69) * 2 *  _
+                     (1 - (1-exp(-0.01*(rpd+zpib5)*tapssl))/ _
+                     (0.01*(rpd+zpib5)*tapssl)) / (0.01*(rpd+zpib5)*tapssl) _
+                     + tapsad*(d69-d81) *(  (1.5 /  _
+                     (1.5 + .01 * tapssl * (rpd + zpib5))) *  _
+                     (1 - exp(-0.5-0.33*(0.01*(rpd+zpib5)*tapssl))) + _
+                     (exp(-0.5)/(0.67*(0.01*(rpd+zpib5)*tapssl)))* _
+                     (exp(-0.33*(0.01*(rpd+zpib5)*tapssl)) -  _
+                     exp(-(0.01*(rpd+zpib5)*tapssl))) ) _
+                     + tapsad * (d81-d86) *(  (1.75 /  _
+                     (1.75 + .01 * tapssl * (rpd + zpib5))) *  _
+                     (1 - exp(-0.75-0.428*(0.01*(rpd+zpib5)*tapssl))) + _
+                     (exp(-0.75)/(0.572*(0.01*(rpd+zpib5)*tapssl)))* _
+                     (exp(-0.428*(0.01*(rpd+zpib5)*tapssl)) -  _
+                     exp(-(0.01*(rpd+zpib5)*tapssl))) ) _
+                     + tapsad * d86 * (1-exp(-0.01*(rpd+zpib5)*tapssl))/ _
+                     (0.01*(rpd+zpib5)*tapssl) 
+
+
+tfcin: tfcin - tfcin_aerr = trfci * ynicpn 
+
+
+tfibn: tfibn - tfibn_aerr = trfib * ecnian 
+
+
+tfpn: tfpn - tfpn_aerr = trfp * (ypn - gftn - gstn) 
+
+
+tfsin: tfsin - tfsin_aerr = trfsi * yniln 
+
+
+trfci: trfci - trfci_aerr = y_trfci(1) _
+                   + y_trfci(2) * trfci(-1) _
+                   + y_trfci(3) * trfcim _
+                   + y_trfci(4) * .01*pxp*epd*ppdr*.01*tapdt/ynicpn _
+                   + y_trfci(5) * xgap2 _
+                   + y_trfci(6) * picnia 
+
+
+trfp: trfp - trfp_aerr = y_trfp(1) * trfpt _
+                 +  ( y_trfp(2) *  (trfp(-1)-trfpt(-1)) +  y_trfp(3) *  (trfp(-2)-trfpt(-2)))  _
+                 + y_trfp(4) * xgap2(-1) 
+
+
+trfpt: trfpt - trfpt_aerr = dfpex * trfptx _
+                   + dfpdbt * ( trfpt(-1) _
+                        + y_trfpt(1) * (gfdbtn(-1)/xgdpn(-1) - gfdrt(-1))  _
+                        + y_trfpt(2) * d( gfdbtn(-1)/xgdpn(-1) - gfdrt(-1), 0, 1 ) ) _
+                   + dfpsrp * ( trfpt(-1) _
+                        + y_trfpt(3) * ((gfsrpn(-1) - egfin(-1) + jygfgn(-1) _
+                              + jygfen(-1))/xgdpn(-1) - gfsrt(-1)))   
+
+
+trsci: trsci - trsci_aerr = y_trsci(1) * trsci(-1) _
+                   +  ( y_trsci(2) *  trscit +  y_trsci(3) *  trscit(-1))  _
+                   +  ( y_trsci(4) *  xgap2 +  y_trsci(5) *  xgap2(-1))  _
+                   + y_trsci(6) * d( trfci, 0, 1 ) 
+
+
+trsib: trsib - trsib_aerr = y_trsib(1) * trsib(-1) _
+                   +  ( y_trsib(2) *  trsibt +  y_trsib(3) *  trsibt(-1))  _
+                   + y_trsib(4) * xgap2 
+
+
+trsp: trsp - trsp_aerr = y_trsp(1) * trsp(-1) _
+                 +  ( y_trsp(2) *  trspt +  y_trsp(3) *  trspt(-1))  _
+                 + y_trsp(4) * xgap2(-1) _
+                 + y_trsp(5) * d( trfp, 0, 1 ) 
+
+
+trspt: trspt - trspt_aerr = dfpex * trsptx _
+                   + dfpdbt * ( trspt(-1) _
+                        + y_trspt(1) * (gsdbtn(-1)/xgdpn(-1) - gsdrt(-1))  _
+                        + y_trspt(2) * d( gsdbtn(-1)/xgdpn(-1) - gsdrt(-1), 0, 1 ) ) _
+                   + dfpsrp * ( trspt(-1) _
+                        + y_trspt(3) * ((gssrpn(-1) - egsin(-1) + jygsgn(-1) _
+                              + jygsen(-1))/xgdpn(-1) - gssrt(-1)))   
+
+
+trssi: trssi - trssi_aerr =  ( y_trssi(1) *  trssi(-1) +  y_trssi(2) *  trssi(-2))  _
+                   +  ( y_trssi(3) *  trssit +  y_trssi(4) *  trssit(-1))  _
+                   + y_trssi(5) * xgap2 
+
+
+tryh: tryh - tryh_aerr = (tfpn+tspn)/(yhln+yhptn) 
+
+
+tscin: tscin - tscin_aerr = trsci * ynicpn 
+
+
+tsibn: tsibn - tsibn_aerr = trsib * ecnian 
+
+
+tspn: tspn - tspn_aerr = trsp * (ypn - gftn - gstn) 
+
+
+tssin: tssin - tssin_aerr = trssi * yniln 
+
+
+uces: d( log(uces), 0, 1 ) - uces_aerr _
+                   = y_uces(1) * log(uces(-1)) _
+                   + y_uces(2) * log(pcer(-1)) _
+                   + y_uces(3) * log(ceng(-1)/xg(-1)) _
+                   + y_uces(4) * t47 _
+                   + y_uces(5) _
+                   + y_uces(6) * d( log(uces(-1)), 0, 1 ) _
+                   + y_uces(7) * d( log(pcer), 0, 1 ) _
+                   + y_uces(8) * d( log(ceng/xg), 0, 1 ) 
+
+
+ucfs: d( log(ucfs), 0, 1 ) - ucfs_aerr  _
+                   = y_ucfs(1) * log(ucfs(-1)) _
+                   + y_ucfs(2) * log(pcfr(-1)) _
+                   + y_ucfs(3) * t47 _
+                   + y_ucfs(4) _
+                   + y_ucfs(5) * d( log(ucfs(-1)), 0, 1 ) _
+                   + y_ucfs(6) * d( log(pcfrt), 0, 1 ) _
+                   + y_ucfs(7) * d( log(pcfr/pcfrt), 0, 1 ) 
+
+
+uqpct: log(uqpct) - uqpct_aerr = y_uqpct(1) + log(uqpct(-1)) + huqpct 
+
+
+uxbt: log(uxbt) - uxbt_aerr = y_uxbt(1) + log(uxbt(-1)) + .0025*huxb 
+
+
+veo: log(veo) - veo_aerr = log(pxb/pceng) 
+
+
+veoa: log(veoa) - veoa_aerr = y_veoa(1) * log(veoa(-1)) _
+                      + y_veoa(2) * log(veo(-1)) _
+                      + uveoa 
+
+
+vpd: vpd - vpd_aerr = uvpd*(pkpdr/ppdr)/rtpd 
+
+
+vpi: vpi - vpi_aerr = uvpi/rtpi 
+
+
+vps: vps - vps_aerr = uvps/rtps 
+
+
+wdnfcn: d( log(wdnfcn), 0, 1) - wdnfcn_aerr  _
+                = y_wdnfcn(1) * log(wdnfcn(-1)/(ynin(-1)-yniln(-1))) _
+                + y_wdnfcn(2)  _
+                + y_wdnfcn(3) * d( log(wdnfcn(-1)), 0, 1) _
+                + y_wdnfcn(4) * d( log(wdnfcn(-2)), 0, 1) _
+                + y_wdnfcn(5) * xgap2 
+
+
+wpo: wpo - wpo_aerr = wpon/(.01*pcnia) 
+
+
+wpon: wpon - wpon_aerr = wpon(-1)*exp( (1-((phouse(-1)*kh(-1)/116)/wpon(-1)))*rcgain/400  _
++ ((phouse(-1)*kh(-1)/116)/wpon(-1))*d( log(phouse), 0, 1) ) _
+                 + .25 * (ydn-ecnian-yhibn) _
+                 + .25 * (.01*pcdr*pcnia*(ecd-jkcd)) 
+
+
+wps: wps - wps_aerr = wpsn/(.01*pcnia) 
+
+
+wpsn: log(wpsn) - wpsn_aerr = log((ynicpn-tfcin-tscin)*.5)  _
+                      - .25 * (req-zdivgr) _
+                      + log(25) + 1 
+
+
+xb: xb - xb_aerr =  xbn/ (pxb/100) 
+
+
+xbn: xbn - xbn_aerr =  pxb/100*xbo + xgdpn -xgdo*pgdp/100 
+
+
+xbo: log(xbo) - xbo_aerr =  log(xbt) + y_xbo(1) * xgap2/100 
+
+
+xbt: log(xbt) - xbt_aerr = log(xb) + (log(xgpot/xg)  _
+   - .5 *(.035*empn/(.01*pceng*ceng) + .035*empn(-1)/(.01*pceng(-1)*ceng(-1))) * log(empt/emp)) / _
+  (1 -  .5 *(.035*empn/(.01*pceng*ceng) + .035*empn(-1)/(.01*pceng(-1)*ceng(-1)))) 
+
+
+xeng: xeng - xeng_aerr = uxeng * xgpot 
+
+
+xfs: log(xfs) - xfs_aerr = log(xfs(-1)) _
+  + .5*( (ecnian/xfsn + ecnian(-1)/xfsn(-1)) * d(log(ecnia), 0, 1) _
+  + (ehn/xfsn + ehn(-1)/xfsn(-1)) * d(log(eh), 0, 1) _
+  + (epdn/xfsn + epdn(-1)/xfsn(-1)) * d(log(epd), 0, 1) _
+  + (epsn/xfsn + epsn(-1)/xfsn(-1)) * d(log(eps), 0, 1) _
+  + (epin/xfsn + epin(-1)/xfsn(-1)) * d(log(epi), 0, 1) _
+  + (egfon/xfsn + egfon(-1)/xfsn(-1)) * d(log(egfo), 0, 1) _
+  + (egfin/xfsn + egfin(-1)/xfsn(-1)) * d(log(egfi), 0, 1) _
+  + (egfln/xfsn + egfln(-1)/xfsn(-1)) * d(log(egfl), 0, 1) _
+  + (egson/xfsn + egson(-1)/xfsn(-1)) * d(log(egso), 0, 1) _
+  + (egsin/xfsn + egsin(-1)/xfsn(-1)) * d(log(egsi), 0, 1) _
+  + (egsln/xfsn + egsln(-1)/xfsn(-1)) * d(log(egsl), 0, 1) _
+  + (exn/xfsn + exn(-1)/xfsn(-1)) * d(log(ex), 0, 1) _
+  - (emon/xfsn + emon(-1)/xfsn(-1)) * d(log(emo), 0, 1) _
+  - (empn/xfsn + empn(-1)/xfsn(-1)) * d(log(emp), 0, 1)) 
+
+
+xfsn: xfsn - xfsn_aerr = xgdpn - ein 
+
+
+xg: log(xg) - xg_aerr = log(xg(-1))   _
+  + (1 - .5*(.035*empn/(.01*pceng*ceng) + .035*empn(-1)/(.01*pceng(-1)*ceng(-1)))) * d(log(xb), 0, 1) _
+  +  .5*(.035*empn/(.01*pceng*ceng) + .035*empn(-1)/(.01*pceng(-1)*ceng(-1))) * d(log(emp), 0, 1) 
+
+
+xgap: xgap - xgap_aerr = 100*log(xgo/xgpot) 
+
+
+xgap2: xgap2 - xgap2_aerr = 100 * log(xgdo/xgdpt) 
+
+
+xgde: log(xgde) - xgde_aerr = log(xgde(-1)) _
+  + .5*( (xgdpn/xgden + xgdpn(-1)/xgden(-1)) * d(log(xgdp), 0, 1) _
+   - (exn/xgden + exn(-1)/xgden(-1)) * d(log(ex), 0, 1) _
+  + (emon/xgden + emon(-1)/xgden(-1)) * d(log(emo), 0, 1) _
+  + (empn/xgden + empn(-1)/xgden(-1)) * d(log(emp), 0, 1)) 
+
+
+xgden: xgden - xgden_aerr = xgdpn + emn - exn 
+
+
+xgdi: xgdi - xgdi_aerr = xgdo*mei 
+
+
+xgdin: xgdin - xgdin_aerr = xgdi *(pgdp/100) 
+
+
+xgdo: xgdo - xgdo_aerr = xgdp/mep 
+
+
+xgdp: xgdp - xgdp_aerr = xgdp(-1) * @sqrt( _
+          ( (xfsn(-1)/xgdpn(-1)) * (xfs/xfs(-1)) _
+           + (.01 * ei(-1)*pkir(-1)*pxp(-1) / xgdpn(-1)) * (ei/ei(-1))) _
+          * 1/ _
+          ((xfsn/xgdpn) * (xfs(-1)/xfs) _
+           + (.01 * ei*pkir*pxp / xgdpn) * (ei(-1)/ei))) 
+
+
+xgdpn: xgdpn - xgdpn_aerr = xpn + ein - emn + egfln + egsln 
+
+
+xgdpt: log(xgdpt) - xgdpt_aerr = log(xbt) + log(uxbt) 
+
+
+xgdptn: xgdptn - xgdptn_aerr = .01*pgdp*xgdpt 
+
+
+xgn: xgn - xgn_aerr = xbn + empn 
+
+
+xgo: log(xgo) - xgo_aerr =  log(xgpot) + y_xgo(1) * xgap2/100 
+
+
+xgpot: log(xgpot) - xgpot_aerr = (y_xgpot(1) * (log(leppot) + log(qlww) + log(lqualt)) _
+                         + y_xgpot(2) * log(ks) _
+                         + y_xgpot(3) * log(veoa) _
+                         + log(mfpt)) / (1-y_xgpot(4)) 
+
+
+xp: log(xp) - xp_aerr = log(xp(-1)) _
+  + .5 * (ecnian/xpn + ecnian(-1)/xpn(-1)) * d(log(ecnia), 0, 1) _
+  + .5 * (ehn/xpn + ehn(-1)/xpn(-1))       * d(log(eh), 0, 1) _
+  + .5 * (epdn/xpn + epdn(-1)/xpn(-1))     * d(log(epd), 0, 1) _
+  + .5 * (epin/xpn + epin(-1)/xpn(-1))     * d(log(epi), 0, 1) _
+  + .5 * (epsn/xpn + epsn(-1)/xpn(-1))     * d(log(eps), 0, 1) _
+  + .5 * (egfon/xpn + egfon(-1)/xpn(-1))   * d(log(egfo), 0, 1) _
+  + .5 * (egfin/xpn + egfin(-1)/xpn(-1))   * d(log(egfi), 0, 1) _
+  + .5 * (egson/xpn + egson(-1)/xpn(-1))   * d(log(egso), 0, 1) _
+  + .5 * (egsin/xpn + egsin(-1)/xpn(-1))   * d(log(egsi), 0, 1) _
+  + .5 * (exn/xpn + exn(-1)/xpn(-1))       * d(log(ex), 0, 1) 
+
+
+xpn: xpn - xpn_aerr = .01 * pxp * xp 
+
+
+ycsn: ycsn - ycsn_aerr = ynicpn - tfcin - tscin - ftcin - ynidn + jccacn 
+
+
+ydn: ydn - ydn_aerr = uyd * (ypn - tfpn - tspn) 
+
+
+ygfsn: ygfsn - ygfsn_aerr = gfsrpn + jygfgn + jygfen 
+
+
+ygssn: ygssn - ygssn_aerr = gssrpn + jygsgn + jygsen 
+
+
+yh: yh - yh_aerr = yhl + yht + yhp 
+
+
+yhgap: yhgap - yhgap_aerr = 100*(yhshr/zyhst-1) 
+
+
+yhibn: d( log(yhibn), 0, 1 ) - yhibn_aerr _
+                          = y_yhibn(1) *  ( picxfe/1600 +  picxfe(-1)/1600 +  picxfe(-2)/1600 +  picxfe(-3)/1600)   _
+                          + y_yhibn(2)  _
+                          + y_yhibn(3) * log(ecnian(-1)/yhibn(-1)) _
+                          + y_yhibn(4) * (d( log(yhibn(-1)), 0, 1 ) -  ( picxfe(-1)/1600 +  picxfe(-2)/1600 +  picxfe(-3)/1600 +  picxfe(-4)/1600) ) _
+                          + y_yhibn(5) * d79a _
+                          + y_yhibn(6) * rcar(-1) _
+                          + y_yhibn(7) * log(.01*pcdr(-1)*pcnia(-1)*ecd(-1)/ecnian(-1)) _
+                          + y_yhibn(8) * d( rffe, 0, 1 ) 
+
+
+yhin: yhin - yhin_aerr = uyhi * (yniin + gfintn + gsintn + yhibn) 
+
+
+yhl: yhl - yhl_aerr = (1-tryh)*yhln/(.01*pcnia) 
+
+
+yhln: yhln - yhln_aerr = uyhln * (yniln - tfsin - tssin) 
+
+
+yhp: yhp - yhp_aerr = ((1-tryh)*yhptn+yhpntn)/(.01*pcnia) 
+
+
+yhpcd: log(yhpcd) - yhpcd_aerr = log(y_yhpcd(1)) + log(kcd(-1)) 
+
+
+yhpgap: yhpgap - yhpgap_aerr = 100*(yhpshr/zyhpst-1) 
+
+
+yhpntn: yhpntn - yhpntn_aerr = .01*pcnia*pcdr*yhpcd  _
+                     - yhibn + ynicpn - tfcin - tscin - ynidn _
+                     - .01 * zpi10 *(gfdbtn+gsdbtn) 
+
+
+yhpshr: yhpshr - yhpshr_aerr = yhp/yh 
+
+
+yhptn: yhptn - yhptn_aerr = uyhptn*(ynisen+yhin+ynidn) 
+
+
+yhshr: yhshr - yhshr_aerr = yh/xgdp 
+
+
+yhsn: yhsn - yhsn_aerr = yhln + yhtn + yhptn - tfpn - tspn - ecnian - yhibn _
+                 + uyhsn * xgdptn 
+
+
+yht: yht - yht_aerr = yhtn/(.01*pcnia) 
+
+
+yhtgap: yhtgap - yhtgap_aerr = 100*(yhtshr/zyhtst-1) 
+
+
+yhtn: yhtn - yhtn_aerr = uyhtn*(gftn+gstn) 
+
+
+yhtshr: yhtshr - yhtshr_aerr = yht/yh 
+
+
+ykin: ykin - ykin_aerr = .01*rtinv*pxb* (ki + ki(-1)) /2 
+
+
+ykpdn: ykpdn - ykpdn_aerr = .01*rtpd*pxb* ( kpd +  kpd(-1)) /2 
+
+
+ykpsn: ykpsn - ykpsn_aerr = .01*rtps*pxb* ( kps +  kps(-1)) /2 
+
+
+ynicpn: ynicpn - ynicpn_aerr = uynicp * (@recode((ynin-yniln-yniin-ynisen-tfibn-tsibn+gfsubn+gssubn)>(tfcin+tscin+.01*xgdpn),ynin-yniln-yniin-ynisen-tfibn-tsibn+gfsubn+gssubn,tfcin+tscin+.01*xgdpn)) 
+
+
+ynidn: d( log((ynidn-ymsdn)/pxb), 0, 1 ) - ynidn_aerr =  _
+                          y_ynidn(1) * log(qynidn(-1)/(ynidn(-1)-ymsdn(-1))) _
+                        + y_ynidn(2) * d( log((ynidn(-1)-ymsdn(-1))/pxb(-1)), 0, 1 ) _
+                        + y_ynidn(3) * zynid 
+
+
+yniin: yniin/(ynin(-1)-yniln(-1)) - yniin_aerr  _
+                 = y_yniin(1) _
+                 + y_yniin(2) * (yniin(-1)/(ynin(-2)-yniln(-2))) _
+                 + y_yniin(3) * (.01*rrmet*.01*phr(-1)*pxp(-1)*kh(-1)/(ynin(-1)-yniln(-1))) _
+                 + y_yniin(4) * ((.01*rbbbe)*(wdnfcn(-1)/(ynin(-1)-yniln(-1)))) _
+                 + y_yniin(5) * (.01*d( rbbbe*(wdnfcn(-1)/(ynin(-1)-yniln(-1))), 0, 1 )) _
+                 + y_yniin(6) * (.01*fnin(-1)/(ynin(-1)-yniln(-1))) 
+
+
+yniln: yniln - yniln_aerr = 0.01 *  uyl * (pl*lhp + pgfl*egfl + pgsl*egsl) 
+
+
+ynin: ynin - ynin_aerr = uyni*(xgdin+fynin-jccan) 
+
+
+ynisen: ynisen - ynisen_aerr = uysen*xbn 
+
+
+ypn: ypn - ypn_aerr = uyp * (yhln + yhtn + yhptn) 
+
+
+zdivgr: zdivgr-zdivgr_aerr = y_zdivgr(1) _
+          +  ( y_zdivgr(2) *  picnia +  y_zdivgr(3) *  picnia(-1) +  y_zdivgr(4) *  picnia(-2) +  y_zdivgr(5) *  picnia(-3))  _
+          +  ( y_zdivgr(6) *  rffe +  y_zdivgr(7) *  rffe(-1) +  y_zdivgr(8) *  rffe(-2) +  y_zdivgr(9) *  rffe(-3))  _
+          + y_zdivgr(10) * rtr _
+          + y_zdivgr(11) * ptr _
+          +  ( y_zdivgr(12) *  xgap +  y_zdivgr(13) *  xgap(-1) +  y_zdivgr(14) *  xgap(-2) +  y_zdivgr(15) *  xgap(-3))  _
+          +  ( y_zdivgr(16) *  (400*d( log((ynicpn-tfcin-tscin)*.5/(.01*pxg)), 0, 1 )) +  y_zdivgr(17) *  (400*d( log((ynicpn(-1)-tfcin(-1)-tscin(-1))*.5/(.01*pxg(-1))), 0, 1 )) +  y_zdivgr(18) *  (400*d( log((ynicpn(-2)-tfcin(-2)-tscin(-2))*.5/(.01*pxg(-2))), 0, 1 )) +  y_zdivgr(19) *  (400*d( log((ynicpn(-3)-tfcin(-3)-tscin(-3))*.5/(.01*pxg(-3))), 0, 1 )))  _
+          + y_zdivgr(20) * hgx 
+
+
+zecd: zecd-zecd_aerr =  ( y_zecd(1) *  picnia(-1) +  y_zecd(2) *  picnia(-2) +  y_zecd(3) *  picnia(-3) +  y_zecd(4) *  picnia(-4))  _
+               +  ( y_zecd(5) *  rffe(-1) +  y_zecd(6) *  rffe(-2) +  y_zecd(7) *  rffe(-3) +  y_zecd(8) *  rffe(-4))  _
+               +  ( y_zecd(9) *  xgap2(-1) +  y_zecd(10) *  xgap2(-2) +  y_zecd(11) *  xgap2(-3) +  y_zecd(12) *  xgap2(-4))  _
+               + y_zecd(13) * ptr(-1) _
+               + y_zecd(14) * rtr(-1) _
+               +  ( y_zecd(15) *  yhgap(-1) +  y_zecd(16) *  yhgap(-2) +  y_zecd(17) *  yhgap(-3) +  y_zecd(18) *  yhgap(-4))  _
+               +  ( y_zecd(19) *  yhtgap(-1) +  y_zecd(20) *  yhtgap(-2) +  y_zecd(21) *  yhtgap(-3) +  y_zecd(22) *  yhtgap(-4))  _
+               +  ( y_zecd(23) *  yhpgap(-1) +  y_zecd(24) *  yhpgap(-2) +  y_zecd(25) *  yhpgap(-3) +  y_zecd(26) *  yhpgap(-4))  _
+               + y_zecd(27)* (hggdpt(-1)/400) _
+               + y_zecd(28)* (hgpcdr(-1)/400) _
+               +  ( y_zecd(29) *  d( log(qecd(-1)), 0, 1 ) +  y_zecd(30) *  d( log(qecd(-2)), 0, 1 ) +  y_zecd(31) *  d( log(qecd(-3)), 0, 1 ) +  y_zecd(32) *  d( log(qecd(-4)), 0, 1 ))  
+
+
+zeco: zeco-zeco_aerr =  _
+                ( y_zeco(1) *  picnia(-1) +  y_zeco(2) *  picnia(-2) +  y_zeco(3) *  picnia(-3) +  y_zeco(4) *  picnia(-4))  _
+             +  ( y_zeco(5) *  rffe(-1) +  y_zeco(6) *  rffe(-2) +  y_zeco(7) *  rffe(-3) +  y_zeco(8) *  rffe(-4))  _
+             +  ( y_zeco(9) *  xgap2(-1) +  y_zeco(10) *  xgap2(-2) +  y_zeco(11) *  xgap2(-3) +  y_zeco(12) *  xgap2(-4))  _
+             + y_zeco(13) * ptr(-1) _
+             + y_zeco(14) * rtr(-1) _
+             +  ( y_zeco(15) *  yhgap(-1) +  y_zeco(16) *  yhgap(-2) +  y_zeco(17) *  yhgap(-3) +  y_zeco(18) *  yhgap(-4))  _
+             +  ( y_zeco(19) *  yhtgap(-1) +  y_zeco(20) *  yhtgap(-2) +  y_zeco(21) *  yhtgap(-3) +  y_zeco(22) *  yhtgap(-4))  _
+             +  ( y_zeco(23) *  yhpgap(-1) +  y_zeco(24) *  yhpgap(-2) +  y_zeco(25) *  yhpgap(-3) +  y_zeco(26) *  yhpgap(-4))  _
+             + y_zeco(27)* ((hggdpt(-1)/400)) _
+             +  ( y_zeco(28)  _
+             * (d( log(qeco(-1)), 0, 1 )) +  y_zeco(29)  _
+             * (d( log(qeco(-2)), 0, 1 )) +  y_zeco(30)  _
+             * (d( log(qeco(-3)), 0, 1 )) +  y_zeco(31)  _
+             * (d( log(qeco(-4)), 0, 1 )))  
+
+
+zeh: zeh-zeh_aerr =  _
+                ( y_zeh(1) *  picnia(-1) +  y_zeh(2) *  picnia(-2) +  y_zeh(3) *  picnia(-3) +  y_zeh(4) *  picnia(-4))  _
+             +  ( y_zeh(5) *  rffe(-1) +  y_zeh(6) *  rffe(-2) +  y_zeh(7) *  rffe(-3) +  y_zeh(8) *  rffe(-4))  _
+             +  ( y_zeh(9) *  xgap2(-1) +  y_zeh(10) *  xgap2(-2) +  y_zeh(11) *  xgap2(-3) +  y_zeh(12) *  xgap2(-4))  _
+             + y_zeh(13) * ptr(-1) _
+             + y_zeh(14) * rtr(-1) _
+             +  ( y_zeh(15) *  yhgap(-1) +  y_zeh(16) *  yhgap(-2) +  y_zeh(17) *  yhgap(-3) +  y_zeh(18) *  yhgap(-4))  _
+             +  ( y_zeh(19) *  yhtgap(-1) +  y_zeh(20) *  yhtgap(-2) +  y_zeh(21) *  yhtgap(-3) +  y_zeh(22) *  yhtgap(-4))  _
+             +  ( y_zeh(23) *  yhpgap(-1) +  y_zeh(24) *  yhpgap(-2) +  y_zeh(25) *  yhpgap(-3) +  y_zeh(26) *  yhpgap(-4))  _
+             + y_zeh(27)* (hggdpt(-1)/400) _
+             +  ( y_zeh(28) *  d( log(qeh(-1)), 0, 1 ) +  y_zeh(29) *  d( log(qeh(-2)), 0, 1 ) +  y_zeh(30) *  d( log(qeh(-3)), 0, 1 ) +  y_zeh(31) *  d( log(qeh(-4)), 0, 1 ))  
+
+
+zgap05:  zgap05-zgap05_aerr = y_zgap05(1) _
+                    +  ( y_zgap05(2) *  picnia +  y_zgap05(3) *  picnia(-1) +  y_zgap05(4) *  picnia(-2) +  y_zgap05(5) *  picnia(-3))  _
+                    +  ( y_zgap05(6) *  rffe +  y_zgap05(7) *  rffe(-1) +  y_zgap05(8) *  rffe(-2) +  y_zgap05(9) *  rffe(-3))  _
+                    + y_zgap05(10) * rtr _
+                    + y_zgap05(11) * ptr _
+                    +  ( y_zgap05(12) *  xgap +  y_zgap05(13) *  xgap(-1) +  y_zgap05(14) *  xgap(-2) +  y_zgap05(15) *  xgap(-3))  
+
+
+zgap10:  zgap10-zgap10_aerr = y_zgap10(1) _
+                    +  ( y_zgap10(2) *  picnia +  y_zgap10(3) *  picnia(-1) +  y_zgap10(4) *  picnia(-2) +  y_zgap10(5) *  picnia(-3))  _
+                    +  ( y_zgap10(6) *  rffe +  y_zgap10(7) *  rffe(-1) +  y_zgap10(8) *  rffe(-2) +  y_zgap10(9) *  rffe(-3))  _
+                    + y_zgap10(10) * rtr _
+                    + y_zgap10(11) * ptr _
+                    +  ( y_zgap10(12) *  xgap +  y_zgap10(13) *  xgap(-1) +  y_zgap10(14) *  xgap(-2) +  y_zgap10(15) *  xgap(-3))  
+
+
+zgap30:  zgap30-zgap30_aerr = y_zgap30(1) _
+                    +  ( y_zgap30(2) *  picnia +  y_zgap30(3) *  picnia(-1) +  y_zgap30(4) *  picnia(-2) +  y_zgap30(5) *  picnia(-3))  _
+                    +  ( y_zgap30(6) *  rffe +  y_zgap30(7) *  rffe(-1) +  y_zgap30(8) *  rffe(-2) +  y_zgap30(9) *  rffe(-3))  _
+                    + y_zgap30(10) * rtr _
+                    + y_zgap30(11) * ptr _
+                    +  ( y_zgap30(12) *  xgap +  y_zgap30(13) *  xgap(-1) +  y_zgap30(14) *  xgap(-2) +  y_zgap30(15) *  xgap(-3))  
+
+
+zgapc2:  zgapc2-zgapc2_aerr =  ( y_zgapc2(1) *  picnia(-1) +  y_zgapc2(2) *  picnia(-2) +  y_zgapc2(3) *  picnia(-3) +  y_zgapc2(4) *  picnia(-4))  _
+               +  ( y_zgapc2(5) *  rffe(-1) +  y_zgapc2(6) *  rffe(-2) +  y_zgapc2(7) *  rffe(-3) +  y_zgapc2(8) *  rffe(-4))  _
+               +  ( y_zgapc2(9) *  xgap2(-1) +  y_zgapc2(10) *  xgap2(-2) +  y_zgapc2(11) *  xgap2(-3) +  y_zgapc2(12) *  xgap2(-4))  _
+               + y_zgapc2(13) * ptr(-1) _
+               + y_zgapc2(14) * rtr(-1) 
+
+
+zlhp:  zlhp-zlhp_aerr =  ( y_zlhp(1) *  picnia(-1) +  y_zlhp(2) *  picnia(-2) +  y_zlhp(3) *  picnia(-3) +  y_zlhp(4) *  picnia(-4))  _
+                +  ( y_zlhp(5) *  rffe(-1) +  y_zlhp(6) *  rffe(-2) +  y_zlhp(7) *  rffe(-3) +  y_zlhp(8) *  rffe(-4))  _
+                + y_zlhp(9) * rtr(-1) _
+                + y_zlhp(10) * ptr(-1) _
+                +  ( y_zlhp(11) *  xgap(-1) +  y_zlhp(12) *  xgap(-2) +  y_zlhp(13) *  xgap(-3) +  y_zlhp(14) *  xgap(-4))  _
+                + y_zlhp(15) * (d( log(xgo(-1)), 0, 1 ) - (d( log(lprdt(-1)), 0, 1 ))) _
+                + y_zlhp(16) * ((hlept(-1) - hqlww(-1))/400) 
+
+
+zpi10:  zpi10-zpi10_aerr =  ( y_zpi10(1) *  picnia(-1) +  y_zpi10(2) *  picnia(-2) +  y_zpi10(3) *  picnia(-3) +  y_zpi10(4) *  picnia(-4))  _
+                  +  ( y_zpi10(5) *  rffe(-1) +  y_zpi10(6) *  rffe(-2) +  y_zpi10(7) *  rffe(-3) +  y_zpi10(8) *  rffe(-4))  _
+                  + y_zpi10(9) * rtr(-1) _
+                  + y_zpi10(10) * ptr(-1) _
+                  +  ( y_zpi10(11) *  xgap(-1) +  y_zpi10(12) *  xgap(-2) +  y_zpi10(13) *  xgap(-3) +  y_zpi10(14) *  xgap(-4))  
+
+
+zpi10f:  zpi10f-zpi10f_aerr = zpi10 
+
+
+zpi5:  zpi5-zpi5_aerr =  ( y_zpi5(1) *  picnia(-1) +  y_zpi5(2) *  picnia(-2) +  y_zpi5(3) *  picnia(-3) +  y_zpi5(4) *  picnia(-4))  _
+                +  ( y_zpi5(5) *  rffe(-1) +  y_zpi5(6) *  rffe(-2) +  y_zpi5(7) *  rffe(-3) +  y_zpi5(8) *  rffe(-4))  _
+                + y_zpi5(9) * rtr(-1) _
+                + y_zpi5(10) * ptr(-1) _
+                +  ( y_zpi5(11) *  xgap(-1) +  y_zpi5(12) *  xgap(-2) +  y_zpi5(13) *  xgap(-3) +  y_zpi5(14) *  xgap(-4))  
+
+
+zpib5:  zpib5-zpib5_aerr = y_zpib5(1) _
+          +  ( y_zpib5(2) *  picnia(-1) +  y_zpib5(3) *  picnia(-2) +  y_zpib5(4) *  picnia(-3) +  y_zpib5(5) *  picnia(-4))  _
+          +  ( y_zpib5(6) *  rffe(-1) +  y_zpib5(7) *  rffe(-2) +  y_zpib5(8) *  rffe(-3) +  y_zpib5(9) *  rffe(-4))  _
+          + y_zpib5(10) * rtr(-1) _
+          + y_zpib5(11) * ptr(-1) _
+          +  ( y_zpib5(12) *  xgap(-1) +  y_zpib5(13) *  xgap(-2) +  y_zpib5(14) *  xgap(-3) +  y_zpib5(15) *  xgap(-4))  _
+          +  ( y_zpib5(16) *  (400*d( log(pxb(-1)), 0, 1 )) +  y_zpib5(17) *  (400*d( log(pxb(-2)), 0, 1 )) +  y_zpib5(18) *  (400*d( log(pxb(-3)), 0, 1 )) +  y_zpib5(19) *  (400*d( log(pxb(-4)), 0, 1 )))  
+
+
+zpic30:  zpic30-zpic30_aerr = y_zpic30(1) _
+          +  ( y_zpic30(2) *  picnia +  y_zpic30(3) *  picnia(-1) +  y_zpic30(4) *  picnia(-2) +  y_zpic30(5) *  picnia(-3))  _
+          +  ( y_zpic30(6) *  rffe +  y_zpic30(7) *  rffe(-1) +  y_zpic30(8) *  rffe(-2) +  y_zpic30(9) *  rffe(-3))  _
+          + y_zpic30(10) * rtr _
+          + y_zpic30(11) * ptr _
+          +  ( y_zpic30(12) *  xgap +  y_zpic30(13) *  xgap(-1) +  y_zpic30(14) *  xgap(-2) +  y_zpic30(15) *  xgap(-3))  
+
+
+zpic58:  zpic58-zpic58_aerr =  ( y_zpic58(1) *  picnia +  y_zpic58(2) *  picnia(-1) +  y_zpic58(3) *  picnia(-2) +  y_zpic58(4) *  picnia(-3))  _
+                  +  ( y_zpic58(5) *  rffe +  y_zpic58(6) *  rffe(-1) +  y_zpic58(7) *  rffe(-2) +  y_zpic58(8) *  rffe(-3))  _
+                  + y_zpic58(9) * rtr _
+                  + y_zpic58(10) * ptr _
+                  +  ( y_zpic58(11) *  xgap +  y_zpic58(12) *  xgap(-1) +  y_zpic58(13) *  xgap(-2) +  y_zpic58(14) *  xgap(-3))  
+
+
+zpicxfe:   zpicxfe-zpicxfe_aerr =  ( y_zpicxfe(1) *  picxfe(-1) +  y_zpicxfe(2) *  picxfe(-2) +  y_zpicxfe(3) *  picxfe(-3) +  y_zpicxfe(4) *  picxfe(-4))  _
+                 +  ( y_zpicxfe(5) *  pieci(-1) +  y_zpicxfe(6) *  pieci(-2) +  y_zpicxfe(7) *  pieci(-3) +  y_zpicxfe(8) *  pieci(-4))  _
+                 +  ( y_zpicxfe(9) *  rffe(-1) +  y_zpicxfe(10) *  rffe(-2) +  y_zpicxfe(11) *  rffe(-3) +  y_zpicxfe(12) *  rffe(-4))  _
+                 +  ( y_zpicxfe(13) *  xgap2(-1) +  y_zpicxfe(14) *  xgap2(-2) +  y_zpicxfe(15) *  xgap2(-3) +  y_zpicxfe(16) *  xgap2(-4))  _
+                 + y_zpicxfe(17) * rtr(-1) _
+                 + y_zpicxfe(18) * ptr(-1) _
+                 + y_zpicxfe(19) * log(qpcnia(-1)/pcnia(-1)) _
+                 + y_zpicxfe(20) * log(qpl(-1)/pl(-1)) _
+                 + y_zpicxfe(21) * (hlprdt(-1) - 400*huqpct(-1)) _
+                 +  ( y_zpicxfe(22) * (lur(-1) - lurnat(-1)) +  y_zpicxfe(23) * (lur(-2) - lurnat(-2)))  
+
+
+zpieci:   zpieci-zpieci_aerr =  ( y_zpieci(1) *  picxfe(-1) +  y_zpieci(2) *  picxfe(-2) +  y_zpieci(3) *  picxfe(-3) +  y_zpieci(4) *  picxfe(-4))  _
+                 +  ( y_zpieci(5) *  pieci(-1) +  y_zpieci(6) *  pieci(-2) +  y_zpieci(7) *  pieci(-3) +  y_zpieci(8) *  pieci(-4))  _
+                 +  ( y_zpieci(9) *  rffe(-1) +  y_zpieci(10) *  rffe(-2) +  y_zpieci(11) *  rffe(-3) +  y_zpieci(12) *  rffe(-4))  _
+                 +  ( y_zpieci(13) *  xgap2(-1) +  y_zpieci(14) *  xgap2(-2) +  y_zpieci(15) *  xgap2(-3) +  y_zpieci(16) *  xgap2(-4))  _
+                 + y_zpieci(17) * rtr(-1) _
+                 + y_zpieci(18) * ptr(-1) _
+                 + y_zpieci(19) * log(qpcnia(-1)/pcnia(-1)) _
+                 + y_zpieci(20) * log(qpl(-1)/pl(-1)) _
+                 + y_zpieci(21) * (hlprdt(-1) - 400*huqpct(-1)) _
+                 +  ( y_zpieci(22) * (lur(-1) - lurnat(-1)) +  y_zpieci(23) * (lur(-2) - lurnat(-2)))  
+
+
+zrff10:  zrff10-zrff10_aerr = y_zrff10(1) _
+                    +  ( y_zrff10(2) *  picnia +  y_zrff10(3) *  picnia(-1) +  y_zrff10(4) *  picnia(-2) +  y_zrff10(5) *  picnia(-3))  _
+                    +  ( y_zrff10(6) *  rffe +  y_zrff10(7) *  rffe(-1) +  y_zrff10(8) *  rffe(-2) +  y_zrff10(9) *  rffe(-3))  _
+                    + y_zrff10(10) * rtr _
+                    + y_zrff10(11) * ptr _
+                    +  ( y_zrff10(12) *  xgap +  y_zrff10(13) *  xgap(-1) +  y_zrff10(14) *  xgap(-2) +  y_zrff10(15) *  xgap(-3))  
+
+
+zrff30:  zrff30-zrff30_aerr = y_zrff30(1) _
+                    +  ( y_zrff30(2) *  picnia +  y_zrff30(3) *  picnia(-1) +  y_zrff30(4) *  picnia(-2) +  y_zrff30(5) *  picnia(-3))  _
+                    +  ( y_zrff30(6) *  rffe +  y_zrff30(7) *  rffe(-1) +  y_zrff30(8) *  rffe(-2) +  y_zrff30(9) *  rffe(-3))  _
+                    + y_zrff30(10) * rtr _
+                    + y_zrff30(11) * ptr _
+                    +  ( y_zrff30(12) *  xgap +  y_zrff30(13) *  xgap(-1) +  y_zrff30(14) *  xgap(-2) +  y_zrff30(15) *  xgap(-3))  
+
+
+zrff5:  zrff5-zrff5_aerr = y_zrff5(1) _
+                  +  ( y_zrff5(2) *  picnia +  y_zrff5(3) *  picnia(-1) +  y_zrff5(4) *  picnia(-2) +  y_zrff5(5) *  picnia(-3))  _
+                  +  ( y_zrff5(6) *  rffe +  y_zrff5(7) *  rffe(-1) +  y_zrff5(8) *  rffe(-2) +  y_zrff5(9) *  rffe(-3))  _
+                  + y_zrff5(10) * rtr _
+                  + y_zrff5(11) * ptr _
+                  +  ( y_zrff5(12) *  xgap +  y_zrff5(13) *  xgap(-1) +  y_zrff5(14) *  xgap(-2) +  y_zrff5(15) *  xgap(-3))  
+
+
+zvpd:  zvpd-zvpd_aerr = y_zvpd(1) _
+                +  ( y_zvpd(2) *  picnia(-1) +  y_zvpd(3) *  picnia(-2) +  y_zvpd(4) *  picnia(-3) +  y_zvpd(5) *  picnia(-4))  _
+                +  ( y_zvpd(6) *  rffe(-1) +  y_zvpd(7) *  rffe(-2) +  y_zvpd(8) *  rffe(-3) +  y_zvpd(9) *  rffe(-4))  _
+                + y_zvpd(10) * rtr(-1) _
+                + y_zvpd(11) * ptr(-1) _
+                +  ( y_zvpd(12) *  xgap(-1) +  y_zvpd(13) *  xgap(-2) +  y_zvpd(14) *  xgap(-3) +  y_zvpd(15) *  xgap(-4))  _
+                +  ( y_zvpd(16) *  d( log(xbo(-1)), 0, 1 ) +  y_zvpd(17) *  d( log(xbo(-2)), 0, 1 ) +  y_zvpd(18) *  d( log(xbo(-3)), 0, 1 ) +  y_zvpd(19) *  d( log(xbo(-4)), 0, 1 ))  _
+                +  ( y_zvpd(20) *  d( log(vpd(-1)), 0, 1 ) +  y_zvpd(21) *  d( log(vpd(-2)), 0, 1 ) +  y_zvpd(22) *  d( log(vpd(-3)), 0, 1 ) +  y_zvpd(23) *  d( log(vpd(-4)), 0, 1 ))  _
+                + y_zvpd(24) * hgvpd(-1) 
+
+
+zvpi:  zvpi-zvpi_aerr =  ( y_zvpi(1) *  picnia(-1) +  y_zvpi(2) *  picnia(-2) +  y_zvpi(3) *  picnia(-3) +  y_zvpi(4) *  picnia(-4))  _
+                +  ( y_zvpi(5) *  rffe(-1) +  y_zvpi(6) *  rffe(-2) +  y_zvpi(7) *  rffe(-3) +  y_zvpi(8) *  rffe(-4))  _
+                + y_zvpi(9) * rtr(-1) _
+                + y_zvpi(10) * ptr(-1) _
+                +  ( y_zvpi(11) *  xgap(-1) +  y_zvpi(12) *  xgap(-2) +  y_zvpi(13) *  xgap(-3) +  y_zvpi(14) *  xgap(-4))  _
+                +  ( y_zvpi(15) *  d( log(xbo(-1)), 0, 1 ) +  y_zvpi(16) *  d( log(xbo(-2)), 0, 1 ) +  y_zvpi(17) *  d( log(xbo(-3)), 0, 1 ) +  y_zvpi(18) *  d( log(xbo(-4)), 0, 1 ))  _
+                +  ( y_zvpi(19) *  d( log(vpi(-1)), 0, 1 ) +  y_zvpi(20) *  d( log(vpi(-2)), 0, 1 ) +  y_zvpi(21) *  d( log(vpi(-3)), 0, 1 ) +  y_zvpi(22) *  d( log(vpi(-4)), 0, 1 ))  _
+                + y_zvpi(23) * hgvpi(-1) 
+
+
+zvps:  zvps-zvps_aerr =  ( y_zvps(1) *  picnia(-1) +  y_zvps(2) *  picnia(-2) +  y_zvps(3) *  picnia(-3) +  y_zvps(4) *  picnia(-4))  _
+                +  ( y_zvps(5) *  rffe(-1) +  y_zvps(6) *  rffe(-2) +  y_zvps(7) *  rffe(-3) +  y_zvps(8) *  rffe(-4))  _
+                + y_zvps(9) * rtr(-1) _
+                + y_zvps(10) * ptr(-1) _
+                +  ( y_zvps(11) *  xgap(-1) +  y_zvps(12) *  xgap(-2) +  y_zvps(13) *  xgap(-3) +  y_zvps(14) *  xgap(-4))  _
+                +  ( y_zvps(15) *  d( log(xbo(-1)), 0, 1 ) +  y_zvps(16) *  d( log(xbo(-2)), 0, 1 ) +  y_zvps(17) *  d( log(xbo(-3)), 0, 1 ) +  y_zvps(18) *  d( log(xbo(-4)), 0, 1 ))  _
+                +  ( y_zvps(19) *  d( log(vps(-1)), 0, 1 ) +  y_zvps(20) *  d( log(vps(-2)), 0, 1 ) +  y_zvps(21) *  d( log(vps(-3)), 0, 1 ) +  y_zvps(22) *  d( log(vps(-4)), 0, 1 ))  _
+                + y_zvps(23) * hgvps(-1) 
+
+
+zxbd:  zxbd-zxbd_aerr = y_zxbd(1) _
+              +  ( y_zxbd(2) *  picnia(-1) +  y_zxbd(3) *  picnia(-2) +  y_zxbd(4) *  picnia(-3) +  y_zxbd(5) *  picnia(-4))  _
+              +  ( y_zxbd(6) *  rffe(-1) +  y_zxbd(7) *  rffe(-2) +  y_zxbd(8) *  rffe(-3) +  y_zxbd(9) *  rffe(-4))  _
+              + y_zxbd(10) * rtr(-1) _
+              + y_zxbd(11) * ptr(-1) _
+              +  ( y_zxbd(12) *  xgap(-1) +  y_zxbd(13) *  xgap(-2) +  y_zxbd(14) *  xgap(-3) +  y_zxbd(15) *  xgap(-4))  _
+              +  ( y_zxbd(16) *  d( log(xbo(-1)), 0, 1 ) +  y_zxbd(17) *  d( log(xbo(-2)), 0, 1 ) +  y_zxbd(18) *  d( log(xbo(-3)), 0, 1 ) +  y_zxbd(19) *  d( log(xbo(-4)), 0, 1 ))  _
+              +  ( y_zxbd(20) *  d( log(vpd(-1)), 0, 1 ) +  y_zxbd(21) *  d( log(vpd(-2)), 0, 1 ) +  y_zxbd(22) *  d( log(vpd(-3)), 0, 1 ) +  y_zxbd(23) *  d( log(vpd(-4)), 0, 1 ))  _
+              + y_zxbd(24) * hgx(-1)/400 
+
+
+zxbi:  zxbi-zxbi_aerr =  _
+                 ( y_zxbi(1) *  picnia(-1) +  y_zxbi(2) *  picnia(-2) +  y_zxbi(3) *  picnia(-3) +  y_zxbi(4) *  picnia(-4))  _
+              +  ( y_zxbi(5) *  rffe(-1) +  y_zxbi(6) *  rffe(-2) +  y_zxbi(7) *  rffe(-3) +  y_zxbi(8) *  rffe(-4))  _
+              + y_zxbi(9) * rtr(-1) _
+              + y_zxbi(10) * ptr(-1) _
+              +  ( y_zxbi(11) *  xgap(-1) +  y_zxbi(12) *  xgap(-2) +  y_zxbi(13) *  xgap(-3) +  y_zxbi(14) *  xgap(-4))  _
+              +  ( y_zxbi(15) *  d( log(xbo(-1)), 0, 1 ) +  y_zxbi(16) *  d( log(xbo(-2)), 0, 1 ) +  y_zxbi(17) *  d( log(xbo(-3)), 0, 1 ) +  y_zxbi(18) *  d( log(xbo(-4)), 0, 1 ))  _
+              +  ( y_zxbi(19) *  d( log(vpi(-1)), 0, 1 ) +  y_zxbi(20) *  d( log(vpi(-2)), 0, 1 ) +  y_zxbi(21) *  d( log(vpi(-3)), 0, 1 ) +  y_zxbi(22) *  d( log(vpi(-4)), 0, 1 ))  _
+              + y_zxbi(23) * hgx(-1)/400 
+
+
+zxbs:  zxbs-zxbs_aerr =  _
+                 ( y_zxbs(1) *  picnia(-1) +  y_zxbs(2) *  picnia(-2) +  y_zxbs(3) *  picnia(-3) +  y_zxbs(4) *  picnia(-4))  _
+              +  ( y_zxbs(5) *  rffe(-1) +  y_zxbs(6) *  rffe(-2) +  y_zxbs(7) *  rffe(-3) +  y_zxbs(8) *  rffe(-4))  _
+              + y_zxbs(9) * rtr(-1) _
+              + y_zxbs(10) * ptr(-1) _
+              +  ( y_zxbs(11) *  xgap(-1) +  y_zxbs(12) *  xgap(-2) +  y_zxbs(13) *  xgap(-3) +  y_zxbs(14) *  xgap(-4))  _
+              +  ( y_zxbs(15) *  d( log(xbo(-1)), 0, 1 ) +  y_zxbs(16) *  d( log(xbo(-2)), 0, 1 ) +  y_zxbs(17) *  d( log(xbo(-3)), 0, 1 ) +  y_zxbs(18) *  d( log(xbo(-4)), 0, 1 ))  _
+              +  ( y_zxbs(19) *  d( log(vps(-1)), 0, 1 ) +  y_zxbs(20) *  d( log(vps(-2)), 0, 1 ) +  y_zxbs(21) *  d( log(vps(-3)), 0, 1 ) +  y_zxbs(22) *  d( log(vps(-4)), 0, 1 ))  _
+              + y_zxbs(23) * hgx(-1)/400 
+
+
+zyh: log(zyh) - zyh_aerr =  ( y_zyh(1) *  picnia +  y_zyh(2) *  picnia(-1) +  y_zyh(3) *  picnia(-2) +  y_zyh(4) *  picnia(-3))  _
+                    +  ( y_zyh(5) *  rffe +  y_zyh(6) *  rffe(-1) +  y_zyh(7) *  rffe(-2) +  y_zyh(8) *  rffe(-3))  _
+                    +  ( y_zyh(9) *  xgap2 +  y_zyh(10) *  xgap2(-1) +  y_zyh(11) *  xgap2(-2) +  y_zyh(12) *  xgap2(-3))  _
+                    + y_zyh(13) * ptr _
+                    + y_zyh(14) * rtr _
+                    +  ( y_zyh(15) *  yhgap +  y_zyh(16) *  yhgap(-1) +  y_zyh(17) *  yhgap(-2) +  y_zyh(18) *  yhgap(-3))  _
+                    + log(zyhst*xgdpt) 
+
+
+zyhp: log(zyhp) - zyhp_aerr =  ( y_zyhp(1) *  picnia +  y_zyhp(2) *  picnia(-1) +  y_zyhp(3) *  picnia(-2) +  y_zyhp(4) *  picnia(-3))  _
+                      +  ( y_zyhp(5) *  rffe +  y_zyhp(6) *  rffe(-1) +  y_zyhp(7) *  rffe(-2) +  y_zyhp(8) *  rffe(-3))  _
+                      +  ( y_zyhp(9) *  xgap2 +  y_zyhp(10) *  xgap2(-1) +  y_zyhp(11) *  xgap2(-2) +  y_zyhp(12) *  xgap2(-3))  _
+                      + y_zyhp(13) * ptr _
+                      + y_zyhp(14) * rtr _
+                      +  ( y_zyhp(15) *  yhgap +  y_zyhp(16) *  yhgap(-1) +  y_zyhp(17) *  yhgap(-2) +  y_zyhp(18) *  yhgap(-3))  _
+                      +  ( y_zyhp(19) *  yhpgap +  y_zyhp(20) *  yhpgap(-1) +  y_zyhp(21) *  yhpgap(-2) +  y_zyhp(22) *  yhpgap(-3))  _
+                      + log(zyhpst*zyhst*xgdpt) 
+
+
+zyhpst: zyhpst-zyhpst_aerr = zyhpst(-1) + y_zyhpst(1)*(yhpshr-zyhpst(-1)) 
+
+
+zyhst: zyhst-zyhst_aerr = zyhst(-1) + y_zyhst(1)*(yhshr-zyhst(-1)) 
+
+
+zyht: log(zyht) - zyht_aerr  =  ( y_zyht(1) *  picnia +  y_zyht(2) *  picnia(-1) +  y_zyht(3) *  picnia(-2) +  y_zyht(4) *  picnia(-3))  _
+                       +  ( y_zyht(5) *  rffe +  y_zyht(6) *  rffe(-1) +  y_zyht(7) *  rffe(-2) +  y_zyht(8) *  rffe(-3))  _
+                       +  ( y_zyht(9) *  xgap2 +  y_zyht(10) *  xgap2(-1) +  y_zyht(11) *  xgap2(-2) +  y_zyht(12) *  xgap2(-3))  _
+                       + y_zyht(13) * ptr _
+                       + y_zyht(14) * rtr _
+                       +  ( y_zyht(15) *  yhgap +  y_zyht(16) *  yhgap(-1) +  y_zyht(17) *  yhgap(-2) +  y_zyht(18) *  yhgap(-3))  _
+                       +  ( y_zyht(19) *  yhtgap +  y_zyht(20) *  yhtgap(-1) +  y_zyht(21) *  yhtgap(-2) +  y_zyht(22) *  yhtgap(-3))  _
+                       + log(zyhtst*zyhst*xgdpt) 
+
+
+zyhtst: zyhtst - zyhtst_aerr = zyhtst(-1) + y_zyhtst(1)*(yhtshr-zyhtst(-1)) 
+
+
+zynid: zynid - zynid_aerr = y_zynid(1) _
+                   +  ( y_zynid(2) *  picnia(-1) +  y_zynid(3) *  picnia(-2) +  y_zynid(4) *  picnia(-3) +  y_zynid(5) *  picnia(-4))  _
+                   +  ( y_zynid(6) *  rffe(-1) +  y_zynid(7) *  rffe(-2) +  y_zynid(8) *  rffe(-3) +  y_zynid(9) *  rffe(-4))  _
+                   + y_zynid(10) * rtr(-1) _
+                   + y_zynid(11) * ptr(-1) _
+                   +  ( y_zynid(12) *  xgap(-1) +  y_zynid(13) *  xgap(-2) +  y_zynid(14) *  xgap(-3) +  y_zynid(15) *  xgap(-4))  _
+                   +  ( y_zynid(16) *  d( log(qynidn(-1)/pxb(-1)), 0, 1 ) +  y_zynid(17) *  d( log(qynidn(-2)/pxb(-2)), 0, 1 ) +  y_zynid(18) *  d( log(qynidn(-3)/pxb(-3)), 0, 1 ) +  y_zynid(19) *  d( log(qynidn(-4)/pxb(-4)), 0, 1 ))  _
+                   + y_zynid(20) * (hggdpt(-1)/400) 
+
+
+theend
