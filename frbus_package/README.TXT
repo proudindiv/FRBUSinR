@@ -69,18 +69,13 @@ DATA
 The data subdirectory contains a database named LONGBASE, which is in
 EViews format and contains actual observations on all FRB/US variables
 from 1968q1 to 2015q2 and projected observations on all variables from
-2015q3 to roughly 100 years in the future.  For the period from 2015
+2015q3 to roughly 100 years in the future.  For the period from 2016
 to 2018, the projections of real GDP growth, core and overall PCE
 price inflation, the unemployment rate, and the federal funds rate are
-based on the September 2015 "Economic Projections of Federal Reserve
+based on the March 2016 "Economic Projections of Federal Reserve
 Board Members and Federal Reserve Bank Presidents." Simple procedures
 are used to interpolate the annual SEP projections to quarterly
-frequency, with one exception.  The quarterly pattern of the federal
-funds rate in 2015 is based on the date viewed as most likely for the
-federal funds rate to lift off from the effective lower bound by the
-modal responses in the Federal Reserve Bank of New York's Primary
-Dealers Survey conduted prior to the September 2015 FOMC meeting.  All
-other aspects of the projections included in the database are
+frequency.  Other aspects of the projections included in the database are
 constructed by mechanical procedures and should not be construed as
 reflecting the views of the FOMC or any of its participants.  The
 mechanical procedures cause the projection to converge to an
