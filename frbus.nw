@@ -6202,6 +6202,37 @@ hgynid: hgynid - hgynid_aerr = 400*d( log((ynicpn-tfcin-tscin)*.5/pxg), 0, 1 )
 @ %def hgynid
 
 
+\chapter{Speculation on What We Can Do With This}
+
+So far the Fed's model is just a set of simultaneous equations that have been estimated from the data supplied.  We assume that there is an underlying structure to the model that represents
+the \href{https://www.federalreserve.gov/monetarypolicy/fomc.htm}
+         {Federal Open Market Committee (FOMC)}
+concerns in setting monetary policy.  They use Eview to analyze consequences for various actions that they could take.
+
+One reason for replicating the FRB/US Model in R would be that anyone could then perform similiar analyses.  Another reason is that the replication process provides an opportunity to look closely at the details and learn how the economy works.
+
+Noah Smith, on
+the \href{http://noahpinionblog.blogspot.com/2014/04/the-foxy-fed_7.html}{Noahpinion blog},
+announced the Fed's release of the model and discusses the significance.
+\begin{quote}
+A few days ago, the Fed released its workhorse model of the macroeconomy - the FRB/US model - to the public. The model had been only semi-private before, since the Fed would send it to interested researchers, and revealed some information about it to the general public. But now the model is fully public. How should we interpret that action?
+\end{quote}
+
+After talking about why they might not want to release the model, he follows that with this:
+\begin{quote}
+So if my guess is right, the Fed's publication of FRB/US indicates that whatever embarrassment existed is now essentially gone. That is kind of interesting.
+\end{quote}
+
+This is suggesting that there is a lot of room to modernize the model.  That's where an FRBUS R package for the R-project community might come in.  I'm an amateur at all of this, so I'll have to see if I can find people who will want to work with me on it.
+
+Stephen Williamson also \href{http://newmonetarism.blogspot.com/2014/04/the-frbus-model-and-inflation.html}{commented on the release of the model}.
+\begin{quote}
+The FRB/US model, used by the Board for forecasting and policy analysis, is the culmination of perhaps 45 years of work. Various generations of management at the Board have directed some smart people to work on this thing, and you can feel the weight of the large quantity of quality-adjusted hours of work that went into putting it together. But is it any good? Could the Board do just as well or better at forecasting with a much simpler tool? Could a well-educated and well-informed economist do a respectable job of central banking without ever looking at the output of the FRB/US model?
+\end{quote}
+
+What's interesting to me about this statement is that in the early 70's I was a programmer at the San Francisco Federal Reserve bank.  One week I spent a few hours helping another programmer find some bugs in code that he had written to do symbolic differentiation.  Apparently that code was related to this model.  You have to realize that personal computers didn't come until the 1980's and in those days we were running batch jobs on main frames.  That started my lifelong interest in econometrics and macro-economics, even though I've never had an opportunity to do anything with it.
+
+
 \begin{appendices}
 
 \chapter{Exogenous Variables}
