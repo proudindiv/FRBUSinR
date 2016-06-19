@@ -27,7 +27,63 @@
 
 \chapter{File Contents}
 
+Notice that I've had to change underscores in file and directory names
+when I create them with noweb.  I use the "setup.sh" bash script to create
+the directory structure, and the "check.sh" bash script to compare the
+renamed Eview files to the originals.  I have to ignore white space in the
+comparison because the original source files are not consistent with
+using either Microsoft or Linux line ending characters.
+
+\section{setup.sh}
+
+<<setup.sh>>=
+mkdir -p srcEview/{frbus.package,mce.solve.package,state.space.package}
+mkdir -p srcEview/frbus.package/{addins,programs,subs}
+mkdir -p srcEview/frbus.package/addins/{ld.frbus.cfs,ld.frbus.eqs,ld.mce.cfs,ld.mce.eqs,ld.some.eqs,ld.varinfo}
+@
+
+\section{check.sh}
+
+<<check.sh>>=
+cfile=frbus_package/addins/ld_frbus_cfs/ld_frbus_cfs.prg; ofile=srcEview/frbus.package/addins/ld.frbus.cfs/ld.frbus.cfs.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=frbus_package/addins/ld_frbus_eqs/ld_frbus_eqs.prg; ofile=srcEview/frbus.package/addins/ld.frbus.eqs/ld.frbus.eqs.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=frbus_package/addins/ld_mce_cfs/ld_mce_cfs.prg; ofile=srcEview/frbus.package/addins/ld.mce.cfs/ld.mce.cfs.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=frbus_package/addins/ld_mce_eqs/ld_mce_eqs.prg; ofile=srcEview/frbus.package/addins/ld.mce.eqs/ld.mce.eqs.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=frbus_package/addins/ld_some_eqs/ld_some_eqs.prg; ofile=srcEview/frbus.package/addins/ld.some.eqs/ld.some.eqs.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=frbus_package/addins/ld_varinfo/ld_varinfo.prg; ofile=srcEview/frbus.package/addins/ld.varinfo/ld.varinfo.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=frbus_package/addins/regadd.prg; ofile=srcEview/frbus.package/addins/regadd.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=frbus_package/programs/example1.prg; ofile=srcEview/frbus.package/programs/example1.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=frbus_package/programs/example2.prg; ofile=srcEview/frbus.package/programs/example2.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=frbus_package/programs/example3.prg; ofile=srcEview/frbus.package/programs/example3.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=frbus_package/programs/example4.prg; ofile=srcEview/frbus.package/programs/example4.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=frbus_package/programs/ocpolicy.prg; ofile=srcEview/frbus.package/programs/ocpolicy.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=frbus_package/programs/pings.prg; ofile=srcEview/frbus.package/programs/pings.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=frbus_package/programs/plot_resids.prg; ofile=srcEview/frbus.package/programs/plot.resids.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=frbus_package/programs/stochsim.prg; ofile=srcEview/frbus.package/programs/stochsim.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=frbus_package/subs/master_library.prg; ofile=srcEview/frbus.package/subs/master.library.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=frbus_package/subs/mce_solve_library.prg; ofile=srcEview/frbus.package/subs/mce.solve.library.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=mce_solve_package/example1.prg; ofile=srcEview/mce.solve.package/example1.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=mce_solve_package/example2.prg; ofile=srcEview/mce.solve.package/example2.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=mce_solve_package/example3.prg; ofile=srcEview/mce.solve.package/example3.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=mce_solve_package/example4.prg; ofile=srcEview/mce.solve.package/example4.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=mce_solve_package/example5.prg; ofile=srcEview/mce.solve.package/example5.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=mce_solve_package/mce_solve_library.prg; ofile=srcEview/mce.solve.package/mce.solve.library.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=state_space_package/data_transformations.prg; ofile=srcEview/state.space.package/data.transformations.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=state_space_package/estimation_code.prg; ofile=srcEview/state.space.package/estimation.code.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=state_space_package/frbus_supply_estimation.prg; ofile=srcEview/state.space.package/frbus.supply.estimation.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=state_space_package/frbus_supply_filter.prg; ofile=srcEview/state.space.package/frbus.supply.filter.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=state_space_package/initial_values.prg; ofile=srcEview/state.space.package/initial.values.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
+@
+
+\section{srcEview/frbus.package/addins/ld.frbus.cfs/ld.frbus.cfs.prg}
+
 <<srcEview/frbus.package/addins/ld.frbus.cfs/ld.frbus.cfs.prg>>=
+<<Load frbus coefficients>>
+
+<<Load frbus coefficients call>>
+@
+
+<<Load frbus coefficients>>=
 subroutine ld_frbus_cfs(string %mname, string %mpath)
 
 'Load coefficients for frbus version %mname from a text file in directory %mpath
@@ -52,7 +108,9 @@ subroutine ld_frbus_cfs(string %mname, string %mpath)
     next
 
 endsub
+@ %def ld_frbus_cfs
 
+<<Load frbus coefficients call>>=
 if @len(@option(1)) < 1  or @len(@option(2)) < 1 then
   @uiprompt("Error: ld_frbus_cfs requires model name and model path")
   stop
@@ -70,7 +128,16 @@ endif
 call ld_frbus_cfs(%mname, %mpath)
 @
 
+\section{srcEview/frbus.package/addins/ld.frbus.eqs/ld.frbus.eqs.prg}
+
 <<srcEview/frbus.package/addins/ld.frbus.eqs/ld.frbus.eqs.prg>>=
+<<Load frbus equations>>
+
+
+<<Load frbus equations call>>
+@
+
+<<Load frbus equations>>=
 subroutine ld_frbus_eqs(string %mname, string %mpath)
 
 'Create eviews model %mname and load it with the equations for frbus version
@@ -120,8 +187,9 @@ subroutine ld_frbus_eqs(string %mname, string %mpath)
     next
 
 endsub
+@ %def ld_frbus_eqs
 
-
+<<Load frbus equations call>>=
 if @len(@option(1)) < 1  or @len(@option(2)) < 1 then
   @uiprompt("Error: ld_frbus_eqs requires model name and model path")
   stop
@@ -139,7 +207,15 @@ endif
 call ld_frbus_eqs(%mname, %mpath)
 @
 
+\section{srcEview/frbus.package/addins/ld.mce.cfs/ld.mce.cfs.prg}
+
 <<srcEview/frbus.package/addins/ld.mce.cfs/ld.mce.cfs.prg>>=
+<<Load mce coefficients>>
+
+<<Load mce coefficients call>>
+@
+
+<<Load mce coefficients>>=
 subroutine ld_mce_cfs(string %pfname, string %pfpath, string %mceeqs)
 
 'This subroutine is used for setting up the particular type of frbus simulations
@@ -182,7 +258,9 @@ subroutine ld_mce_cfs(string %pfname, string %pfpath, string %mceeqs)
 
 
 endsub
+@ %def ld_mce_cfs
 
+<<Load mce coefficients call>>=
 if @len(@option(1)) < 1  or @len(@option(2)) < 1 or @len(@option(3)) < 1  then
   @uiprompt("Error: ld_mce_cfs requires four parameters: pf model  name, pf model path, mceeqs of selected eqs")
   stop
@@ -232,7 +310,14 @@ endif
 call ld_mce_cfs(%pfname, %pfpath, %mceeqs)
 @
 
+\section{srcEview/frbus.package/addins/ld.mce.eqs/ld.mce.eqs.prg}
+
 <<srcEview/frbus.package/addins/ld.mce.eqs/ld.mce.eqs.prg>>=
+<<Load mce equations>>
+<<Load mce equations call>>
+@
+
+<<Load mce equations>>=
 subroutine ld_mce_eqs(string %pfname, string %pfpath, string %mcename, string %mceeqs)
 
 'This subroutine is used for setting up the particular type of frbus simulations
@@ -331,6 +416,9 @@ subroutine ld_mce_eqs(string %pfname, string %pfpath, string %mcename, string %m
     endif
 
 endsub
+@ %def ld_mce_eqs
+
+<<Load mce equations call>>=
 if @len(@option(1)) < 1  or @len(@option(2)) < 1 or @len(@option(3)) < 1 or @len(@option(4)) < 1 then
   @uiprompt("Error: ld_mce_eqs requires five parameters: pf model  name, pf model path, mce model name, mce_table of selected eqs and  number of selected eqs")
   stop
@@ -384,7 +472,14 @@ endif
 call ld_mce_eqs(%pfname, %pfpath, %mcename, %mceeqs)
 @
 
+\section{srcEview/frbus.package/addins/ld.some.eqs/ld.some.eqs.prg}
+
 <<srcEview/frbus.package/addins/ld.some.eqs/ld.some.eqs.prg>>=
+<<Load some equations>>
+<<Load some equations call>>
+@
+
+<<Load some equations>>=
 subroutine ld_some_eqs(string %mname, string %mpath, string %eqnames)
 
 ' Create eviews model %mname and load it with selected equations for frbus version
@@ -491,6 +586,9 @@ subroutine ld_some_eqs(string %mname, string %mpath, string %eqnames)
 
 
 endsub
+@ %def ld_some_eqs
+
+<<Load some equations call>>=
 if @len(@option(1)) < 1  or @len(@option(2)) < 1 or @len(@option(3)) < 1 then
   @uiprompt("Error: ld_some_eqs requires model name and model pathand  and eqnames")
   stop
@@ -512,7 +610,15 @@ endif
 call ld_some_eqs(%mname, %mpath, %eqnames)
 @
 
+\section{srcEview/frbus.package/addins/ld.varinfo/ld.varinfo.prg}
+
 <<srcEview/frbus.package/addins/ld.varinfo/ld.varinfo.prg>>=
+<<Load variable information>>
+
+<<Load variable information call>>
+@
+
+<<Load variable information>>=
 subroutine ld_varinfo(string %pathname)
 
 'Load varinfo information from %pathname in strings
@@ -555,7 +661,9 @@ subroutine ld_varinfo(string %pathname)
   next
 
 endsub
+@ %def ld_varinfo
 
+<<Load variable information call>>=
 if @len(@option(1)) < 1  then
   @uiprompt("Error: ld_varinfo requires varinfo path")
   stop
@@ -570,6 +678,8 @@ endif
 call ld_varinfo(%pathname)
 @
 
+\section{srcEview/frbus.package/addins/regadd.prg}
+
 <<srcEview/frbus.package/addins/regadd.prg>>=
 addin(proc="ld_frbus_eqs",desc="Load FRB/US equations") ".\ld_frbus_eqs/ld_frbus_eqs.prg"
 addin(proc="ld_frbus_cfs",desc="Load FRB/US coefficients") ".\ld_frbus_cfs/ld_frbus_cfs.prg"
@@ -578,6 +688,8 @@ addin(proc="ld_mce_cfs",desc="Load MCE coefficients") ".\ld_mce_cfs/ld_mce_cfs.p
 addin(proc="ld_some_eqs",desc="Load some FRB/US equations") ".\ld_some_eqs/ld_some_eqs.prg"
 addin(proc="ld_varinfo",desc="Load variable information file") ".\ld_varinfo/ld_varinfo.prg"
 @
+
+\section{srcEview/frbus.package/programs/example1.prg}
 
 <<srcEview/frbus.package/programs/example1.prg>>=
 ' Program for simple simulation under VAR expectations
@@ -708,6 +820,8 @@ addin(proc="ld_varinfo",desc="Load variable information file") ".\ld_varinfo/ld_
 
 
 @
+
+\section{srcEview/frbus.package/programs/example2.prg}
 
 <<srcEview/frbus.package/programs/example2.prg>>=
 ' Program for simple simulation with MCE expectations
@@ -882,6 +996,8 @@ addin(proc="ld_varinfo",desc="Load variable information file") ".\ld_varinfo/ld_
 
 
 @
+
+\section{srcEview/frbus.package/programs/example3.prg}
 
 <<srcEview/frbus.package/programs/example3.prg>>=
 ' Program for simulation under VAR expectations that illustrates how
@@ -1120,6 +1236,8 @@ addin(proc="ld_varinfo",desc="Load variable information file") ".\ld_varinfo/ld_
 
 @
 
+\section{srcEview/frbus.package/programs/example4.prg}
+
 <<srcEview/frbus.package/programs/example4.prg>>=
 ' This MCE example program illustrates:
 '
@@ -1346,6 +1464,8 @@ addin(proc="ld_varinfo",desc="Load variable information file") ".\ld_varinfo/ld_
 
 
 @
+
+\section{srcEview/frbus.package/programs/ocpolicy.prg}
 
 <<srcEview/frbus.package/programs/ocpolicy.prg>>=
 ' Routine to simulate how the SEP baseline forecast would change if
@@ -1693,6 +1813,8 @@ addin(proc="ld_varinfo",desc="Load variable information file") ".\ld_varinfo/ld_
 
 
 @
+
+\section{srcEview/frbus.package/programs/pings.prg}
 
 <<srcEview/frbus.package/programs/pings.prg>>=
 ' Simulate six ping simulations (AKA simple IRFs) 
@@ -2308,6 +2430,8 @@ addin(proc="ld_varinfo",desc="Load variable information file") ".\ld_varinfo/ld_
 
 @
 
+\section{srcEview/frbus.package/programs/plot.resids.prg}
+
 <<srcEview/frbus.package/programs/plot.resids.prg>>=
 ' Program to plot the historical residuals of key FRB/US equations
 '
@@ -2431,6 +2555,8 @@ addin(proc="ld_varinfo",desc="Load variable information file") ".\ld_varinfo/ld_
     next
   endsub  
 @
+
+\section{srcEview/frbus.package/programs/stochsim.prg}
 
 <<srcEview/frbus.package/programs/stochsim.prg>>=
 ' Program for stochastic sims under VAR expectations
@@ -2905,10 +3031,50 @@ subroutine makestats(string %trkname)
   endsub
 @
 
+\section{srcEview/frbus.package/subs/master.library.prg}
+
 <<srcEview/frbus.package/subs/master.library.prg>>=
 '**************************************************************************
 '**************************************************************************
 '**************************************************************************
+<<quarterly date string shift>>
+  
+
+'**************************************************************************
+'**************************************************************************
+'**************************************************************************
+<<copy series into group>>
+'**************************************************************************
+'**************************************************************************
+'**************************************************************************
+<<set group to zero>>
+'**************************************************************************
+'**************************************************************************
+'**************************************************************************
+<<names of all series in group>>
+'**************************************************************************
+'**************************************************************************
+'**************************************************************************
+<<create new group>>
+'**************************************************************************
+'**************************************************************************
+'**************************************************************************
+<<interpolate unavailable observations>>
+'**************************************************************************
+'**************************************************************************
+'**************************************************************************
+<<set fiscal policy option>>
+'**************************************************************************
+'**************************************************************************
+'**************************************************************************
+<<set monetary policy option>>
+'**************************************************************************
+'**************************************************************************
+'**************************************************************************
+<<set monetary policy fed funds rate>>
+@
+
+<<quarterly date string shift>>=
 subroutine dateshift(string %indate, string %outdate, scalar qtrshift)
 
 ' this subroutine takes the quarterly date string in %indate (ie, "2001q1") and shifts 
@@ -2919,11 +3085,9 @@ subroutine dateshift(string %indate, string %outdate, scalar qtrshift)
   %outdate = @datestr(!dddd2,"yyyyfq")  
 
   endsub
-  
+@ %def dateshift
 
-'**************************************************************************
-'**************************************************************************
-'**************************************************************************
+<<copy series into group>>=
 subroutine group2group(string %fromgroup, string %togroup, string %to_type)
 
 ' copies a group of series into another group.
@@ -2979,9 +3143,9 @@ subroutine group2group(string %fromgroup, string %togroup, string %to_type)
     endif
 
 endsub
-'**************************************************************************
-'**************************************************************************
-'**************************************************************************
+@ %def group2group
+
+<<set group to zero>>=
 subroutine group2zero(string %group)
 
 ' set all series in an existin %group to zero
@@ -2992,9 +3156,9 @@ subroutine group2zero(string %group)
     next
 
 endsub
-'**************************************************************************
-'**************************************************************************
-'**************************************************************************
+@ %def group2zero
+
+<<names of all series in group>>=
 subroutine groupnames2string(string %group, string %groupnames)
 
 ' creates a string of the names of all the series in a group
@@ -3005,9 +3169,9 @@ subroutine groupnames2string(string %group, string %groupnames)
     next
 
 endsub
-'**************************************************************************
-'**************************************************************************
-'**************************************************************************
+@ %def groupnames2string
+
+<<create new group>>=
 subroutine groupnew(string %fromgroup, string %to)
 
 ' Creates a new group.  The names of the new group and associated series are built up
@@ -3025,9 +3189,9 @@ subroutine groupnew(string %fromgroup, string %to)
   group {%tmpb} {%tmpa}
 
 endsub
-'**************************************************************************
-'**************************************************************************
-'**************************************************************************
+@ %def groupnew
+
+<<interpolate unavailable observations>>=
 subroutine interp_lin(string %series_in, string %series_out, string %substart, string %subend)
 
 ' Subroutine that replaces NA values in a series with
@@ -3084,9 +3248,9 @@ subroutine interp_lin(string %series_in, string %series_out, string %substart, s
   delete tmp_ser tmp_prev tmp_next tmp_lambda tmp_id tmp_nanext tmp_naprev tmp_check
 
 endsub
-'**************************************************************************
-'**************************************************************************
-'**************************************************************************
+@ %def interp_lin
+
+<<set fiscal policy option>>=
 subroutine set_fp(string dfpxxx)
 
   %policy_options = "dfpex dfpsrp dfpdbt"
@@ -3110,9 +3274,9 @@ subroutine set_fp(string dfpxxx)
     endif
 
 endsub
-'**************************************************************************
-'**************************************************************************
-'**************************************************************************
+@ %def set_fp
+
+<<set monetary policy option>>=
 subroutine set_mp(string dmpxxx)
 
   %policy_options = "dmpex dmprr dmptay dmptlr dmpintay dmpalt dmpgen"
@@ -3136,9 +3300,9 @@ subroutine set_mp(string dmpxxx)
     endif
 
 endsub
-'**************************************************************************
-'**************************************************************************
-'**************************************************************************
+@ %def set_mp
+
+<<set monetary policy fed funds rate>>=
 subroutine set_mpvars2rff
 
   rfffix = rff
@@ -3150,9 +3314,163 @@ subroutine set_mpvars2rff
   rrfix = rffe - @movav(picxfe,4)
 
 endsub
-@
+@ %def set_mpvars2rff
+
+\section{srcEview/frbus.package/subs/mce.solve.library.prg}
 
 <<srcEview/frbus.package/subs/mce.solve.library.prg>>=
+<<mce solve library change history>>
+
+' ****************************************************************** '
+' ****************************************************************** '
+' ******************************************************************
+<<run model consistent expectations>>
+
+
+'**************************************************************************
+'**************************************************************************
+'**************************************************************************
+<<determine endogenous and exogenous variables>>
+
+
+
+' ****************************************************************** '
+' ****************************************************************** '
+' ******************************************************************
+<<determine default method, linesearch, and other options>>
+
+
+ 
+' ************************************************************
+' ************************************************************
+' ************************************************************
+<<parse options containing equal signs>>
+
+ 
+' ************************************************************
+' ************************************************************
+' ************************************************************
+<<parse options not containing equal signs>>
+
+
+' ******************************************************************
+' ******************************************************************
+' ******************************************************************
+' ******************************************************************
+<<create common variables, strings, matrices, vectors, and tables>>
+
+
+' ****************************************************************** '
+' ****************************************************************** '
+' ******************************************************************
+<<model consistent coefficient simulation>>
+
+
+'****************************************************************
+'****************************************************************
+'****************************************************************
+<<solve model consistent instrument values>>
+
+
+'****************************************************************
+'****************************************************************
+'****************************************************************
+<<compute derivatives of mce targets wrt mce instruments>>
+
+
+
+'************************************************************
+'************************************************************
+'************************************************************
+<<model consistent coefficient non-monotone step-length procedure>>
+
+
+
+'************************************************************
+'************************************************************
+'************************************************************
+<<model consistent armijo optimization rule>>
+
+
+
+'**************************************************************************
+'**************************************************************************
+'**************************************************************************
+<<variable terminal values>>
+
+
+
+'**************************************************************************
+'**************************************************************************
+'**************************************************************************
+
+<<set options based on defaults and overrides>>
+
+
+'**************************************************************************
+'**************************************************************************
+'**************************************************************************
+<<main unconstrained optimal control simulation>>
+
+
+'**************************************************************************
+'**************************************************************************
+'**************************************************************************
+<<main optimal control simulation with inequality constraints>>
+
+
+'**************************************************************************
+'**************************************************************************
+'**************************************************************************
+<<model consistent optimal time-consistent solution>>
+
+
+'**************************************************************************
+'**************************************************************************
+'**************************************************************************
+<<compute derivatives of loss function targets wrt instruments>>
+
+
+'****************************************************************
+'****************************************************************
+'****************************************************************
+<<solve model consistent expectations model>>
+
+
+'****************************************************************
+'****************************************************************
+'****************************************************************
+<<convert mcz inequality constraints>>
+
+
+ 
+'************************************************************
+'************************************************************
+'************************************************************
+<<shift left>>
+
+
+'****************************************************************
+'****************************************************************
+'****************************************************************
+<<find next delimiter>>
+  
+
+
+
+' ****************************************************************** '
+' ****************************************************************** '
+' ******************************************************************
+<<load frbus with transformed subsidiary model>>
+
+
+' ****************************************************************** '
+' ****************************************************************** '
+' ******************************************************************
+<<create wage and expectation variables in forward looking model>>
+@
+
+<<mce solve library change history>>=
 ' Changes (1/25/14)
 '
 ' 1.  Removed defaults from mce_load_frbus subroutine
@@ -3227,10 +3545,9 @@ endsub
 '    initial and transformed constraint matrices are based on !ndrv not !nevl
 ' 4. Dropped the explicit optqp simtype
 '
+@
 
-' ****************************************************************** '
-' ****************************************************************** '
-' ******************************************************************
+<<run model consistent expectations>>=
   subroutine mce_run(string m_opts, string a_opts, string s_opts)
 
 ' Driver program
@@ -3545,11 +3862,9 @@ endsub
     endif
 
 endsub
+@ %def mce_run
 
-
-'**************************************************************************
-'**************************************************************************
-'**************************************************************************
+<<determine endogenous and exogenous variables>>=
 subroutine mcz_parsemod(model modo)
 '
 ' This subroutine takes modo, a model with explicit leads, and creates
@@ -3649,12 +3964,9 @@ subroutine mcz_parsemod(model modo)
 
 
 endsub
+@ %def mcz_parsemod
 
-
-
-' ****************************************************************** '
-' ****************************************************************** '
-' ******************************************************************
+<<determine default method, linesearch, and other options>>=
   subroutine mcz_algo(string mcz_mod_b, string mcz_mod_f, string mcz_algo_opts, group mcz_instrus, group mcz_errs)
 
   %existing_algos = "yes"
@@ -3838,12 +4150,9 @@ endsub
     next
 
 endsub
+@ %def mcz_algo
 
-
- 
-' ************************************************************
-' ************************************************************
-' ************************************************************
+<<parse options containing equal signs>>=
   subroutine mcz_equalopt(string optionstext,string opts)
 
 ' parse an option that contains an "=" sign
@@ -3859,11 +4168,9 @@ endsub
     endif
 
   endsub    
+@ %def mcz_equalopt
 
- 
-' ************************************************************
-' ************************************************************
-' ************************************************************
+<<parse options not containing equal signs>>=
   subroutine mcz_hasopt(string optionstext,string opts)
 
 ' parse an option that does not contain an "=" sign
@@ -3875,12 +4182,9 @@ endsub
     endif
 
   endsub    
+@ %def mcz_hasopt
 
-
-' ******************************************************************
-' ******************************************************************
-' ******************************************************************
-' ******************************************************************
+<<create common variables, strings, matrices, vectors, and tables>>=
   subroutine mcz_sim_setup
 
 ' create various program variables, strings, matrices, vectors, and tables
@@ -3935,11 +4239,9 @@ endsub
 
 
   endsub
+@ %def mcz_sim_setup
 
-
-' ****************************************************************** '
-' ****************************************************************** '
-' ******************************************************************
+<<model consistent coefficient simulation>>=
   subroutine mcz_sim(string mcz_sim_options)
 
   %mcz_sim = "ok"
@@ -4306,11 +4608,9 @@ endsub
     endif
 
 endsub
+@ %def mcz_sim
 
-
-'****************************************************************
-'****************************************************************
-'****************************************************************
+<<solve model consistent instrument values>>=
 subroutine mcz_solvit
 
 ' This subroutine first sets the MCE instrument values based on the current
@@ -4384,11 +4684,9 @@ subroutine mcz_solvit
     endif
 
 endsub
+@ %def mcz_solvit
 
-
-'****************************************************************
-'****************************************************************
-'****************************************************************
+<<compute derivatives of mce targets wrt mce instruments>>=
 subroutine mcz_derivs
  
 'This subroutine computes the derivatives of the mce targets wrt the mce instruments
@@ -4620,12 +4918,9 @@ subroutine mcz_derivs
     endif
 
 endsub
+@ %def mcz_derivs
 
-
-
-'************************************************************
-'************************************************************
-'************************************************************
+<<model consistent coefficient non-monotone step-length procedure>>=
 subroutine mcz_lmr
 
   %mcz_lmr = "ok"
@@ -4691,12 +4986,9 @@ subroutine mcz_lmr
   setcell(mce_sim_stats,!mcetry+2,5,!j,0)
 
 endsub
+@ %def mcz_lmr
 
-
-
-'************************************************************
-'************************************************************
-'************************************************************
+<<model consistent armijo optimization rule>>=
 subroutine mcz_armijo
   
   %mcz_armijo = "ok"
@@ -4714,12 +5006,9 @@ subroutine mcz_armijo
   setcell(mce_sim_stats,!mcetry+2,5,!iarm,0)
 
 endsub
+@ %def mcz_armijo
 
-
-
-'**************************************************************************
-'**************************************************************************
-'**************************************************************************
+<<variable terminal values>>=
 subroutine mcz_terminal
 
 ' Set terminal values for all variables in _$_mod_f that might
@@ -4807,13 +5096,9 @@ subroutine mcz_terminal
   %terminal = "no"
 
 endsub
+@ %def mcz_terminal
 
-
-
-'**************************************************************************
-'**************************************************************************
-'**************************************************************************
-
+<<set options based on defaults and overrides>>=
 subroutine mcz_opt_setup(string mcz_opt_options, group mcz_opt_instrus, group mcz_opt_targs, text mcz_opt_cnstr)
 
   statusline mcz_opt_setup
@@ -5115,11 +5400,9 @@ subroutine mcz_opt_setup(string mcz_opt_options, group mcz_opt_instrus, group mc
 
 
   endsub
+@ %def mcz_opt_setup
 
-
-'**************************************************************************
-'**************************************************************************
-'**************************************************************************
+<<main unconstrained optimal control simulation>>=
 subroutine mcz_opt
 
 'Main subroutine for unconstrained optimal control simulations
@@ -5256,11 +5539,9 @@ subroutine mcz_opt
 
 
 endsub
+@ %def mcz_opt
 
-
-'**************************************************************************
-'**************************************************************************
-'**************************************************************************
+<<main optimal control simulation with inequality constraints>>=
 subroutine mcz_opt_qp
 
 ' Main subroutine for optimal control simulations with inequality constraints
@@ -5469,11 +5750,9 @@ subroutine mcz_opt_qp
 
 
 endsub
+@ %def mcz_opt_qp
 
-
-'**************************************************************************
-'**************************************************************************
-'**************************************************************************
+<<model consistent optimal time-consistent solution>>=
 subroutine mcz_opt_tc
 
 
@@ -5811,11 +6090,9 @@ subroutine mcz_opt_tc
   delete(noerr) tc_itmax tc_stat
 
 endsub
+@ %def mcz_opt_tc
 
-
-'**************************************************************************
-'**************************************************************************
-'**************************************************************************
+<<compute derivatives of loss function targets wrt instruments>>=
 subroutine mcz_opt_deriv
 '
 ' requires that the following be defined
@@ -5869,11 +6146,9 @@ subroutine mcz_opt_deriv
   !optshow = !optshow_bac
 
 endsub
+@ %def mcz_opt_deriv
 
-
-'****************************************************************
-'****************************************************************
-'****************************************************************
+<<solve model consistent expectations model>>=
 subroutine mcz_opt_solve
 
 ' This subroutine first sets the instrument values, based on the current
@@ -5920,11 +6195,9 @@ subroutine mcz_opt_solve
     endif
 
 endsub
+@ %def mcz_opt_solve
 
-
-'****************************************************************
-'****************************************************************
-'****************************************************************
+<<convert mcz inequality constraints>>=
 subroutine local mcz_constraints(svector sss, table ctable,string cvarnames)
 
 
@@ -6068,12 +6341,9 @@ subroutine local mcz_constraints(svector sss, table ctable,string cvarnames)
   cvarnames = @wunique(cvarnames)
 
 endsub
+@ %def mcz_constraints
 
-
- 
-'************************************************************
-'************************************************************
-'************************************************************
+<<shift left>>=
 subroutine local shiftleft(vector abc, scalar nshift)
 
   !rows = @rows(abc)
@@ -6083,11 +6353,9 @@ subroutine local shiftleft(vector abc, scalar nshift)
   matplace(abc,v1,!rows - nshift + 1)
   
 endsub
+@ %def shiftleft
 
-
-'****************************************************************
-'****************************************************************
-'****************************************************************
+<<find next delimiter>>=
 subroutine local find_next_delimit(string %instring,scalar loc,scalar sign) 
 
   !ttp = @instr(%instring,"+")
@@ -6105,13 +6373,9 @@ subroutine local find_next_delimit(string %instring,scalar loc,scalar sign)
   endif
 
 endsub
-  
+@ %def find_next_delimit
 
-
-
-' ****************************************************************** '
-' ****************************************************************** '
-' ******************************************************************
+<<load frbus with transformed subsidiary model>>=
   subroutine mce_load_frbus(string frbus_opts)
 
 ' take two corresponding FRB/US models (eg, stdver and pfver) and make 
@@ -6247,11 +6511,9 @@ endsub
     next
 
 endsub
+@ %def mce_load_frbus
 
-
-' ****************************************************************** '
-' ****************************************************************** '
-' ******************************************************************
+<<create wage and expectation variables in forward looking model>>=
   subroutine make_frbus_mcevars(string frbus_mcevars)
 
 ' Create data for the w and e variables in the operational forward looking
@@ -6306,7 +6568,9 @@ endsub
     next
 
 endsub
-@
+@ %def make_frbus_mcevars
+
+\section{srcEview/mce.solve.package/example1.prg}
 
 <<srcEview/mce.solve.package/example1.prg>>=
 ' This example illustrates:
@@ -6400,6 +6664,8 @@ endsub
 
 
 @
+
+\section{srcEview/mce.solve.package/example2.prg}
 
 <<srcEview/mce.solve.package/example2.prg>>=
 ' This example illustrates:
@@ -6508,6 +6774,8 @@ endsub
 
 
 @
+
+\section{srcEview/mce.solve.package/example3.prg}
 
 <<srcEview/mce.solve.package/example3.prg>>=
 ' This example illustrates:
@@ -6685,6 +6953,8 @@ endsub
 
 @
 
+\section{srcEview/mce.solve.package/example4.prg}
+
 <<srcEview/mce.solve.package/example4.prg>>=
 ' This example illustrates:
 '
@@ -6814,6 +7084,8 @@ endsub
 
 
 @
+
+\section{srcEview/mce.solve.package/example5.prg}
 
 <<srcEview/mce.solve.package/example5.prg>>=
 ' This example illustrates the two optimal policy simulation types
@@ -6985,6 +7257,8 @@ endsub
   gr4.addtext(t,c,font(14)) %title
   show gr4
 @
+
+\section{srcEview/mce.solve.package/mce.solve.library.prg}
 
 <<srcEview/mce.solve.package/mce.solve.library.prg>>=
 ' Changes (1/25/14)
@@ -10142,6 +10416,8 @@ endsub
 endsub
 @
 
+\section{srcEview/state.space.package/data.transformations.prg}
+
 <<srcEview/state.space.package/data.transformations.prg>>=
 subroutine data_transformations()
 
@@ -10271,6 +10547,8 @@ vpriors(20,20) = 1    ' igthtfactor
 
 endsub
 @
+
+\section{srcEview/state.space.package/estimation.code.prg}
 
 <<srcEview/state.space.package/estimation.code.prg>>=
 subroutine ss_estimation()
@@ -10445,6 +10723,8 @@ freeze({%modname}_results) {%modname}.ml(m=100,showopts)
 endsub
 @
 
+\section{srcEview/state.space.package/frbus.supply.estimation.prg}
+
 <<srcEview/state.space.package/frbus.supply.estimation.prg>>=
 ' Program to estimate the FRB/US state-space model and
 ' generate estimates of model states.  
@@ -10575,6 +10855,8 @@ wfsave saved_results_new
 
 @
 
+\section{srcEview/state.space.package/frbus.supply.filter.prg}
+
 <<srcEview/state.space.package/frbus.supply.filter.prg>>=
 ' Program is part of the FRB/US state-space model package.
 ' frbus_supply_filter takes a previously estimated state-space model and
@@ -10694,6 +10976,8 @@ series xgdo   = exp(cycle_2/100)*xgdpt
 
 
 @
+
+\section{srcEview/state.space.package/initial.values.prg}
 
 <<srcEview/state.space.package/initial.values.prg>>=
 subroutine initial_values
