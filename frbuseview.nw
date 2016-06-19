@@ -81,7 +81,7 @@ cfile=state_space_package/initial_values.prg; ofile=srcEview/state.space.package
 <<load frbus coefficients>>
 
 <<load frbus coefficients call>>
-@
+@ %def ld_frbus_cfs
 
 <<load frbus coefficients>>=
 subroutine ld_frbus_cfs(string %mname, string %mpath)
@@ -135,7 +135,7 @@ call ld_frbus_cfs(%mname, %mpath)
 
 
 <<load frbus equations call>>
-@
+@ %def ld_frbus_eqs
 
 <<load frbus equations>>=
 subroutine ld_frbus_eqs(string %mname, string %mpath)
@@ -213,7 +213,7 @@ call ld_frbus_eqs(%mname, %mpath)
 <<load mce coefficients>>
 
 <<load mce coefficients call>>
-@
+@ %def ld_mce_cfs
 
 <<load mce coefficients>>=
 subroutine ld_mce_cfs(string %pfname, string %pfpath, string %mceeqs)
@@ -315,7 +315,7 @@ call ld_mce_cfs(%pfname, %pfpath, %mceeqs)
 <<srcEview/frbus.package/addins/ld.mce.eqs/ld.mce.eqs.prg>>=
 <<load mce equations>>
 <<load mce equations call>>
-@
+@ %def ld_mce_eqs
 
 <<load mce equations>>=
 subroutine ld_mce_eqs(string %pfname, string %pfpath, string %mcename, string %mceeqs)
@@ -477,7 +477,7 @@ call ld_mce_eqs(%pfname, %pfpath, %mcename, %mceeqs)
 <<srcEview/frbus.package/addins/ld.some.eqs/ld.some.eqs.prg>>=
 <<load some equations>>
 <<load some equations call>>
-@
+@ %def ld_some_eqs
 
 <<load some equations>>=
 subroutine ld_some_eqs(string %mname, string %mpath, string %eqnames)
@@ -616,7 +616,7 @@ call ld_some_eqs(%mname, %mpath, %eqnames)
 <<load variable information>>
 
 <<load variable information call>>
-@
+@ %def ld_varinfo
 
 <<load variable information>>=
 subroutine ld_varinfo(string %pathname)
@@ -687,7 +687,7 @@ addin(proc="ld_mce_eqs",desc="Load MCE equations") ".\ld_mce_eqs/ld_mce_eqs.prg"
 addin(proc="ld_mce_cfs",desc="Load MCE coefficients") ".\ld_mce_cfs/ld_mce_cfs.prg"
 addin(proc="ld_some_eqs",desc="Load some FRB/US equations") ".\ld_some_eqs/ld_some_eqs.prg"
 addin(proc="ld_varinfo",desc="Load variable information file") ".\ld_varinfo/ld_varinfo.prg"
-@
+@ %def regadd
 
 \section{srcEview/frbus.package/programs/example1.prg}
 
@@ -819,7 +819,7 @@ addin(proc="ld_varinfo",desc="Load variable information file") ".\ld_varinfo/ld_
   show fig1
 
 
-@
+@ %def example1
 
 \section{srcEview/frbus.package/programs/example2.prg}
 
@@ -995,7 +995,7 @@ addin(proc="ld_varinfo",desc="Load variable information file") ".\ld_varinfo/ld_
   show fig1
 
 
-@
+@ %def example2
 
 \section{srcEview/frbus.package/programs/example3.prg}
 
@@ -1234,7 +1234,7 @@ addin(proc="ld_varinfo",desc="Load variable information file") ".\ld_varinfo/ld_
   show fig1
 
 
-@
+@ %def example3
 
 \section{srcEview/frbus.package/programs/example4.prg}
 
@@ -1463,7 +1463,7 @@ addin(proc="ld_varinfo",desc="Load variable information file") ".\ld_varinfo/ld_
   show fig1
 
 
-@
+@ %def example4
 
 \section{srcEview/frbus.package/programs/ocpolicy.prg}
 
@@ -1812,7 +1812,7 @@ addin(proc="ld_varinfo",desc="Load variable information file") ".\ld_varinfo/ld_
 
 
 
-@
+@ %def ocpolicy
 
 \section{srcEview/frbus.package/programs/pings.prg}
 
@@ -1835,7 +1835,7 @@ addin(proc="ld_varinfo",desc="Load variable information file") ".\ld_varinfo/ld_
 <<graph it>>
 
 
-@
+@ %def pings
 
 <<simulate six ping simulations, aka simple IRFs>>=
 ' Simulate six ping simulations (AKA simple IRFs) 
@@ -2444,7 +2444,7 @@ addin(proc="ld_varinfo",desc="Load variable information file") ".\ld_varinfo/ld_
   graph gr_{%ping}.merge  {%ping}a {%ping}b {%ping}c
   gr_{%ping}.align(3,.40,.40)
   endsub
-@
+@ %def graphit
 
 \section{srcEview/frbus.package/programs/plot.resids.prg}
 
@@ -2455,7 +2455,7 @@ addin(proc="ld_varinfo",desc="Load variable information file") ".\ld_varinfo/ld_
 ' *************************************************************
 ' *************************************************************
 <<find variable description>>
-@
+@ %def plot_resids
 
 <<plot historical residuals of key equations>>=
 ' Program to plot the historical residuals of key FRB/US equations
@@ -2608,7 +2608,7 @@ because I was working with only a hex dump.}
 '**************************************************************************
 '**************************************************************************
 <<make statistics>>
-@
+@ %def stochsim
 
 <<stochastic simulations under variable expectations>>=
 ' Program for stochastic sims under VAR expectations
@@ -3116,7 +3116,7 @@ subroutine makestats(string %trkname)
 '**************************************************************************
 '**************************************************************************
 <<set monetary policy fed funds rate>>
-@
+@ %def master_library
 
 <<quarterly date string shift>>=
 subroutine dateshift(string %indate, string %outdate, scalar qtrshift)
@@ -3364,7 +3364,7 @@ endsub
 
 <<srcEview/frbus.package/subs/mce.solve.library.prg>>=
 <<mce solve library>>
-@
+@ %def mce_solve_library
 
 <<mce solve library>>=
 <<mce solve library change history>>
@@ -6711,7 +6711,7 @@ endsub
 
 
 
-@
+@ %def example1
 
 \section{srcEview/mce.solve.package/example2.prg}
 
@@ -6821,7 +6821,7 @@ endsub
 
 
 
-@
+@ %def example2
 
 \section{srcEview/mce.solve.package/example3.prg}
 
@@ -6999,7 +6999,7 @@ endsub
 
 
 
-@
+@ %def example3 
 
 \section{srcEview/mce.solve.package/example4.prg}
 
@@ -7131,7 +7131,7 @@ endsub
 
 
 
-@
+@ %def example4
 
 \section{srcEview/mce.solve.package/example5.prg}
 
@@ -7304,13 +7304,13 @@ endsub
   %title = %title + "\r3.  Optimal time-consistent policy (_opttc)"
   gr4.addtext(t,c,font(14)) %title
   show gr4
-@
+@ %def example5
 
 \section{srcEview/mce.solve.package/mce.solve.library.prg}
 
 <<srcEview/mce.solve.package/mce.solve.library.prg>>=
 <<mce solve library>>
-@
+@ %def mce_solve_library
 
 \section{srcEview/state.space.package/data.transformations.prg}
 
@@ -7442,7 +7442,7 @@ vpriors(17,17) = 1    ' igtww
 vpriors(20,20) = 1    ' igthtfactor
 
 endsub
-@
+@ %def data_transformations
 
 \section{srcEview/state.space.package/estimation.code.prg}
 
@@ -7617,7 +7617,7 @@ sspace {%modname}  ' Declare a new state-space model object
 freeze({%modname}_results) {%modname}.ml(m=100,showopts)
 
 endsub
-@
+@ %def ss_estimation
 
 \section{srcEview/state.space.package/frbus.supply.estimation.prg}
 
@@ -7749,7 +7749,7 @@ series xgdo   = exp(cycle_2/100)*xgdpt
 wfsave saved_results_new
 
 
-@
+@ %def frbus_supply_estimation
 
 \section{srcEview/state.space.package/frbus.supply.filter.prg}
 
@@ -7871,7 +7871,7 @@ series xgdpt  = xbt * uxbt
 series xgdo   = exp(cycle_2/100)*xgdpt
 
 
-@
+@ %def frbus.supply.filter
 
 \section{srcEview/state.space.package/initial.values.prg}
 
@@ -7928,7 +7928,7 @@ beta(11) = 1/beta(10)
 
 
 endsub
-@
+@ %def initial_values
 
 
 \chapter{Notes, Bibliography and Indexes}
