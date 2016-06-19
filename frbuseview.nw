@@ -78,12 +78,12 @@ cfile=state_space_package/initial_values.prg; ofile=srcEview/state.space.package
 \section{srcEview/frbus.package/addins/ld.frbus.cfs/ld.frbus.cfs.prg}
 
 <<srcEview/frbus.package/addins/ld.frbus.cfs/ld.frbus.cfs.prg>>=
-<<Load frbus coefficients>>
+<<load frbus coefficients>>
 
-<<Load frbus coefficients call>>
+<<load frbus coefficients call>>
 @
 
-<<Load frbus coefficients>>=
+<<load frbus coefficients>>=
 subroutine ld_frbus_cfs(string %mname, string %mpath)
 
 'Load coefficients for frbus version %mname from a text file in directory %mpath
@@ -110,7 +110,7 @@ subroutine ld_frbus_cfs(string %mname, string %mpath)
 endsub
 @ %def ld_frbus_cfs
 
-<<Load frbus coefficients call>>=
+<<load frbus coefficients call>>=
 if @len(@option(1)) < 1  or @len(@option(2)) < 1 then
   @uiprompt("Error: ld_frbus_cfs requires model name and model path")
   stop
@@ -131,13 +131,13 @@ call ld_frbus_cfs(%mname, %mpath)
 \section{srcEview/frbus.package/addins/ld.frbus.eqs/ld.frbus.eqs.prg}
 
 <<srcEview/frbus.package/addins/ld.frbus.eqs/ld.frbus.eqs.prg>>=
-<<Load frbus equations>>
+<<load frbus equations>>
 
 
-<<Load frbus equations call>>
+<<load frbus equations call>>
 @
 
-<<Load frbus equations>>=
+<<load frbus equations>>=
 subroutine ld_frbus_eqs(string %mname, string %mpath)
 
 'Create eviews model %mname and load it with the equations for frbus version
@@ -189,7 +189,7 @@ subroutine ld_frbus_eqs(string %mname, string %mpath)
 endsub
 @ %def ld_frbus_eqs
 
-<<Load frbus equations call>>=
+<<load frbus equations call>>=
 if @len(@option(1)) < 1  or @len(@option(2)) < 1 then
   @uiprompt("Error: ld_frbus_eqs requires model name and model path")
   stop
@@ -210,12 +210,12 @@ call ld_frbus_eqs(%mname, %mpath)
 \section{srcEview/frbus.package/addins/ld.mce.cfs/ld.mce.cfs.prg}
 
 <<srcEview/frbus.package/addins/ld.mce.cfs/ld.mce.cfs.prg>>=
-<<Load mce coefficients>>
+<<load mce coefficients>>
 
-<<Load mce coefficients call>>
+<<load mce coefficients call>>
 @
 
-<<Load mce coefficients>>=
+<<load mce coefficients>>=
 subroutine ld_mce_cfs(string %pfname, string %pfpath, string %mceeqs)
 
 'This subroutine is used for setting up the particular type of frbus simulations
@@ -260,7 +260,7 @@ subroutine ld_mce_cfs(string %pfname, string %pfpath, string %mceeqs)
 endsub
 @ %def ld_mce_cfs
 
-<<Load mce coefficients call>>=
+<<load mce coefficients call>>=
 if @len(@option(1)) < 1  or @len(@option(2)) < 1 or @len(@option(3)) < 1  then
   @uiprompt("Error: ld_mce_cfs requires four parameters: pf model  name, pf model path, mceeqs of selected eqs")
   stop
@@ -313,11 +313,11 @@ call ld_mce_cfs(%pfname, %pfpath, %mceeqs)
 \section{srcEview/frbus.package/addins/ld.mce.eqs/ld.mce.eqs.prg}
 
 <<srcEview/frbus.package/addins/ld.mce.eqs/ld.mce.eqs.prg>>=
-<<Load mce equations>>
-<<Load mce equations call>>
+<<load mce equations>>
+<<load mce equations call>>
 @
 
-<<Load mce equations>>=
+<<load mce equations>>=
 subroutine ld_mce_eqs(string %pfname, string %pfpath, string %mcename, string %mceeqs)
 
 'This subroutine is used for setting up the particular type of frbus simulations
@@ -418,7 +418,7 @@ subroutine ld_mce_eqs(string %pfname, string %pfpath, string %mcename, string %m
 endsub
 @ %def ld_mce_eqs
 
-<<Load mce equations call>>=
+<<load mce equations call>>=
 if @len(@option(1)) < 1  or @len(@option(2)) < 1 or @len(@option(3)) < 1 or @len(@option(4)) < 1 then
   @uiprompt("Error: ld_mce_eqs requires five parameters: pf model  name, pf model path, mce model name, mce_table of selected eqs and  number of selected eqs")
   stop
@@ -475,11 +475,11 @@ call ld_mce_eqs(%pfname, %pfpath, %mcename, %mceeqs)
 \section{srcEview/frbus.package/addins/ld.some.eqs/ld.some.eqs.prg}
 
 <<srcEview/frbus.package/addins/ld.some.eqs/ld.some.eqs.prg>>=
-<<Load some equations>>
-<<Load some equations call>>
+<<load some equations>>
+<<load some equations call>>
 @
 
-<<Load some equations>>=
+<<load some equations>>=
 subroutine ld_some_eqs(string %mname, string %mpath, string %eqnames)
 
 ' Create eviews model %mname and load it with selected equations for frbus version
@@ -588,7 +588,7 @@ subroutine ld_some_eqs(string %mname, string %mpath, string %eqnames)
 endsub
 @ %def ld_some_eqs
 
-<<Load some equations call>>=
+<<load some equations call>>=
 if @len(@option(1)) < 1  or @len(@option(2)) < 1 or @len(@option(3)) < 1 then
   @uiprompt("Error: ld_some_eqs requires model name and model pathand  and eqnames")
   stop
@@ -613,12 +613,12 @@ call ld_some_eqs(%mname, %mpath, %eqnames)
 \section{srcEview/frbus.package/addins/ld.varinfo/ld.varinfo.prg}
 
 <<srcEview/frbus.package/addins/ld.varinfo/ld.varinfo.prg>>=
-<<Load variable information>>
+<<load variable information>>
 
-<<Load variable information call>>
+<<load variable information call>>
 @
 
-<<Load variable information>>=
+<<load variable information>>=
 subroutine ld_varinfo(string %pathname)
 
 'Load varinfo information from %pathname in strings
@@ -663,7 +663,7 @@ subroutine ld_varinfo(string %pathname)
 endsub
 @ %def ld_varinfo
 
-<<Load variable information call>>=
+<<load variable information call>>=
 if @len(@option(1)) < 1  then
   @uiprompt("Error: ld_varinfo requires varinfo path")
   stop
@@ -1817,6 +1817,27 @@ addin(proc="ld_varinfo",desc="Load variable information file") ".\ld_varinfo/ld_
 \section{srcEview/frbus.package/programs/pings.prg}
 
 <<srcEview/frbus.package/programs/pings.prg>>=
+<<simulate six ping simulations, aka simple IRFs>>
+'************************************************************
+'************************************************************
+'************************************************************
+<<copy it>>
+
+'************************************************************
+'************************************************************
+'************************************************************
+<<plot it>>
+
+
+'************************************************************
+'************************************************************
+'************************************************************
+<<graph it>>
+
+
+@
+
+<<simulate six ping simulations, aka simple IRFs>>=
 ' Simulate six ping simulations (AKA simple IRFs) 
 '
 ' Notes:
@@ -2197,9 +2218,9 @@ addin(proc="ld_varinfo",desc="Load variable information file") ".\ld_varinfo/ld_
   fig_3.align(3,.4,1.0)
   fig_3.addtext(t,just(c),font(12)) %t3
   show fig_3
-'************************************************************
-'************************************************************
-'************************************************************
+@
+
+<<copy it>>=
   subroutine copyit
 
   smpl %simstart %simend
@@ -2212,10 +2233,9 @@ addin(proc="ld_varinfo",desc="Load variable information file") ".\ld_varinfo/ld_
   series rff_{%ping} = rff{%suf} - rff
 
   endsub
+@ %def copyit
 
-'************************************************************
-'************************************************************
-'************************************************************
+<<plot it>>=
   subroutine plotit(string %grname, string %width, string %height, string %var1, string %title, string %units)
 
 
@@ -2230,11 +2250,9 @@ addin(proc="ld_varinfo",desc="Load variable information file") ".\ld_varinfo/ld_
   {%grname}.axis(l) font(9)
 
   endsub
+@ %def plotit
 
-
-'************************************************************
-'************************************************************
-'************************************************************
+<<graph it>>=
   subroutine graphit
 
   smpl %simstart %simstart + 39
@@ -2426,13 +2444,20 @@ addin(proc="ld_varinfo",desc="Load variable information file") ".\ld_varinfo/ld_
   graph gr_{%ping}.merge  {%ping}a {%ping}b {%ping}c
   gr_{%ping}.align(3,.40,.40)
   endsub
-
-
 @
 
 \section{srcEview/frbus.package/programs/plot.resids.prg}
 
 <<srcEview/frbus.package/programs/plot.resids.prg>>=
+<<plot historical residuals of key equations>>
+
+
+' *************************************************************
+' *************************************************************
+<<find variable description>>
+@
+
+<<plot historical residuals of key equations>>=
 ' Program to plot the historical residuals of key FRB/US equations
 '
 ' Each residual has the same units of measurement as the
@@ -2527,10 +2552,17 @@ addin(proc="ld_varinfo",desc="Load variable information file") ".\ld_varinfo/ld_
     next
 
   plot_vars.display
+@
 
+\textbf{This was originally written in Fortran!
+Look at the $ii$, $jj$, $kk$ variable names.
+I had forgotten about that from when I briefly helped
+the programmer debug the original model some 45 years ago.
+Who would have expected nostalgia from something so prosaic.
+I never saw the original source code
+because I was working with only a hex dump.}
 
-' *************************************************************
-' *************************************************************
+<<find variable description>>=
   subroutine find_var_description
 
   for !j = 1 to 500
@@ -2554,11 +2586,31 @@ addin(proc="ld_varinfo",desc="Load variable information file") ".\ld_varinfo/ld_
       endif
     next
   endsub  
-@
+@ %def find_var_description
 
 \section{srcEview/frbus.package/programs/stochsim.prg}
 
 <<srcEview/frbus.package/programs/stochsim.prg>>=
+<<stochastic simulations under variable expectations>>
+
+'**************************************************************************
+'**************************************************************************
+'**************************************************************************
+'**************************************************************************
+'Subroutines
+
+
+'**************************************************************************
+'**************************************************************************
+<<form table>>
+
+
+'**************************************************************************
+'**************************************************************************
+<<make statistics>>
+@
+
+<<stochastic simulations under variable expectations>>=
 ' Program for stochastic sims under VAR expectations
 
 ' The stochastic shocks are bootstrapped from the de-meaned
@@ -2958,16 +3010,9 @@ addin(proc="ld_varinfo",desc="Load variable information file") ".\ld_varinfo/ld_
   results.append summary_graph
   results.append error_tab
   results.display
+@
 
-'**************************************************************************
-'**************************************************************************
-'**************************************************************************
-'**************************************************************************
-'Subroutines
-
-
-'**************************************************************************
-'**************************************************************************
+<<form table>>=
 subroutine tableform(string %tabname, string %nrows)
 
   table(@val(%nrows),9) {%tabname}
@@ -2986,10 +3031,9 @@ subroutine tableform(string %tabname, string %nrows)
   {%tabname}(1,9) = "70%-hi"
 
   endsub 
+@ %def tableform
 
-
-'**************************************************************************
-'**************************************************************************
+<<make statistics>>=
 subroutine makestats(string %trkname)
 
   %trkmat = %trkname + "_mat"
@@ -3029,7 +3073,7 @@ subroutine makestats(string %trkname)
   mtos({%statsmat},{%trkname}_group)
 
   endsub
-@
+@ %def makestats
 
 \section{srcEview/frbus.package/subs/master.library.prg}
 
