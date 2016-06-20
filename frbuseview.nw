@@ -157,7 +157,7 @@
   show fig1
 
 
-@ %def example1
+@
 
 \section{example2 program}
 
@@ -333,7 +333,7 @@
   show fig1
 
 
-@ %def example2
+@
 
 \section{example3 program}
 
@@ -572,7 +572,7 @@
   show fig1
 
 
-@ %def example3
+@
 
 \section{example4 program}
 
@@ -801,7 +801,7 @@
   show fig1
 
 
-@ %def example4
+@
 
 \section{ocpolicy program}
 
@@ -1150,7 +1150,7 @@
 
 
 
-@ %def ocpolicy
+@
 
 \section{pings program}
 
@@ -1633,7 +1633,7 @@
 
 
 
-@ %def example1
+@
 
 \section{example2 program}
 
@@ -1743,7 +1743,7 @@
 
 
 
-@ %def example2
+@
 
 \section{example3 program}
 
@@ -1921,7 +1921,7 @@
 
 
 
-@ %def example3 
+@
 
 \section{example4 program}
 
@@ -2053,7 +2053,7 @@
 
 
 
-@ %def example4
+@
 
 \section{example5 program}
 
@@ -2226,7 +2226,7 @@
   %title = %title + "\r3.  Optimal time-consistent policy (_opttc)"
   gr4.addtext(t,c,font(14)) %title
   show gr4
-@ %def example5
+@
 
 
 \chapter{State Space Package}
@@ -2361,7 +2361,7 @@ series xgdo   = exp(cycle_2/100)*xgdpt
 wfsave saved_results_new
 
 
-@ %def frbus_supply_estimation saved_results_new
+@ %def saved_results_new
 
 \section{Data Transformations}
 
@@ -2493,7 +2493,7 @@ vpriors(17,17) = 1    ' igtww
 vpriors(20,20) = 1    ' igthtfactor
 
 endsub
-@ %def data_transformations
+@
 
 \section{Estimation Code}
 
@@ -2668,7 +2668,7 @@ sspace {%modname}  ' Declare a new state-space model object
 freeze({%modname}_results) {%modname}.ml(m=100,showopts)
 
 endsub
-@ %def estimation_code ss_estimation
+@ %def ss_estimation
 
 \section{Supply Filter}
 
@@ -2790,7 +2790,7 @@ series xgdpt  = xbt * uxbt
 series xgdo   = exp(cycle_2/100)*xgdpt
 
 
-@ %def frbus.supply.filter
+@
 
 \section{Initial Values}
 
@@ -6942,31 +6942,31 @@ addin(proc="ld_varinfo",desc="Load variable information file") ".\ld_varinfo/ld_
 
 <<srcEview/frbus.package/programs/example1.prg>>=
 <<frbus example1>>
-@
+@ %def example1
 
 \subsection[example2]{srcEview/frbus.package/programs/example2.prg}
 
 <<srcEview/frbus.package/programs/example2.prg>>=
 <<frbus example2>>
-@
+@ %def example2
 
 \subsection[example3]{srcEview/frbus.package/programs/example3.prg}
 
 <<srcEview/frbus.package/programs/example3.prg>>=
 <<frbus example3>>
-@
+@ %def example3
 
 \subsection[example4]{srcEview/frbus.package/programs/example4.prg}
 
 <<srcEview/frbus.package/programs/example4.prg>>=
 <<frbus example4>>
-@
+@ %def example4
 
 \subsection[ocpolicy]{srcEview/frbus.package/programs/ocpolicy.prg}
 
 <<srcEview/frbus.package/programs/ocpolicy.prg>>=
 <<frbus ocpolicy>>
-@
+@ %def ocpolicy
 
 \subsection[pings]{srcEview/frbus.package/programs/pings.prg}
 
@@ -7850,7 +7850,7 @@ subroutine makestats(string %trkname)
 
 <<srcEview/frbus.package/subs/master.library.prg>>=
 <<master library routines>>
-@
+@ %def master_library
 
 <<master library routines>>=
 '**************************************************************************
@@ -8057,31 +8057,31 @@ subroutine makestats(string %trkname)
 
 <<srcEview/mce.solve.package/example1.prg>>=
 <<mce example1>>
-@
+@ %def example1
 
 \subsection[example2]{srcEview/mce.solve.package/example2.prg}
 
 <<srcEview/mce.solve.package/example2.prg>>=
 <<mce example2>>
-@
+@ %def example2
 
 \subsection[example3]{srcEview/mce.solve.package/example3.prg}
 
 <<srcEview/mce.solve.package/example3.prg>>=
 <<mce example3>>
-@
+@ %def example3
 
 \subsection[example4]{srcEview/mce.solve.package/example4.prg}
 
 <<srcEview/mce.solve.package/example4.prg>>=
 <<mce example4>>
-@
+@ %def example4
 
 \subsection[example5]{srcEview/mce.solve.package/example5.prg}
 
 <<srcEview/mce.solve.package/example5.prg>>=
 <<mce example5>>
-@
+@ %def example5
 
 \subsection[mce.solve.library]{srcEview/mce.solve.package/mce.solve.library.prg}
 
@@ -8095,31 +8095,31 @@ subroutine makestats(string %trkname)
 
 <<srcEview/state.space.package/data.transformations.prg>>=
 <<data transformations>>
-@
+@ %def data_transformations
 
 \subsection[estimation.code]{srcEview/state.space.package/estimation.code.prg}
 
 <<srcEview/state.space.package/estimation.code.prg>>=
 <<estimation code>>
-@
+@ %def estimation_code
 
 \subsection[frbus.supply.estimation]{srcEview/state.space.package/frbus.supply.estimation.prg}
 
 <<srcEview/state.space.package/frbus.supply.estimation.prg>>=
 <<estimation model>>
-@
+@ %def frbus_supply_estimation
 
 \subsection[frbus.supply.filter]{srcEview/state.space.package/frbus.supply.filter.prg}
 
 <<srcEview/state.space.package/frbus.supply.filter.prg>>=
 <<supply filter>>
-@
+@ %def frbus_supply_filter
 
 \subsection[initial.values]{srcEview/state.space.package/initial.values.prg}
 
 <<srcEview/state.space.package/initial.values.prg>>=
 <<initial values>>
-@
+@ %def initial_values
 
 
 \chapter{Notes, Bibliography and Indexes}
