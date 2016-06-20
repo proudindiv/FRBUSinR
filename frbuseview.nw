@@ -29,39 +29,2825 @@
 
 \section{example1 program}
 
+<<frbus example1>>=
+' Program for simple simulation under VAR expectations
+'
+' See FRB/US Simulation Basics document for information about
+' this program
+
+' *************************************************************
+' Initial filename and parameter settings
+' *************************************************************
+
+' Subroutines
+  include ../subs/master_library
+
+' Workfile    
+  %wfstart = "1975q1"
+  %wfend = "2030q4"
+  %mainpage = "main"
+  wfcreate(wf=aaa,page={%mainpage}) q {%wfstart} {%wfend}
+
+' FRB/US model name and location
+  %varmod = "stdver"
+  %varpath = "../mods/"
+
+' Input datbase
+  %dbin  = "../data/longbase"
+
+' Simulation range
+  %simstart = "2020q1"
+  %simend   = "2025q4"
+
+
+' ****************************************************************
+' Retrieve data, model equations and coefficients, set
+' policy options, and compute tracking residuals 
+' ****************************************************************
+
+' Load equations and coefficients
+  ld_frbus_eqs(modelname=%varmod,modelpath=%varpath)  
+  ld_frbus_cfs(modelname=%varmod,modelpath=%varpath)
+
+' Load data
+  dbopen %dbin as longbase
+  fetch(d=longbase) *
+
+' Set monetary policy rule
+  smpl @all
+  call set_mp("dmpintay")
+
+' Turn off zero bound and policy thresholds; hold policymaker's
+' perceived equilibrium real interest rate constant
+  smpl @all
+  dmptrsh = 0
+  rffmin = -9999
+  drstar = 0
+
+' Set fiscal policy
+  smpl @all
+  call set_fp("dfpsrp")
+
+' Set _aerr variables to zero
+  smpl @all
+  {%varmod}.makegroup(a,n) endog @endog
+  call groupnew("endog","_aerr")
+  call group2zero("endog_aerr")
+
+' Standard solution options
+  {%varmod}.solveopt(o=b,g=12,z=1e-12)
+
+' Assign baseline tracking add factors
+  %suftrk = "_0"
+  smpl %simstart %simend 
+  {%varmod}.addassign @all
+  {%varmod}.addinit(v=n) @all
+  {%varmod}.scenario(n,a={%suftrk}) "track"
+  {%varmod}.solve
+  scalar mm = @max(@abs(xgap{%suftrk}-xgap))
+  if mm > .0001 then
+    statusline dynamic tracking simulation failed for {%varmod}
+    stop
+    endif
+
+' *************************************************************
+' Simulate a shock to monetary policy rule
+' *************************************************************
+
+  %sufsim = "_1"
+  {%varmod}.scenario(n,a={%sufsim}) "sim"
+
+  smpl %simstart %simstart
+  rffintay_aerr = rffintay_aerr + 1
+
+  smpl %simstart %simend
+  {%varmod}.solve
+
+
+'***********************************************************
+' Make a graph
+'***********************************************************
+
+  smpl %simstart %simend
+  series zero = 0
+  series d_rff = rff{%sufsim} - rff
+  series d_rg10 = rg10{%sufsim} - rg10
+  series d_lur = lur{%sufsim} - lur
+  series d_pic4 = pic4{%sufsim} - pic4
+
+  graph fig1a.line zero d_rff
+  fig1a.addtext(t,just(c),font("arial",12)) Federal Funds Rate
+  fig1a.legend -display
+
+  graph fig1b.line zero d_rg10
+  fig1b.addtext(t,just(c),font("arial",12)) 10-Year Treasury Yield
+  fig1b.legend -display
+
+  graph fig1c.line zero d_lur
+  fig1c.addtext(t,just(c),font("arial",12)) Unemployment Rate
+  fig1c.legend -display
+
+  graph fig1d.line zero d_pic4
+  fig1d.addtext(t,just(c),font("arial",12)) Inflation Rate (4-Quarter)
+  fig1d.legend -display
+
+  graph fig1.merge fig1a fig1b fig1c fig1d
+  fig1.addtext(t,just(c),font("Arial",16)) Macroeconomic Effects of Funds Rate Perturbation\r(VAR Expectations)
+  fig1.align(2,1,1.25)
+  show fig1
+
+
+@ %def example1
+
 \section{example2 program}
+
+<<frbus example2>>=
+' Program for simple simulation with MCE expectations
+'
+' The switch variables %mcvars_wp and %mcvars_all control whether
+' the assumption of MC expectations extends beyond the financial
+' sector
+
+' See the Simulation Basics document for information about
+' this program
+
+
+' *************************************************************
+' Initial filename and parameter settings
+' *************************************************************
+
+' Subroutines
+  include ../subs/master_library
+  include ../subs/mce_solve_library
+
+' Workfile    
+  %wfstart = "1975q1"
+  %wfend = "2100q4"
+  %mainpage = "main"
+  wfcreate(wf=aaa,page={%mainpage}) q {%wfstart} {%wfend}
+
+' FRB/US model names and locations
+  %varmod = "stdver"
+  %varpath = "../mods/"
+  %mcemod = "pfver"
+  %mcepath = "../mods/"
+
+' Input datbase
+  %dbin  = "../data/longbase"
+
+' Simulation range
+  %simstart = "2020q1"
+  %simend   = "2069q4"
+
+
+' ****************************************************************
+' Retrieve data, model equations and coefficients, set
+' policy options, and compute tracking residuals 
+' ****************************************************************
+
+' Specify MC expectations variables
+  %mcvars_wp = "yes"
+  %mcvars_all = "no"
+ 
+' MCE asset pricing
+  %zvars = "zdivgr zgap05 zgap10 zgap30 zrff5 zrff10 zrff30 zpi10 zpi10f zpic30 zpib5 zpic58 "
+
+' MCE elsewhere
+  if %mcvars_wp = "yes" and %mcvars_all = "no" then
+    %zvars = %zvars + "zpicxfe zpieci "
+    endif
+  if %mcvars_all = "yes" then
+    %zvars = %zvars + "zpicxfe zpieci "
+    %zvars = %zvars + "zecd zeco zeh zgapc2 zlhp zpi5 zvpd zvpi zvps zxbd zxbi zxbs zyh zyhp zyht zynid "
+    endif
+
+' Load equations and coefficients
+  call mce_load_frbus("mce_vars=%zvars,mod_b=%varmod,path_b=%varpath,mod_f=%mcemod,path_f=%mcepath")
+
+' Load data
+  dbopen %dbin as longdata
+  fetch(d=longdata) *
+
+' Data for extra variables associated with MC expectations
+  smpl @all
+  call make_frbus_mcevars(%zvars)
+
+' Set monetary policy
+  smpl @all
+  call set_mp("dmpintay")
+
+' Turn off zero bound and policy thresholds; hold policymaker's
+' perceived equilibrium real interest rate constant
+  smpl @all
+  dmptrsh = 0
+  rffmin = -9999
+  drstar = 0
+
+' Set fiscal policy
+  smpl @all
+  call set_fp("dfpsrp")
+
+' Set _aerr variables to zero
+  smpl @all
+  {%varmod}.makegroup(a,n) endog @endog
+  call groupnew("endog","_aerr")
+  call group2zero("endog_aerr")
+
+' Standard solution options
+  {%varmod}.solveopt(o=b,g=12,z=1e-12)
+  {%mcemod}.solveopt(o=b,g=12,z=1e-12)
+
+' Assign baseline tracking add factors
+  %suftrk = "_0"
+  smpl %simstart %simend 
+  {%varmod}.addassign @all
+  {%varmod}.addinit(v=n) @all
+  {%varmod}.scenario(n,a={%suftrk}) "track"
+  {%varmod}.solve
+  scalar mm = @max(@abs(xgap{%suftrk}-xgap))
+  if mm > .0001 then
+    statusline dynamic tracking simulation failed for {%varmod}
+    stop
+    endif
+  {%mcemod}.addassign @all
+  {%mcemod}.addinit(v=n) @all
+
+' *************************************************************
+' Simulate a monetary policy shock 
+' *************************************************************
+
+  %sufsim = "_1"
+  {%varmod}.scenario(n,a={%sufsim}) "sim"
+  {%mcemod}.scenario(n,a={%sufsim}) "sim"
+
+  smpl %simstart %simstart
+  rffintay_a = rffintay_a + 1
+
+  %modstr = "mod_b=%varmod,mod_f=%mcemod,mce_vars=%zvars"
+  %algstr = "meth=qnewton"
+  %simstr = "type=single"
+  smpl %simstart %simend
+  call mce_run(%modstr,%algstr,%simstr)
+
+
+'***********************************************************
+' Make a graph
+'***********************************************************
+
+  smpl %simstart %simstart + 39
+  series zero = 0
+  series d_rff = rff{%sufsim} - rff
+  series d_rg10 = rg10{%sufsim} - rg10
+  series d_lur = lur{%sufsim} - lur
+  series d_pic4 = pic4{%sufsim} - pic4
+
+  graph fig1a.line zero d_rff
+  fig1a.addtext(t,just(c),font("arial",12)) Federal Funds Rate
+  fig1a.legend -display
+
+  graph fig1b.line zero d_rg10
+  fig1b.addtext(t,just(c),font("arial",12)) 10-Year Treasury Yield
+  fig1b.legend -display
+
+  graph fig1c.line zero d_lur
+  fig1c.addtext(t,just(c),font("arial",12)) Unemployment Rate
+  fig1c.legend -display
+
+  graph fig1d.line zero d_pic4
+  fig1d.addtext(t,just(c),font("arial",12)) Inflation Rate (4-Quarter)
+  fig1d.legend -display
+
+  graph fig1.merge fig1a fig1b fig1c fig1d
+  %title = " Macroeconomic Effects of Funds Rate Shock\r"
+  if %mcvars_wp = "no" and %mcvars_all = "no" then
+    %title = %title + "(MC Expectations in Asset Pricing)"
+    endif
+  if %mcvars_wp = "yes" and %mcvars_all = "no" then
+    %title = %title + "(MC Expectations in Asset Pricing and Price-Wage Setting)"
+    endif
+  if %mcvars_all = "yes" then
+    %title = %title + "(MC Expectations in All Sectors)"
+    endif
+  fig1.addtext(t,just(c),font("Arial",16)) {%title}
+  fig1.align(2,1,1.25)
+  show fig1
+
+
+@ %def example2
 
 \section{example3 program}
 
+<<frbus example3>>=
+' Program for simulation under VAR expectations that illustrates how
+' to set the monetary policy options that impose the zero lower bound
+' on the funds rate and delay the liftoff of the funds rate from the
+' ZLB until either the unemployment rate falls below a threshold or
+' inflation rises above a threshold.
+'
+' See FRB/US Simulation Basics document for general information about
+' this program.
+
+' Additional notes:
+
+' 1. The scenario involves a set of negative aggregate demand 
+' shocks and a positive risk premium shock that start in 2003q3,
+' when the baseline (historical) funds rate is about one percent.
+' The shocks are equal to the equation errors actually observed
+' in the four quarters starting in 2008q4.
+
+' 2. To impose the ZLB set %zb = "yes" (rather than "no")
+
+' 3. To impose the policy liftfoff threshold conditions set both
+' %zb = "yes" and %threshold = "yes".  For illustrative purposes
+' and reflecting the baseline conditions in 2003 and the years
+' that immediately follow, the inflation threshold is set to 3.0
+' and the unemployment threshold is set to 7.0, subject to the
+' the adjustments described next.
+
+' 4. Because the threshold conditions only make sense once the ZLB is
+' binding, unemployment is above its threshold level (lurtrsh),
+' and inflation is below its threshold (pitrsh), which is not the
+' case in the initial simulation quarters, the program turns on the
+' threshold code (using dmptrsh) in the 5th simulation quarter,
+' at which point these conditions hold. In addition, for the threshold 
+' code to work properly, the endogenous switch variable dmptr must be 
+' zero in the quarter prior to the quarter in which the threshold code is 
+' turned on.  This is accomplished by setting the baseline data on dmptr 
+' to zero and by setting the unemployment and inflation thresholds
+' (lurtrsh, pitrsh) to values in the first four simulation quarters that
+' would not flip the dmptr switch to one. 
+
+' 4. Choose one of the five available policy rules by setting
+' %policy to one of rffintay, rfftay, rfftlr, rffalt, or rffgen.
+
+' 5. If neither the ZLB or thresholds are imposed, the monetary policy
+' equations have baseline-tracking adds and the simulation is
+' a standard deviations-from-baseline exercise. 
+
+' 6. If either the ZLB or thresholds are imposed, the add factors on 
+' monetary policy equations are set to zero after the tracking adds
+' are computed so that the ZLB and threshold conditions are based on the
+' actual simulated outcomes for the funds rate and inflation and unemployment,
+' not their deviations from baseline. 
+
+' *************************************************************
+' Initial filename and parameter settings
+' *************************************************************
+
+' Subroutines
+  include ../subs/master_library
+
+' Workfile    
+  %wfstart = "1975q1"
+  %wfend = "2012q4"
+  %mainpage = "main"
+  wfcreate(wf=aaa,page={%mainpage}) q {%wfstart} {%wfend}
+
+' FRB/US model name and location
+  %varmod = "stdver"
+  %varpath = "../mods/"
+
+' Input datbase
+  %dbin  = "../data/longbase"
+
+' Simulation range
+  %simstart = "2003q3"
+  %simend   = "2008q2"
+
+' Policy 
+  %zb = "yes"
+  %threshold = "yes"
+  %policy = "rfftay"
+
+
+' ****************************************************************
+' Retrieve data, model equations and coefficients, set
+' policy options, and compute tracking residuals 
+' ****************************************************************
+
+' Load equations and coefficients
+  ld_frbus_eqs(modelname=%varmod,modelpath=%varpath)  
+  ld_frbus_cfs(modelname=%varmod,modelpath=%varpath)
+
+' Load data
+  dbopen %dbin as longbase
+  fetch(d=longbase) *
+
+' Set monetary policy rule
+  smpl @all
+  %policydmp = @replace(%policy,"rff","dmp")
+  call set_mp(%policydmp)
+
+' Set ZLB
+  if %zb = "yes" then
+    rffmin = .125
+    else
+    rffmin = -9999
+    endif
+
+' Set threshold variables 
+  if %threshold = "yes" then
+    if %zb = "no" then
+      @uiprompt("When policy thresholds are imposed, the zero bound must also be imposed")
+      stop
+      endif
+    smpl @all
+    call dateshift(%simstart,%quarter4,3)
+  ' thresholds (dmptrsh and dmptr) not active in first 4 qtrs
+    smpl %simstart - 1 %quarter4
+    dmptrsh = 0
+    lurtrsh = -9999
+    pitrsh = 9999
+    dmptr = 0
+  ' thresholds (dmptrsh and dmptr) active starting in qtr 5
+    smpl %quarter4 + 1 %simend
+    dmptrsh = 1
+    lurtrsh = 7.0
+    pitrsh = 3.0
+    smpl @all
+    else
+    smpl @all
+    dmptrsh = 0
+    endif
+
+  smpl @all
+  drstar = 0
+
+' Set fiscal policy
+  smpl @all
+  call set_fp("dfpsrp")
+
+' Set _aerr variables to zero
+  smpl @all
+  {%varmod}.makegroup(a,n) endog @endog
+  call groupnew("endog","_aerr")
+  call group2zero("endog_aerr")
+
+' Standard solution options
+  {%varmod}.solveopt(o=b,g=12,z=1e-12)
+
+' Assign baseline tracking add factors
+  %suftrk = "_0"
+  smpl %simstart 2012q4
+  {%varmod}.addassign @all
+  {%varmod}.addinit(v=n) @all
+  {%varmod}.scenario(n,a={%suftrk}) "track"
+  {%varmod}.solve
+  scalar mm = @max(@abs(xgap{%suftrk}-xgap))
+  if mm > .0001 then
+    statusline dynamic tracking simulation failed for {%varmod}
+    stop
+    endif
+
+' Set monetary policy add factors to zero when ZLB or threshold are
+' imposed
+
+  if %zb = "yes" then
+    smpl @all
+    {%policy}_a = 0
+    rffrule_a = 0
+    rffe_a = 0
+    if %threshold = "yes" then
+      dmptpi_a = 0
+      dmptlur_a = 0
+      dmptmax_a = 0
+      dmptr_a = 0
+      endif
+    endif
+
+' *************************************************************
+' Simulation
+' *************************************************************
+
+  %sufsim = "_1"
+  {%varmod}.scenario(n,a={%sufsim}) "sim"
+
+' shock values are taken from equation residuals for 2008q4-2009q3
+  eco_a.fill(o=%simstart) -.006, -.006, -.011, -.001
+  ecd_a.fill(o=%simstart) -.091, -.018, -.021,  .029
+  eh_a.fill(o=%simstart)  -.076, -.078, -.040,  .073
+  epd_a.fill(o=%simstart) -.096, -.062,  .014,  .032
+  eps_a.fill(o=%simstart) -.018, -.046, -.036, -.017
+  rbbbp_a.fill(o=%simstart) 2.70, 0.38, -0.89, -1.35
+
+  smpl %simstart %simend
+  {%varmod}.solve
+
+
+'***********************************************************
+' Make a graph
+'***********************************************************
+
+  smpl %simstart %simend
+
+  graph fig1a.line rff rff{%sufsim}
+  fig1a.addtext(t,just(c),font("arial",12)) Federal Funds Rate
+  fig1a.legend -display
+
+  graph fig1b.line rg10 rg10{%sufsim}
+  fig1b.addtext(t,just(c),font("arial",12)) 10-Year Treasury Yield
+  fig1b.legend -display
+
+  graph fig1c.line lur lur{%sufsim}
+  fig1c.addtext(t,just(c),font("arial",12)) Unemployment Rate
+  fig1c.legend -display
+
+  graph fig1d.line pic4 pic4{%sufsim}
+  fig1d.addtext(t,just(c),font("arial",12)) Inflation Rate (4-Quarter)
+  fig1d.legend -display
+
+  %title = "Macroeconomic Effects of Negative AD Shock\r(VAR Expectations"
+  %title = %title + "; Policy = " + %policy + ")"
+  if %zb = "yes" and %threshold = "no" then
+    %title = %title + "\r(ZLB Imposed)"
+    endif
+  if %zb = "yes" and %threshold = "yes" then
+    %title = %title + "\r(ZLB and Thresholds Imposed)"
+    endif
+
+  graph fig1.merge fig1a fig1b fig1c fig1d
+  fig1.addtext(t,just(c),font("Arial",16)) {%title}
+  fig1.addtext(b,just(c),font("Arial",16)) Blue:  Actual;  Red:  Simulated
+  fig1.align(2,1,1.25)
+  show fig1
+
+
+@ %def example3
+
 \section{example4 program}
+
+<<frbus example4>>=
+' This MCE example program illustrates:
+'
+' 1. how to use a monetary policy rule that is not one of the policy
+'   alternatives included in FRB/US;
+' 2. how to add new MCE expectations variables;
+' 3. how to drop one of the regular FRB/US equations as part of the process
+'   of loading the model
+
+' Most of the code needed illustrate these issues is located between
+' the "start of new code" and "end of new code" comments below
+
+' The switch variables %mcvars_wp and %mcvars_all control whether
+' the assumption of MC expectations extends beyond the financial
+' sector
+
+' See the Simulation Basics document for information about
+' this program
+
+
+' *************************************************************
+' Initial filename and parameter settings
+' *************************************************************
+
+' Subroutines
+  include ../subs/master_library
+  include ../subs/mce_solve_library
+
+' Workfile    
+  %wfstart = "1975q1"
+  %wfend = "2100q4"
+  %mainpage = "main"
+  wfcreate(wf=aaa,page={%mainpage}) q {%wfstart} {%wfend}
+
+' FRB/US model names and locations
+  %varmod = "stdver"
+  %varpath = "../mods/"
+  %mcemod = "pfver"
+  %mcepath = "../mods/"
+
+' Input datbase
+  %dbin  = "../data/longbase"
+
+' Simulation range
+  %simstart = "2010q1"
+  %simend   = "2069q4"
+
+
+' ****************************************************************
+' Retrieve data, model equations and coefficients, set
+' policy options, and compute tracking residuals 
+' ****************************************************************
+
+' Specify MC expectations variables
+  %mcvars_wp = "no"
+  %mcvars_all = "yes"
+ 
+' MCE asset pricing
+  %zvars = "zdivgr zgap05 zgap10 zgap30 zrff5 zrff10 zrff30 zpi10 zpi10f zpic30 zpib5 zpic58 "
+
+' MCE elsewhere
+  if %mcvars_wp = "yes" and %mcvars_all = "no" then
+    %zvars = %zvars + "zpicxfe zpieci "
+    endif
+  if %mcvars_all = "yes" then
+    %zvars = %zvars + "zpicxfe zpieci "
+    %zvars = %zvars + "zecd zeco zeh zgapc2 zlhp zpi5 zvpd zvpi zvps zxbd zxbi zxbs zyh zyhp zyht zynid "
+    endif
+
+' Load equations and coefficients
+
+' drop one of the FRB/US monetary policy rule equations (rffgen) so that it can be
+' replaced below with an alternative rule 
+  %allbut = "rffgen"
+  call mce_load_frbus("mce_vars=%zvars,mod_b=%varmod,path_b=%varpath,mod_f=%mcemod,path_f=%mcepath,allbut=%allbut")
+
+' Load data
+  dbopen %dbin as longdata
+  fetch(d=longdata) *
+
+' *****************************************************************************
+' *****************************************************************************
+' start of new code (aside from the change above to mce_load_frbus and
+'                    the change below to the call to set_mp)
+
+' Code a first-difference interest rate rule as rffgen.  The first-difference rule depends on
+' the expected output gap three quarters ahead (zgap3) and on expected 4-qtr inflation three
+' quarters ahead (zpic43).  The name of each new expectation must start with a "z".
+  {%varmod}.append rffgen-rffgen_aerr = rffe(-1) + .5*(zpic43-pitarg) + .5*(zgap3-zgap3(-4))
+
+' Add the MCE definitions of zgap3 and zpic43 to the forward-looking model,
+' noting that the MCE names of these variables must start with a "w" rather than a "z".
+  {%mcemod}.append wgap3-wgap3_aerr = xgap2(3)
+  {%mcemod}.append wpic43-wpic43_aerr = picx4(3)
+' Add expectations error equations to the MCE model
+  {%mcemod}.append ezgap3 = zgap3-wgap3
+  {%mcemod}.append ezpic43 = zpic43-wpic43
+
+' Add to the backward-looking model simple equations for the new expectations variables.
+' Technically, these equations should be the appropriate VAR expectations formulas, but
+' because in this program these expectations will always be MCE, the form of their 
+' backward-looking identities is not very important.
+  {%varmod}.append zgap3-zgap3_aerr = .5*xgap2(-1)
+  {%varmod}.append zpic43-zpic43_aerr = .5*picx4(-1)+.5*ptr(-1)
+
+' Add the new MCE variables to the %zvars string
+  %zvars = %zvars + " zgap3 zpic43"
+
+' Define baseline values of the new expectations variables
+  smpl @all
+  series zgap3 = xgap2(3)
+  series zpic43 = picx4(3)
+
+' Make sure that the baseline data for rffgen matches the baseline data for rffe
+  rffgen = rffe
+
+' end of new code
+' *****************************************************************************
+' *****************************************************************************
+
+' Data for extra variables associated with MC expectations
+  smpl @all
+  call make_frbus_mcevars(%zvars)
+
+' Set monetary policy to use the first-difference policy rule (coded as rffgen)
+  smpl @all
+  call set_mp("dmpgen")
+
+' Turn off zero bound and policy thresholds; hold policymaker's
+' perceived equilibrium real interest rate constant
+  smpl @all
+  dmptrsh = 0
+  rffmin = -9999
+  drstar = 0
+
+' Set fiscal policy
+  smpl @all
+  call set_fp("dfpsrp")
+
+' Set _aerr variables to zero
+  smpl @all
+  {%varmod}.makegroup(a,n) endog @endog
+  call groupnew("endog","_aerr")
+  call group2zero("endog_aerr")
+
+' Standard solution options
+  {%varmod}.solveopt(o=b,g=12,z=1e-12)
+  {%mcemod}.solveopt(o=b,g=12,z=1e-12)
+
+' Assign baseline tracking add factors
+  %suftrk = "_0"
+  smpl %simstart %simend 
+  {%varmod}.addassign @all
+  {%varmod}.addinit(v=n) @all
+  {%varmod}.scenario(n,a={%suftrk}) "track"
+  {%varmod}.solve
+  scalar mm = @max(@abs(xgap{%suftrk}-xgap))
+  if mm > .0001 then
+    statusline dynamic tracking simulation failed for {%varmod}
+    stop
+    endif
+  {%mcemod}.addassign @all
+  {%mcemod}.addinit(v=n) @all
+
+' *************************************************************
+' Simulate the effects of a one-percent consumption shock 
+' *************************************************************
+
+  %sufsim = "_1"
+  {%varmod}.scenario(n,a={%sufsim}) "sim"
+  {%mcemod}.scenario(n,a={%sufsim}) "sim"
+
+  smpl %simstart %simstart
+  eco_a = eco_a + .01
+
+  %modstr = "mod_b=%varmod,mod_f=%mcemod,mce_vars=%zvars"
+  %algstr = "meth=qnewton"
+  %simstr = "type=single"
+  smpl %simstart %simend
+  call mce_run(%modstr,%algstr,%simstr)
+
+
+'***********************************************************
+' Make a graph
+'***********************************************************
+
+  smpl %simstart %simstart + 39
+  series zero = 0
+  series d_rff = rff{%sufsim} - rff
+  series d_rg10 = rg10{%sufsim} - rg10
+  series d_lur = lur{%sufsim} - lur
+  series d_pic4 = pic4{%sufsim} - pic4
+
+  graph fig1a.line zero d_rff
+  fig1a.addtext(t,just(c),font("arial",12)) Federal Funds Rate
+  fig1a.legend -display
+
+  graph fig1b.line zero d_rg10
+  fig1b.addtext(t,just(c),font("arial",12)) 10-Year Treasury Yield
+  fig1b.legend -display
+
+  graph fig1c.line zero d_lur
+  fig1c.addtext(t,just(c),font("arial",12)) Unemployment Rate
+  fig1c.legend -display
+
+  graph fig1d.line zero d_pic4
+  fig1d.addtext(t,just(c),font("arial",12)) Inflation Rate (4-Quarter)
+  fig1d.legend -display
+
+  graph fig1.merge fig1a fig1b fig1c fig1d
+  %title = " Macroeconomic Effects of a Shock to Consumption\r"
+  if %mcvars_wp = "no" and %mcvars_all = "no" then
+    %title = %title + "(MC Expectations in Asset Pricing)"
+    endif
+  if %mcvars_wp = "yes" and %mcvars_all = "no" then
+    %title = %title + "(MC Expectations in Asset Pricing and Price-Wage Setting)"
+    endif
+  if %mcvars_all = "yes" then
+    %title = %title + "(MC Expectations in All Sectors)"
+    endif
+  fig1.addtext(t,just(c),font("Arial",16)) {%title}
+  fig1.align(2,1,1.25)
+  show fig1
+
+
+@ %def example4
 
 \section{ocpolicy program}
 
+<<frbus ocpolicy>>=
+' Routine to simulate how the SEP baseline forecast would change if
+' policymakers commit to a path for the federal funds rate that is 
+' determined by optimal-control (OC) techniques to minimize a 
+' quadratic loss function.
+'
+' Detailed information on the mechanics of the OC algorithm and the
+' various required and optional parameters that set up and guide its
+' execution is available in the MCE Solve Users Guide in the
+' documentation directory.  Most relevant is the part of section 5
+' that describes the "opt" simulation type as well as table 7.  
+
+' As specified below, the loss function penalizes equally weighted 
+' squared deviations of the unemployment rate from the natural rate,
+' squared deviations of inflation from a 2 percent, and squared 
+' quarterly changes in the funds rate.
+
+' In the SEP baseline, agents with model-consistent (MC) expectations
+' are initially assumed to project that the funds rate will follow the
+' baseline path and to set their baseline expectations 
+' accordingly.  At the start of the optimal control simulation, however, 
+' these agents immediately and fully revise their expectations to be 
+' consistent with the revision to the funds rate path that occurs under 
+' optimal control -- that is, agents have rational expectations and 
+' announced policy actions are completely credible.
+'
+' The experiment can be run with the zero lower bound (ZLB) imposed
+' (%zerobound = "yes") or not imposed (%zerobound = "no").  When
+' the ZLB is imposed, a penalty term is added to the loss function.
+
+' *************************************************************
+' Initial filename and parameter settings
+' *************************************************************
+
+' Subroutines
+  include ../subs/master_library
+  include ../subs/mce_solve_library
+
+' Workfile    
+  %wfstart = "1975q1"
+  %wfend = "2100q4"
+  %mainpage = "main"
+  wfcreate(wf=aaa,page={%mainpage}) q {%wfstart} {%wfend}
+
+' FRB/US model names and locations
+  %varmod = "stdver"
+  %varpath = "../mods/"
+  %mcemod = "pfver"
+  %mcepath = "../mods/"
+
+' Input datbase
+  %dbin  = "../data/longbase"
+
+' Simulation range
+  %simstart = "2014q4"
+  %simend   = "2070q4"
+
+' Primary loss function parameters:  The value of the policy instrument
+' is chosen optimally from %drvstart to %drvend (60 qtrs) to minimize
+' the loss function from %evlstart to %evlend (80 qtrs).  The three
+' arguments of the period loss function are weighted by the the
+' weight parameters and over time losses are discounted at the rate
+' %discount
+  %evlstart = %simstart
+  %drvstart = %simstart
+  call dateshift(%evlstart,%evlend,79)
+  call dateshift(%drvstart,%drvend,59)
+  %discount = ".99"
+  %u_weight = "1.0"
+  %p_weight = "1.0"
+  %r_weight = "1.0"
+  
+' Optionally impose the zero lower bound
+  %zerobound = "yes"
+
+
+' ****************************************************************
+' Retrieve data, model equations and coefficients, set
+' policy options, and compute tracking residuals 
+' ****************************************************************
+
+' Specify MC expectations variables
+  %mcvars_wp = "yes"
+  %mcvars_all = "no"
+ 
+' MCE asset pricing
+  %zvars = "zdivgr zgap05 zgap10 zgap30 zrff5 zrff10 zrff30 zpi10 zpi10f zpic30 zpib5 zpic58 "
+
+' MCE elsewhere
+  if %mcvars_wp = "yes" and %mcvars_all = "no" then
+    %zvars = %zvars + "zpicxfe zpieci "
+    endif
+  if %mcvars_all = "yes" then
+    %zvars = %zvars + "zpicxfe zpieci "
+    %zvars = %zvars + "zecd zeco zeh zgapc2 zlhp zpi5 zvpd zvpi zvps zxbd zxnfbi zxnfbs zyh zyhp zyht zynid "
+    endif
+
+' Load equations and coefficients
+  call mce_load_frbus("mce_vars=%zvars,mod_b=%varmod,path_b=%varpath,mod_f=%mcemod,path_f=%mcepath")
+
+' Add a ugap equation
+  {%varmod}.append ugap - ugap_aerr = lur - lurnat
+
+' Load data
+  dbopen %dbin as longdata
+  fetch(d=longdata) *
+
+' Define SEP-consistent ustar and ugap series; this step is needed because 
+' the baseline value of lurnat may not be fully SEP-consistent in the 
+' short-to-medium ruun
+  smpl @all
+  series ustar = lurnat
+  smpl %simstart 2025q4
+  ustar = 5.35
+  smpl @all
+  series ugap = lur-ustar
+  series ugap_aerr = 0
+
+' Data for extra variables associated with MC expectations
+  smpl @all
+  call make_frbus_mcevars(%zvars)
+
+' Set monetary policy option (the residual on the equation of
+' the chosen option is the OC policy instrument)
+  smpl @all
+  call set_mp("dmptay")
+
+' Initially turn off zero lower bound; if %zerobound = "yes", it will be
+' imposed below by adding a penalty term to the loss function.
+  smpl @all
+  rffmin = -9999
+' Turn off policy thresholds
+  dmptrsh = 0
+' Let the perceived equilibrium real interest rate vary
+  drstar = 1
+
+' Set fiscal policy so that it is exogenous for first 20 qtrs and then
+' turns on debt targeting rule
+  smpl %simstart %simstart + 19
+  call set_fp("dfpex")
+  smpl %simstart + 20 %simend
+  call set_fp("dfpdbt")
+
+' Set _aerr variables to zero
+  smpl @all
+  {%varmod}.makegroup(a,n) endog @endog
+  call groupnew("endog","_aerr")
+  call group2zero("endog_aerr")
+
+' Standard solution options
+  {%varmod}.solveopt(o=b,g=12,z=1e-12)
+  {%mcemod}.solveopt(o=b,g=12,z=1e-12)
+
+' Assign baseline tracking add factors
+  %suftrk = "_0"
+  smpl %simstart %simend 
+  {%varmod}.addassign @all
+  {%varmod}.addinit(v=n) @all
+  {%varmod}.scenario(n,a={%suftrk}) "track"
+  {%varmod}.solve
+  scalar mm = @max(@abs(xgap{%suftrk}-xgap))
+  if mm > .0001 then
+    statusline dynamic tracking simulation failed for {%varmod}
+    stop
+    endif
+  {%mcemod}.addassign @all
+  {%mcemod}.addinit(v=n) @all
+
+
+
+'*************************************************************
+' optimal policy setup
+'*************************************************************
+
+' The policy instrument is a time varying constant in the equation
+' for the selected policy rule
+  group opt_instrus rfftay_aerr
+
+' Loss function variables (unemployment gap, 4-qtr PCE inflation, 
+' and the first difference of the federal funds rate)
+  group opt_targs ugap pic4 delrff
+
+' The desired paths of the loss function variables are specified in
+' series with "_t" suffix.
+  smpl @all
+  series ugap_t   = 0
+  series delrff_t = 0
+  series pic4_t   = 2.0
+
+' The weights on the loss function arguments are specified in
+' series with "_w" suffix.
+  series ugap_w   = @val(%u_weight)
+  series pic4_w   =  @val(%p_weight)
+  series delrff_w =  @val(%r_weight)
+
+  !discount = @val(%discount)
+  smpl %simstart+1 %simend
+  ugap_w   = !discount * ugap_w(-1)     
+  pic4_w   = !discount * pic4_w(-1)     
+  delrff_w = !discount * delrff_w(-1)     
+
+' Zero bound penalty function
+  if %zerobound = "yes" then
+    {%varmod}.append penalty - penalty_aerr = _
+       @recode(rff<(rff_lo_bnd+rff_lo_shift), _ 
+         3.0*((rff_lo_bnd+rff_lo_shift)-rff),  _
+         0) _
+     + @recode(rff<(rff_lo_bnd+rff_lo_shift), _
+       .10*exp(10*(rff-(rff_lo_bnd+rff_lo_shift))), _
+       .10*exp(-20*(rff-(rff_lo_bnd+rff_lo_shift))))
+    smpl @all
+    series rff_lo_bnd = .125
+    series rff_lo_shift = .00
+    series penalty = 0
+    series penalty_aerr = 0
+    series rffmin = -9999
+    %penalty_weight = "10.0"
+    opt_targs.add penalty
+    smpl @all
+    series penalty_a = 0
+    series penalty_t = 0
+    series penalty_w = @val(%penalty_weight)
+    smpl %simstart+1 %simend
+    penalty_w = !discount * penalty_w(-1)     
+    endif
+
+
+
+'*************************************************************
+' optimal policy simulation
+'*************************************************************
+
+  %sufcontrol = "_1"
+
+' In %simstr, the "type=opt" string designates a commitment-based 
+' OC simulation.  The required "instrus" and "targs" keywords point to
+' the groups containing the policy instrument(s) and target variables.
+' FRB/US simulations of this type generally run much more quickly with
+' the newton MCE algorithm than they do with qnewton. 
+  %modstr = "mod_b=%varmod,mod_f=%mcemod,mce_vars=%zvars"
+  %algstr = "jinit=interp(4), meth=newton"
+  %simstr = "type=opt,instrus=opt_instrus,targs=opt_targs"
+  %simstr = %simstr + ",scen,suf=" + %sufcontrol+ ",solveopt=%sopt"
+  %simstr = %simstr + ",lend=" + %evlend + ",iend=" + %drvend + ",lmax=20"
+  smpl {%simstart} {%simend}
+  call mce_run(%modstr,%algstr,%simstr)
+
+' When the ZLB is imposed, run the OC algorithm a second time, 
+' after adjusting the intercept of the penalty function,
+' to hit ZLB more closely
+  if %zerobound = "yes" then
+    smpl if rff{%sufcontrol} <.2
+    rff_lo_shift = .125 - rff{%sufcontrol} 
+    %modstr = ""
+    %algstr = ""
+    %simstr = "type=opt,instrus=opt_instrus,targs=opt_targs"
+    %simstr = %simstr + ",solveopt=%sopt"
+    %simstr = %simstr + ",lend=" + %evlend + ",iend=" + %drvend + ",lmax=20"
+    smpl {%simstart} {%simend}
+    call mce_run(%modstr,%algstr,%simstr)
+    endif
+
+
+'***********************************************************
+' graph results
+'***********************************************************
+
+  call dateshift(%simstart,%graphstart,-8)
+  call dateshift(%simstart,%graphend,32)
+
+  smpl %graphstart %graphend
+  graph fig1a.line rff{%sufcontrol} rff
+  fig1a.options size(7,4.2)
+  fig1a.legend display -inbox position(3.8,2.8) font("arial",15)
+  fig1a.datelabel format(yy)
+  fig1a.addtext(6.4,-.30,font("arial",13),keep) percent
+  fig1a.axis(left) font("arial",15)
+  fig1a.axis(bottom) font("arial",15)
+  fig1a.setelem(1) lcolor(red)  legend("optimal control") lwidth(2)
+  fig1a.setelem(2) lcolor(black) legend("SEP-consistent baseline") lwidth(2)
+  fig1a.addtext(t,just(c),font("arial",18)) Federal Funds Rate
+
+
+  smpl %graphstart %graphend
+  graph fig1b.line rg10{%sufcontrol} rg10
+  fig1b.options size(7,4.2)
+  fig1b.legend display -inbox position(3.8,2.8) font("arial",15)
+  fig1b.datelabel format(yy)
+  fig1b.addtext(6.4,-.30,font("arial",13),keep) percent
+  fig1b.axis(left) font("arial",15)
+  fig1b.axis(bottom) font("arial",15)
+  fig1b.setelem(1) lcolor(red)  legend("optimal control") lwidth(2)
+  fig1b.setelem(2) lcolor(black) legend("SEP-consistent baseline") lwidth(2)
+  fig1b.addtext(t,just(c),font("arial",18)) 10-Year Treasury Yield
+
+
+  smpl %graphstart %graphend
+  graph fig1c.line lur{%sufcontrol} lur
+  fig1c.options size(7,4.2)
+  fig1c.legend display -inbox position(3.9,0.3) font("arial",15)
+  fig1c.datelabel format(yy)
+  fig1c.addtext(6.4,-.30,font("arial",13),keep) percent
+  fig1c.axis(left) font("arial",15)
+  fig1c.axis(bottom) font("arial",15)
+  fig1c.setelem(1) lcolor(red)  legend("optimal control") lwidth(2)
+  fig1c.setelem(2) lcolor(black) legend("SEP-consistent baseline") lwidth(2)
+  fig1c.addtext(t,just(c),font("arial",18)) Unemployment Rate
+
+
+  smpl %graphstart %graphend
+  graph fig1d.line pic4{%sufcontrol} pic4
+  fig1d.options size(7,4.2)
+  fig1d.legend display -inbox position(0.5,0.2) font("arial",15)
+  fig1d.datelabel format(yy)
+  fig1d.addtext(6.4,-.30,font("arial",13),keep) percent
+  fig1d.axis(left) font("arial",15)
+  fig1d.axis(bottom) font("arial",15)
+  fig1d.setelem(1) lcolor(red)  legend("optimal control") lwidth(2)
+  fig1d.setelem(2) lcolor(black) legend("SEP-consistent baseline") lwidth(2)
+  fig1d.addtext(t,just(c),font("arial",18)) PCE Inflation Rate (4-Quarter)
+
+
+  graph fig1.merge fig1a fig1b fig1c fig1d
+  if %mcvars_wp = "no" and %mcvars_all = "no" then
+    %title = "Macroeconomic Effects of Optimal-Control Policy with Rational Expectations only in Financial Markets"
+    endif
+  if %mcvars_wp = "yes" and %mcvars_all = "no" then
+    %title = "Macroeconomic Effects of Optimal-Control Policy\n With Rational Expectationsin Financial Markets and Wage-Price Setting"
+    endif 
+  if %mcvars_all = "yes" then
+    %title = "Macroeconomic Effects of Optimal-Control Policy With Full Rational Expectations"
+    endif
+
+  if %zerobound = "yes" then
+    %title = %title + "\rZLB Imposed"
+    else
+    %title = %title + "\rZLB not Imposed"
+    endif    
+
+  fig1.addtext(t,just(c),font("Arial",20)) {%title}
+  fig1.align(2,1,1.25)
+  show fig1
+
+
+
+@ %def ocpolicy
+
 \section{pings program}
+
+<<simulate six ping simulations, aka simple IRFs>>=
+' Simulate six ping simulations (AKA simple IRFs) 
+'
+' Notes:
+'
+' 1. Choose between VAR expectations and several MCE alternatives
+' with the %mcevars parameter.
+'
+'   - %mcevars = "none"   => VAR expectations everywhere
+'   - %mcevars = "mcap"   => MCE in asset pricing, VAR expectations elsewhere
+'   - %mcevars = "mcapwp" => MCE in asset pricing and price-wage setting;
+'        VAR expectations elsewhere
+'   - %mcevars = "all"    => MCE everywhere
+'
+' Note that even when %mcevars = "none", the program does many
+' of the setup steps for an MCE simulation even though it never
+' uses what they create.
+
+' 2. Seven of the pings are one-time shocks to the residual of an
+' equation whose structure contains a large autoregressive
+' element.  The remaining ping involves a permanent increase in the
+' level of trend MFP.
+
+' 3. The eight pings are:
+'
+'   - A 100 basis point upward shock to the rffintay monetary
+'     policy rule
+'   - An increase in federal purchases equal to one percent of
+'     baseline GDP
+'   - A one percent permanent increase in the level of trend MPF 
+'   - A 100 bp increase in the equity premium
+'   - A $10 per barrel increase in the price of oil
+'   - A 1 percent (ar) increase in the growth rate of 
+'     multifactor productivity
+'   - Increases of 100 basis points to the 10-year Treasury term premium, 
+'     75 basis points to the 5-year premium, and 30 basis points to the
+'     30-year premium 
+'   - A 10 percent increase in the (real) exchange rate
+
+' *************************************************************
+' Initial filename and parameter settings
+' *************************************************************
+
+' Subroutines
+  include ../subs/master_library
+  include ../subs/mce_solve_library
+
+' Workfile    
+  %wfstart = "1975q1"
+  %wfend = "2100q4"
+  %mainpage = "main"
+  wfcreate(wf=aaa,page={%mainpage}) q {%wfstart} {%wfend}
+
+' FRB/US model names and locations
+  %varmod = "stdver"
+  %varpath = "../mods/"
+  %mcemod = "pfver"
+  %mcepath = "../mods/"
+
+' Input datbase
+  %dbin  = "../data/longbase"
+
+' Simulation range
+  %simstart = "2020q1"
+  %simend   = "2069q4"
+
+' Choose an expectations option ("none" => VAR expectations, "mcap", "mcapwp", "all") 
+  %mcevars = "none"
+
+' ****************************************************************
+' Retrieve data, model equations and coefficients, set
+' policy options, and compute tracking residuals 
+' ****************************************************************
+
+' MCE variable setup 
+  if %mcevars = "none" then
+    %zvars = "zpic58 "
+    else
+    %zvars = "zdivgr zgap05 zgap10 zgap30 zrff5 zrff10 zrff30 zpi10 zpi10f zpic30 zpib5 zpic58 "
+    if %mcevars = "mcapwp" or %mcevars = "all" then
+      %zvars = %zvars + "zpicxfe zpieci "
+      endif
+    if %mcevars = "all" then
+      %zvars = %zvars + "zecd zeco zeh zgapc2 zlhp zpi5 zvpd zvpi zvps zxbd zxbi zxbs zyh zyhp zyht zynid "
+      endif
+    endif
+
+' Load equations and coefficients
+  call mce_load_frbus("mce_vars=%zvars,mod_b=%varmod,path_b=%varpath,mod_f=%mcemod,path_f=%mcepath")
+
+' Load data
+  dbopen %dbin as longdata
+  fetch(d=longdata) *
+
+' Data for extra variables associated with MC expectations
+  smpl @all
+  call make_frbus_mcevars(%zvars)
+
+' Set monetary policy
+  smpl @all
+  call set_mp("dmpintay")
+
+' Turn off zero bound and policy thresholds; hold policymaker's
+' perceived equilibrium real interest rate constant
+  smpl @all
+  dmptrsh = 0
+  rffmin = -9999
+  drstar = 0
+
+' Set fiscal policy
+  smpl @all
+  call set_fp("dfpsrp")
+
+' Set _aerr variables to zero
+  smpl @all
+  {%varmod}.makegroup(a,n) endog @endog
+  call groupnew("endog","_aerr")
+  call group2zero("endog_aerr")
+
+' Standard solution options
+  {%varmod}.solveopt(o=b,g=12,z=1e-12)
+  {%mcemod}.solveopt(o=b,g=12,z=1e-12)
+
+' Assign baseline tracking add factors
+  %suftrk = "_0"
+  smpl %simstart %simend 
+  {%varmod}.addassign @all
+  {%varmod}.addinit(v=n) @all
+  {%varmod}.scenario(n,a={%suftrk}) "track"
+  {%varmod}.solve
+  scalar mm = @max(@abs(xgap{%suftrk}-xgap))
+  if mm > .0001 then
+    statusline dynamic tracking simulation failed for {%varmod}
+    stop
+    endif
+  {%mcemod}.addassign @all
+  {%mcemod}.addinit(v=n) @all
+
+
+
+
+  
+' ****************************************************************
+' Ping simulations
+' ****************************************************************
+
+  %suf = "_1"
+  {%varmod}.scenario(n,a={%suf}) "ping"
+  {%mcemod}.scenario(n,a={%suf}) "ping"
+  
+' **********************************
+' Federal Funds Rate: RFF ping 
+
+  %ping = "rff"
+
+  smpl %simstart %simstart
+  rffintay_aerr = rffintay_aerr + 1
+  smpl %simstart %simend
+  if %mcevars = "none" then
+    {%varmod}.solve
+    else
+    %modstr = "mod_b=%varmod,mod_f=%mcemod,mce_vars=%zvars"
+    %algstr = "meth=qnewton"
+    %simstr = "type=single,solveopt=%sopt,suf=" + %suf
+    call mce_run(%modstr,%algstr,%simstr)
+    endif
+  smpl %simstart %simstart
+  rffintay_aerr = rffintay_aerr - 1
+  call copyit
+
+' **********************************
+' Treasury Term Premium: RG10P, RG5P, and RG30P ping 
+
+  %ping = "prem"
+  smpl @all
+  series rg30p_aerr = 0
+  smpl %simstart %simstart
+  rg10p_aerr = rg10p_aerr + 1
+  rg5p_aerr = rg5p_aerr + .75
+  rg30p_aerr = rg30p_aerr + .35
+  smpl %simstart %simend
+  if %mcevars = "none" then
+    {%varmod}.solve
+    else
+    %modstr = "mod_b=%varmod,mod_f=%mcemod,mce_vars=%zvars"
+    %algstr = "meth=qnewton"
+    %simstr = "type=single,solveopt=%sopt,suf=" + %suf
+    call mce_run(%modstr,%algstr,%simstr)
+    endif
+  smpl %simstart %simstart
+  rg10p_aerr = rg10p_aerr - 1
+  rg5p_aerr = rg5p_aerr - 0.75
+  rg30p_aerr = rg30p_aerr - .35
+  call copyit
+  smpl %simstart %simend
+  series rg10p_{%ping} = rg10p{%suf} - rg10p
+
+' **********************************
+' Federal Purchases: EGFO ping
+
+  %ping = "eg"
+  smpl %simstart %simstart
+  egfo_aerr = egfo_aerr + .01*xgdpn/egfon
+  smpl %simstart %simend
+  if %mcevars = "none" then
+    {%varmod}.solve
+    else
+    %modstr = "mod_b=%varmod,mod_f=%mcemod,mce_vars=%zvars"
+    %algstr = "meth=qnewton"
+    %simstr = "type=single,solveopt=%sopt,suf=" + %suf
+    call mce_run(%modstr,%algstr,%simstr)
+    endif
+  smpl %simstart %simstart
+  egfo_aerr = egfo_aerr - .01*xgdpn/egfon
+  call copyit
+  smpl %simstart %simend
+  series egfn_shr_{%ping} = 100*(egfn{%suf}/xgdpn{%suf} - egfn/xgdpn)
+
+' **********************************
+' Equity Premium: REQP ping
+
+  %ping = "reqp"
+  smpl %simstart %simstart
+  reqp_aerr = reqp_aerr + 1
+  smpl %simstart %simend
+  if %mcevars = "none" then
+    {%varmod}.solve
+    else
+    %modstr = "mod_b=%varmod,mod_f=%mcemod,mce_vars=%zvars"
+    %algstr = "meth=qnewton"
+    %simstr = "type=single,solveopt=%sopt,suf=" + %suf
+    call mce_run(%modstr,%algstr,%simstr)
+    endif
+  smpl %simstart %simstart
+  reqp_aerr = reqp_aerr - 1
+  call copyit
+  smpl %simstart %simend
+  series reqp_{%ping} = reqp{%suf} - reqp
+
+
+' **********************************
+' Oil Prices: POILR ping
+
+  %ping = "oil"
+  smpl %simstart %simstart
+  poilr_aerr = poilr_aerr + 10/pxb
+  smpl %simstart %simend
+  if %mcevars = "none" then
+    {%varmod}.solve
+    else
+    %modstr = "mod_b=%varmod,mod_f=%mcemod,mce_vars=%zvars"
+    %algstr = "meth=qnewton"
+    %simstr = "type=single,solveopt=%sopt,suf=" + %suf
+    call mce_run(%modstr,%algstr,%simstr)
+    endif
+  smpl %simstart %simstart
+  poilr_aerr = poilr_aerr - 10/pxb
+  call copyit
+  smpl %simstart %simend
+  series poil_{%ping} = poil{%suf} - poil
+
+
+
+' **********************************
+' Exchange Rate: FPXRR ping
+
+  %ping = "exch"
+  smpl %simstart %simstart
+  series shock_fpxr = log(1.1)
+  fpxrr_aerr = fpxrr_aerr + shock_fpxr
+
+  smpl %simstart %simend
+  if %mcevars = "none" then
+    {%varmod}.solve
+    else
+    %modstr = "mod_b=%varmod,mod_f=%mcemod,mce_vars=%zvars"
+    %algstr = "meth=qnewton"
+    %simstr = "type=single,solveopt=%sopt,suf=" + %suf
+    call mce_run(%modstr,%algstr,%simstr)
+    endif
+   
+  series fpxr_{%ping} = fpxr{%suf} - fpxr 
+  smpl %simstart %simstart
+  fpxrr_aerr = fpxrr_aerr - shock_fpxr
+  call copyit
+
+
+' **********************************
+' HMFPT ping
+
+  %ping = "hmfp"
+  smpl %simstart %simstart
+  hmfpt_aerr = hmfpt_aerr + 1
+  smpl %simstart %simend
+  if %mcevars = "none" then
+    {%varmod}.solve
+    else
+    %modstr = "mod_b=%varmod,mod_f=%mcemod,mce_vars=%zvars"
+    %algstr = "meth=qnewton"
+    %simstr = "type=single,solveopt=%sopt,suf=" + %suf
+    call mce_run(%modstr,%algstr,%simstr)
+    endif
+  smpl %simstart %simstart
+  hmfpt_aerr = hmfpt_aerr - 1
+  call copyit
+  smpl %simstart %simend
+  series hmfpt_{%ping} = hmfpt{%suf} - hmfpt
+
+
+' **********************************
+' MFPT ping
+
+  %ping = "mfp"
+  smpl %simstart %simstart
+  mfpt_aerr = mfpt_aerr + .01
+  smpl %simstart %simend
+  if %mcevars = "none" then
+    {%varmod}.solve
+    else
+    %modstr = "mod_b=%varmod,mod_f=%mcemod,mce_vars=%zvars"
+    %algstr = "meth=qnewton"
+    %simstr = "type=single,solveopt=%sopt,suf=" + %suf
+    call mce_run(%modstr,%algstr,%simstr)
+    endif
+  smpl %simstart %simstart
+  mfpt_aerr = mfpt_aerr - .01
+  call copyit
+  smpl %simstart %simend
+  series mfpt_{%ping} = 100*(mfpt{%suf}/mfpt - 1)
+
+
+' ****************************************************************
+' Individual ping graphs
+' ****************************************************************
+  call graphit
+
+
+' ****************************************************************
+' Composite figures
+' ****************************************************************
+
+  if %mcevars = "none" then
+    %exp = "VAR Expectations"
+    endif
+  if %mcevars = "mcap" then
+    %exp = "MC (MCAP) Expectations"
+    endif
+  if %mcevars = "mcapwp" then
+    %exp = "MC (MCAP+WP) Expectations"
+    endif
+  if %mcevars = "all" then
+    %exp = "MC (ALL) Expectations"
+    endif
+
+  %t1 = "FRB/US Ping Simulations:  " + %exp + " -- I"
+  %t2 = "FRB/US Ping Simulations:  " + %exp + " -- II"
+  %t3 = "FRB/US Ping Simulations:  " + %exp + " -- III"
+
+' Figure 1
+
+  graph fig_1.merge gr_rff gr_eg gr_reqp
+  fig_1.align(3,.4,1.0)
+  fig_1.addtext(t,just(c),font(12)) %t1
+  show fig_1
+
+
+
+' Figure 2
+
+  graph fig_2.merge gr_oil gr_hmfp gr_mfp
+  fig_2.align(3,.4,1.0)
+  fig_2.addtext(t,just(c),font(12)) %t2
+  show fig_2
+
+
+' Figure 3
+
+  graph fig_3.merge gr_prem gr_exch
+  fig_3.align(3,.4,1.0)
+  fig_3.addtext(t,just(c),font(12)) %t3
+  show fig_3
+@
 
 
 \chapter{Model Consistent Expectation Solve Package}
 
 \section{example1 program}
 
+<<mce example1>>=
+' This example illustrates:
+'
+'   - The automated approach to constructing the two operational
+'     models
+'   - How to define the multiplier shock in a text
+'     file whose lines are executed from within the call to
+'     mce_run
+'   - How to declare the model scenario and the scenario
+'     scenario alias within the call to mce_run
+'   - The use of the "linear" option of the "newton" algorithm
+'     for a linear model in which the maximum endogenous lead and
+'     lag is one period
+
+'************************************************************
+'************************************************************
+'************************************************************
+' Section 1:  Workfile, model name, simulation range
+
+  include  mce_solve_library
+
+' Workfile
+  %wfstart = "2000q1"
+  %wfend = "2100q4"
+  %mainpage = "main"
+  wfcreate(wf=aaa,page={%mainpage}) q {%wfstart} {%wfend}
+
+' Model name
+  %mod = "simple"
+
+' Simulation range
+  %simstart = "2001q1"
+  %simend = "2025q4"
+
+
+'************************************************************
+'************************************************************
+'************************************************************
+' Section 2:  Model, coefficients, and data
+
+' equations
+
+  model {%mod}
+  {%mod}.append pinf = cp(1) * pinf(-1) + (.98-cp(1))*pinf(1)+ cp(2) * ygap
+  {%mod}.append rate = cr(1)*rate(-1)+(1-cr(1))*(cr(2)*pinf + cr(3)*ygap)
+  {%mod}.append ygap = cy(1) * ygap(-1) + (.98-cy(1))*ygap(1) + cy(2) * (rate - pinf(1))
+
+
+' coefficients
+
+  coef(2) cy
+  cy.fill .50, -.02
+  coef(2) cp
+  cp.fill .50, .02
+  coef(3) cr
+  cr.fill .75, 1.5, 0.5 
+
+' set all data to zero
+  smpl @all
+  %vars = {%mod}.@varlist
+  for !i = 1 to @wcount(%vars)
+    %tmp = @word(%vars,!i)
+    series {%tmp} = 0
+    next
+
+
+'************************************************************
+'************************************************************
+'************************************************************
+' Section 3: Simulation
+
+  text shock1
+  shock1.append smpl {%simstart} {%simstart}
+  shock1.append series rate_a = rate_a + 1
+
+  %mopts = "create,mod=%mod,adds,track"
+  %aopts = "jinit=linear"
+  %sopts = "type=single,txt=shock1,scen,suf=_1"
+  smpl {%simstart} {%simend}
+  call mce_run(%mopts,%aopts,%sopts)
+  copy mce_sim_spool mce_sim_spool_1
+  show mce_sim_spool_1
+
+  series zero = 0
+  smpl %simstart %simstart + 39
+  graph gr1.line zero rate_1 pinf_1 ygap_1
+  gr1.addtext(t,c,font(14)) "Positive interest rate shock"
+  show gr1
+
+
+
+@ %def example1
+
 \section{example2 program}
+
+<<mce example2>>=
+' This example illustrates:
+'
+'   - A manual approach to constructing the two operational
+'     models that mimics what the automated approach does
+'   - How to define the multiplier shock in a text
+'     file whose lines are executed from within the call to
+'     mce_run
+'   - How to declare the model scenario and the scenario
+'     scenario alias within the call to mce_run
+'   - The use of the "linear" option of the "newton" algorithm
+'     for a linear model in which the maximum endogenous lead and
+'     lag is one period
+
+'************************************************************
+'************************************************************
+'************************************************************
+' Section 1:  Workfile, model name, simulation range
+
+  include  mce_solve_library
+
+' Workfile
+  %wfstart = "2000q1"
+  %wfend = "2100q4"
+  %mainpage = "main"
+  wfcreate(wf=aaa,page={%mainpage}) q {%wfstart} {%wfend}
+
+' Model names
+  %modb = "simpleb"
+  %modf = "simplef"
+
+' Simulation range
+  %simstart = "2001q1"
+  %simend = "2025q4"
+
+
+'************************************************************
+'************************************************************
+'************************************************************
+' Section 2:  Model, coefficients, and data
+
+' equations in backward-looking model
+
+  model {%modb}
+  {%modb}.append pinf = cp(1) * pinf(-1) + (.98-cp(1))*zpinf+ cp(2) * ygap
+  {%modb}.append rate = cr(1)*rate(-1)+(1-cr(1))*(cr(2)*pinf + cr(3)*ygap)
+  {%modb}.append ygap = cy(1) * ygap(-1) + (.98-cy(1))*zygap + cy(2) * (rate - zpinf)
+
+' equations in expectations errors model
+
+  model {%modf}
+  {%modf}.append ezpinf = zpinf - pinf(1)
+  {%modf}.append ezygap = zygap - ygap(1)
+
+' coefficients
+
+  coef(2) cy
+  cy.fill .50, -.02
+  coef(2) cp
+  cp.fill .50, .02
+  coef(3) cr
+  cr.fill .75, 1.5, 0.5 
+
+' set all data to zero
+  smpl @all
+  %vars = {%modb}.@varlist
+  for !i = 1 to @wcount(%vars)
+    %tmp = @word(%vars,!i)
+    series {%tmp} = 0
+    next
+  %vars = {%modf}.@varlist
+  for !i = 1 to @wcount(%vars)
+    %tmp = @word(%vars,!i)
+    series {%tmp} = 0
+    next
+
+' declare mce variables and instruments
+  %instrus = "zpinf zygap"
+  %errs = "ezpinf ezygap"
+
+'************************************************************
+'************************************************************
+'************************************************************
+' Section 3: Simulation
+
+
+  text shock1
+  shock1.append smpl {%simstart} {%simstart}
+  shock1.append series rate_a = rate_a + 1
+
+  %mopts = "mod_b=%modb,mod_f=%modf,mce_instrus=%instrus,mce_errs=%errs,adds,track"
+  %aopts = "jinit=linear"
+  %sopts = "type=single,txt=shock1,scen,suf=_1"
+  smpl {%simstart} {%simend}
+  call mce_run(%mopts,%aopts,%sopts)
+  copy mce_sim_spool mce_sim_spool_1
+  show mce_sim_spool_1
+
+  series zero = 0
+  smpl %simstart %simstart + 39
+  graph gr1.line zero rate_1 pinf_1 ygap_1
+  gr1.addtext(t,c,font(14)) "Positive interest rate shock"
+  show gr1
+
+
+
+@ %def example2
 
 \section{example3 program}
 
+<<mce example3>>=
+' This example illustrates:
+'
+'   - Another manual approach to constructing the two operational
+'     models that introduces new endogenous variables for the
+'     expectations leads along with simple equations for the new
+'     endogenous variables.
+'   - The MCE instruments are the add factors on the equations for
+'     the new endogenous variables; this circumstance requires that
+'     add factors be assigned to the operational models prior to 
+'     the call to mce_run.
+'   - The option of defining the multiplier shock in commands that
+'     are executed prior to the call to mce_run, when the manual
+'     approach is used.
+'   - The option of declaring model scenarios and the scenario
+'     scenario alias prior to the call to mce_run, when the manual
+'     approach is used.
+'   - The model no longer satisfies the conditions for which the
+'     "jinit=linear" option of the "newton" algorithm is designed.
+'     This example uses "jinit=interp(4)" to specify a
+'     particular approximate Jacobian.
+'
+'   - This example runs three simulations.  In the second and third 
+'     simulations, the assignment of null strings to the first two 
+'     arguments of the mce_run subroutine causes the simulations to be
+'     run with the same internal models and algorithm (including
+'     the Newton MCE Jacobian) that were created or declared in the
+'     first simulation.  
+
+'************************************************************
+'************************************************************
+'************************************************************
+' Section 1:  Workfile, model name, simulation range
+
+  include  mce_solve_library
+
+' Workfile
+  %wfstart = "2000q1"
+  %wfend = "2100q4"
+  %mainpage = "main"
+  wfcreate(wf=aaa,page={%mainpage}) q {%wfstart} {%wfend}
+
+' Model names
+  %modb = "simpleb"
+  %modf = "simplef"
+
+' Simulation range
+  %simstart = "2001q1"
+  %simend = "2025q4"
+
+
+'************************************************************
+'************************************************************
+'************************************************************
+' Section 2:  Model, coefficients, and data
+
+' equations in backward-looking model
+
+  model {%modb}
+  {%modb}.append pinf = cp(1) * pinf(-1) + (.98-cp(1))*zpinf+ cp(2) * ygap
+  {%modb}.append rate = cr(1)*rate(-1)+(1-cr(1))*(cr(2)*pinf + cr(3)*ygap)
+  {%modb}.append ygap = cy(1) * ygap(-1) + (.98-cy(1))*zygap + cy(2) * (rate - zpinf)
+  {%modb}.append zpinf = @movav(pinf(-1),4)
+  {%modb}.append zygap = @movav(ygap(-1),4)
+
+' equations in expectations errors model
+
+  model {%modf}
+  {%modf}.append ezpinf = zpinf - pinf(1)
+  {%modf}.append ezygap = zygap - ygap(1)
+
+' coefficients
+
+  coef(2) cy
+  cy.fill .50, -.02
+  coef(2) cp
+  cp.fill .50, .02
+  coef(3) cr
+  cr.fill .75, 1.5, 0.5 
+
+' set all data to zero
+  smpl @all
+  %vars = {%modb}.@varlist
+  for !i = 1 to @wcount(%vars)
+    %tmp = @word(%vars,!i)
+    series {%tmp} = 0
+    next
+  %vars = {%modf}.@varlist
+  for !i = 1 to @wcount(%vars)
+    %tmp = @word(%vars,!i)
+    series {%tmp} = 0
+    next
+
+' declare mce variables and instruments
+  %instrus = "zpinf_a zygap_a"
+  %errs = "ezpinf ezygap"
+
+' assign tracking add factors
+  smpl %simstart %simend
+  {%modb}.addassign @all
+  {%modb}.addinit(v=n) @all
+  {%modf}.addassign @all
+  {%modf}.addinit(v=n) @all
+
+'************************************************************
+'************************************************************
+'************************************************************
+' Section 3: Simulations
+
+  %sufm = "_1"
+  {%modb}.scenario(n,a=%sufm) "multiplier"
+  {%modf}.scenario(n,a=%sufm) "multiplier"
+
+
+' Sim 1:  interest rate shock
+
+  smpl {%simstart} {%simstart}
+  rate_a = rate_a + 1
+
+  %mopts = "mod_b=%modb,mod_f=%modf,mce_instrus=%instrus,mce_errs=%errs"
+  %aopts = "jinit=interp(4)"
+  %sopts = "type=single"
+  smpl {%simstart} {%simend}
+  call mce_run(%mopts,%aopts,%sopts)
+  smpl {%simstart} {%simstart}
+  rate_a = rate_a - 1
+
+  series zero = 0
+  smpl %simstart %simstart + 39
+  graph gr1.line zero rate{%sufm} pinf{%sufm} ygap{%sufm}
+  gr1.addtext(t,c,font(14)) "Positive interest rate shock"
+  show gr1
+
+
+' Sim 2:  output gap shock
+
+  smpl {%simstart} {%simstart}
+  ygap_a = ygap_a + 1
+
+  %mopts = ""
+  %aopts = ""
+  %sopts = "type=single"
+  smpl {%simstart} {%simend}
+  call mce_run(%mopts,%aopts,%sopts)
+  smpl {%simstart} {%simstart}
+  ygap_a = ygap_a - 1
+
+  series zero = 0
+  smpl %simstart %simstart + 39
+  graph gr2.line zero rate{%sufm} pinf{%sufm} ygap{%sufm}
+  gr2.addtext(t,c,font(14)) "Positive output gap shock"
+  show gr2
+
+' Sim 3:  inflation shock
+
+  smpl {%simstart} {%simstart}
+  pinf_a = pinf_a + 1
+
+  %mopts = ""
+  %aopts = ""
+  %sopts = "type=single"
+  smpl {%simstart} {%simend}
+  call mce_run(%mopts,%aopts,%sopts)
+  smpl {%simstart} {%simstart}
+  pinf_a = pinf_a - 1
+
+  series zero = 0
+  smpl %simstart %simstart + 39
+  graph gr3.line zero rate{%sufm} pinf{%sufm} ygap{%sufm}
+  gr3.addtext(t,c,font(14)) "Positive inflation shock"
+  show gr3
+
+
+
+@ %def example3 
+
 \section{example4 program}
 
+<<mce example4>>=
+' This example illustrates:
+'
+'   - The simulation of a nonlinear model (zero bound imposed)
+'     (because the baseline data is set to zero; the zero-bound
+'     is set illustratively to -1)
+'   - The use of the qnewton algorithm
+
+'************************************************************
+'************************************************************
+'************************************************************
+' Section 1:  Workfile, model name, simulation range
+
+  include  mce_solve_library
+
+' Workfile
+  %wfstart = "2000q1"
+  %wfend = "2100q4"
+  %mainpage = "main"
+  wfcreate(wf=aaa,page={%mainpage}) q {%wfstart} {%wfend}
+
+' Model names
+  %modb = "simpleb"
+  %modf = "simplef"
+
+' Simulation range
+  %simstart = "2001q1"
+  %simend = "2025q4"
+
+
+'************************************************************
+'************************************************************
+'************************************************************
+' Section 2:  Model, coefficients, and data
+
+' equations in backward-looking model
+
+  model {%modb}
+  {%modb}.append pinf = cp(1) * pinf(-1) + (.98-cp(1))*zpinf+ cp(2) * ygap
+  {%modb}.append rate_u = cr(1)*rate(-1)+(1-cr(1))*(cr(2)*pinf + cr(3)*ygap)
+  {%modb}.append rate = @recode( rate_u>rate_min,rate_u,rate_min)
+  {%modb}.append ygap = cy(1) * ygap(-1) + (.98-cy(1))*zygap + cy(2) * (rate - zpinf)
+  {%modb}.append zpinf = @movav(pinf(-1),4)
+  {%modb}.append zygap = @movav(ygap(-1),4)
+
+' equations in expectations errors model
+
+  model {%modf}
+  {%modf}.append ezpinf = zpinf - pinf(1)
+  {%modf}.append ezygap = zygap - ygap(1)
+
+' coefficients
+
+  coef(2) cy
+  cy.fill .50, -.02
+  coef(2) cp
+  cp.fill .50, .02
+  coef(3) cr
+  cr.fill .75, 1.5, 0.5 
+
+' set all data to zero
+  smpl @all
+  %vars = {%modb}.@varlist
+  for !i = 1 to @wcount(%vars)
+    %tmp = @word(%vars,!i)
+    series {%tmp} = 0
+    next
+  %vars = {%modf}.@varlist
+  for !i = 1 to @wcount(%vars)
+    %tmp = @word(%vars,!i)
+    series {%tmp} = 0
+    next
+
+' declare mce variables and instruments
+  %instrus = "zpinf_a zygap_a"
+  %errs = "ezpinf ezygap"
+
+' assign tracking add factors
+  smpl %simstart %simend
+  {%modb}.addassign @all
+  {%modb}.addinit(v=n) @all
+  {%modf}.addassign @all
+  {%modf}.addinit(v=n) @all
+
+'************************************************************
+'************************************************************
+'************************************************************
+' Section 3: Simulation
+
+  %zb = "yes"
+
+  %sufm = "_1"
+  {%modb}.scenario(n,a=%sufm) "multiplier"
+  {%modf}.scenario(n,a=%sufm) "multiplier"
+
+  if %zb = "yes" then
+    smpl @all
+    rate_min = -1
+    else
+    rate_min = -9999
+    endif
+
+  smpl {%simstart} {%simstart}
+  ygap_a = ygap_a - 5
+
+  %mopts = "mod_b=%modb,mod_f=%modf,mce_instrus=%instrus,mce_errs=%errs"
+  %aopts = "meth=qnewton"
+  %sopts = "type=single"
+  smpl {%simstart} {%simend}
+  tic
+  call mce_run(%mopts,%aopts,%sopts)
+  scalar elapsed = @toc
+  show elapsed
+
+  series zero = 0
+  smpl %simstart %simstart + 39
+  graph gr1.line zero rate{%sufm} pinf{%sufm} ygap{%sufm}
+  %title = "Negative Output Shock"
+  if %zb = "yes" then
+    %title = %title + "\r(zero bound imposed)"
+    else
+    %title = %title + "\r(zero bound not imposed)"
+    endif
+  gr1.addtext(t,c,font(14)) %title
+  show gr1
+
+
+
+@ %def example4
+
 \section{example5 program}
+
+<<mce example5>>=
+' This example illustrates the two optimal policy simulation types
+' 
+'   - Simulate the effects of a positive shock to the output gap
+'     using sequentially 
+'
+'     (a) the model's interest rate rule
+'
+'     (b) the opt simulation type to find the optimal interest rate
+'     path under commitment
+'
+'     (c) the opttc simulation type to find the optimal time-consistent
+'     or discretionary interest rate path; note that the solution in 
+'     this case is only approximate
+'
+'     In both (b) and (c) the policy instrument is the residual of
+'     the interest rule
+'
+'   - The illustrative loss function penalizes equally weighted,
+'     discounted, squared deviations of the output gap,
+'     inflation, and the first difference of the interest rate.
+'
+
+'************************************************************
+'************************************************************
+'************************************************************
+' Section 1:  Workfile, model name, simulation range
+
+  include  mce_solve_library
+
+' Workfile
+  %wfstart = "2000q1"
+  %wfend = "2100q4"
+  %mainpage = "main"
+  wfcreate(wf=aaa,page={%mainpage}) q {%wfstart} {%wfend}
+
+' Model name
+  %mod = "simple"
+
+' Simulation range
+  %simstart = "2001q1"
+  %simend = "2025q4"
+
+'************************************************************
+'************************************************************
+'************************************************************
+' Section 2:  Model, coefficients, and data
+
+' equations
+
+  model {%mod}
+  {%mod}.append pinf = cp(1) * pinf(-1) + (.98-cp(1))*pinf(1)+ cp(2) * ygap
+  {%mod}.append rate - rate_aerr = cr(1)*rate(-1)+(1-cr(1))*(cr(2)*pinf + cr(3)*ygap)
+  {%mod}.append ygap = cy(1) * ygap(-1) + (.98-cy(1))*ygap(1) + cy(2) * (rate - pinf(1))
+  {%mod}.append drate = rate - rate(-1)
+
+
+' coefficients
+
+  coef(2) cy
+  cy.fill .50, -.02
+  coef(2) cp
+  cp.fill .50, .02
+  coef(3) cr
+  cr.fill .75, 1.5, 0.5 
+
+' set all data to zero
+  smpl @all
+  %vars = {%mod}.@varlist
+  for !i = 1 to @wcount(%vars)
+    %tmp = @word(%vars,!i)
+    series {%tmp} = 0
+    next
+
+'************************************************************
+'************************************************************
+'************************************************************
+' Section 3: Optimal policy setup
+
+' targets, instruments
+  group opt_instrus rate_aerr
+  group opt_targs pinf ygap drate
+
+' desired target trajectories 
+  smpl @all
+  series pinf_t = 0
+  series ygap_t = 0
+  series drate_t = 0
+
+' loss function weights
+  %discount = ".99"
+  %y_weight = "1.0"
+  %p_weight = "1.0"
+  %r_weight = "1.0"
+  smpl @all
+  series ygap_w = @val(%y_weight)
+  series pinf_w =  @val(%p_weight)
+  series drate_w  =  @val(%r_weight)
+  !discount = @val(%discount)
+  smpl %simstart+1 %simend
+  ygap_w = !discount * ygap_w(-1)     
+  pinf_w = !discount * pinf_w(-1)     
+  drate_w = !discount * drate_w(-1)     
+
+
+'************************************************************
+'************************************************************
+'************************************************************
+' Section 3: Simulations
+
+  text shock1
+  shock1.append smpl {%simstart} {%simstart}
+  shock1.append series ygap_a = ygap_a + 3
+
+' run the simulation using the monetary policy rule
+
+  %mopts = "create,mod=%mod,adds,track"
+  %aopts = "jinit=linear"
+  %sopts = "type= single,txt=shock1,scen,suf=_1"
+  smpl {%simstart} {%simend}
+  call mce_run(%mopts,%aopts,%sopts)
+
+  smpl @all
+  series rate_rule = rate_1
+  series pinf_rule = pinf_1
+  series ygap_rule = ygap_1
+
+
+' run the simulation using opt
+
+  %mopts = ""
+  %aopts = ""
+  %sopts = "type=opt,instrus=opt_instrus,targs=opt_targs"
+  smpl {%simstart} {%simend}
+  call mce_run(%mopts,%aopts,%sopts)
+
+  smpl @all
+  series rate_opt = rate_1
+  series pinf_opt = pinf_1
+  series ygap_opt = ygap_1
+
+
+' run the simulation using opttc
+
+  %mopts = ""
+  %aopts = ""
+  %sopts = "type=opttc,instrus=opt_instrus,targs=opt_targs"
+  smpl {%simstart} {%simend}
+  call mce_run(%mopts,%aopts,%sopts)
+
+  smpl @all
+  series rate_opttc = rate_1
+  series pinf_opttc = pinf_1
+  series ygap_opttc = ygap_1
+
+'graph
+
+  smpl %simstart %simstart + 39
+  series zero = 0
+  graph gr1.line zero rate_rule rate_opt rate_opttc
+  graph gr2.line zero pinf_rule pinf_opt pinf_opttc
+  graph gr3.line zero ygap_rule ygap_opt ygap_opttc
+  graph gr4.merge gr1 gr2 gr3
+  %title = "Effects of Positive Output Shock Under Three Policy Responses"
+  %title = %title + "\r1.  An intertial interest rate rule (_rule)"
+  %title = %title + "\r2.  Optimal policy under committment (_opt)"
+  %title = %title + "\r3.  Optimal time-consistent policy (_opttc)"
+  gr4.addtext(t,c,font(14)) %title
+  show gr4
+@ %def example5
 
 
 \chapter{State Space Package}
 
+\section{Estimate Model}
+
+<<estimation model>>=
+' Program to estimate the FRB/US state-space model and
+' generate estimates of model states.  
+
+
+' Subroutines:
+'    To transform data
+include "./data_transformations"
+
+'    To estimate the model
+include "./estimation_code"
+include "./initial_values"
+
+close @all
+wfcreate kf_data q 1949:1 2020:4
+
+%estend    = "2013q4"
+%eststart  = "1963q2" 
+%datastart = "1949q1"
+
+
+
+sample estsample  %eststart  %estend
+sample datasample %datastart %estend
+%datasmpl = %datastart + " " + %estend
+%modname = "ss_model"
+
+
+'**********************************************************************************
+' Retrieve variables from the database
+
+' Definitions of series in database
+'    See FRB/US model documentation for more complete descriptions
+
+' XGDP   - GDP, cw 2009$
+' XGDPN  - GDP
+' XB   - BLS Business output, 2009$ 
+' XBN  - BLS Business output 
+' XGDIN  - GDI
+
+' PGDP   - Price index for GDP, cw
+' PXB  - BLS Business price 
+
+' LEP    - Employment in business sector (employee and self-employed)
+' LHP    - Aggregate labor hours, business sector (employee and self-employed) 
+' LUR    - Civilian unemployment rate (break adjusted) 
+' LF     - Civilian labor force (break adjusted) 
+' N16    - Noninstitutional population, aged 16 and over (break adjusted) 
+
+' KS     - Capital services, 2009 $ 
+' LQUALT - Labor quality, trend level
+' VEOA   - Average energy-output ratio of existing capital stock 
+
+' PCXFE  - Price index for personal consumption expendits ex. food and energy, cw (NIA def.) 
+' PCER   - Price index for personal consumption expenditures on energy (relative to PCXFE) 
+
+' PMO    - Price index for imports ex. petroleum, cw 
+' UCES   - Energy share of nominal consumption expenditures 
+' EMON   - Imports of goods and services ex. petroleum 
+' XGDEN  - Nominal Absorption 
+' PTR    - 10-year expected inflation (Hoey/Philadelphia survey) 
+
+
+%dbin = "state_space_data"
+dbopen %dbin as dbin
+
+string varlist = " xgdpn xbn pgdp pxb pcxfe pcer xgdp xb lep uces emon xgden ptr "
+varlist = varlist + " ks lqualt veoa lhp lur lf n16 pmo xgdin "
+
+fetch(d=dbin) {varlist}
+
+
+
+'**************************************************
+' Make model observable series, set priors
+
+smpl datasample
+
+call data_transformations
+
+'**************************************************
+' Specify and estimate model, save for re-use
+
+smpl estsample
+
+statusline Estimating model
+call ss_estimation
+
+{%modname}.makefilter saved_results
+
+
+
+'*************************************************************
+' Create states 
+
+{%modname}.makestates(t=pred) *_prs        ' one-step ahead state predictions
+{%modname}.makestates(t=filt) *_1          ' filter states
+{%modname}.makestates(t=smooth) *_2        ' smoothed states
+{%modname}.makestates(t=disturb) *err      ' estimate of the disturbances
+{%modname}.makestates(t=filtse) *se        ' RMSE of the filtered states
+{%modname}.makestates(t=smoothse) *se2     ' RMSE of the smoothed states
+
+{%modname}.makesignals(t=pred) *_pr        ' one-step ahead signal predictions
+{%modname}.makesignals(t=resid) *_res      ' error in one-step ahead signal predictions  
+{%modname}.makesignals(t=stdresid) *_sres  ' standardized one-step ahead prediction residual
+
+
+'*************************************************************
+' Transformation into FRB/US mnemonics
+
+series xbt  = exp((tmfp_2/.965 + 0.725*(terate_2 + tlfpr_2  + thtfactor_2 + tww_2) + _
+                0.275*lks + 0.725*llqualt + (.035/.965)*lveoa +lpop)/100)
+series hmfpt  = gtmfp_2
+series qlfpr  = exp(tlfpr_2/100)
+series hqlfpr = (gtlfpr_2/400)*qlfpr(-1)
+series hqlww  = gtww_2
+series huxb   = gtotfactor_2
+series leppot = exp((tlfpr_2+terate_2+thtfactor_2)/100) * n16
+series lurnat = 100*(1-exp(terate_2/100))
+series qlww   = exp(tww_2/100)
+series uxbt   = exp(totfactor_2/100)
+series xgdpt  = xbt * uxbt
+series xgdo   = exp(cycle_2/100)*xgdpt
+
+
+wfsave saved_results_new
+
+
+@ %def frbus_supply_estimation saved_results_new
+
 \section{Data Transformations}
 
-\section{Initial Values}
+<<data transformations>>=
+subroutine data_transformations()
+
+' Subroutine for FRB/US state-space model package to
+' transform raw data from EViews database to observables
+' used in the estimation of the state-space model.
+
+' 1. Data transformations
+
+series lpop = 100*log(n16)
+ 
+'Business - product side
+series nbp = xbn
+series bp = log(xb)*100 -lpop
+
+'GDP
+series gdp = log(xgdp)*100 -lpop
+
+'Buseness - income side
+series dsnst_q = xgdpn - xgdin
+series nbi = nbp - dsnst_q
+series rbi = nbi/(pxb/100)
+series bi = log(rbi)*100 -lpop
+
+' Employment Business sector
+series eb = log(lep)*100  - lpop
+
+' Workweek
+series hb = log(lhp)*100 - lpop
+series bww = hb - eb
+
+' Employment Rate
+series erate = 100*log((100-lur)/100)
+
+' Participation Rate
+series lfpr = 100*log(lf/n16)
+
+' Variables for TMFP:
+series lks = 100*log(ks) - lpop
+series llqualt = 100*log(lqualt)
+series lveoa = 100*log(veoa)
+
+' Series for the price equation
+series c1pcex = @pca(pcxfe)
+series engylag_pcex = 0.5*(uces(-1)+uces(-2))*@pca(pcer(-1))
+series sw_coreimp_pcex = 0.5*((emon/xgden)+(emon(-1)/xgden(-1)))*@pca(pmo/pcxfe)
+series dum84 = @year>=1985
+series frzbulg = 0   ''' Nixon wage-price control programs
+smpl 1971q3 1974q1
+frzbulg = 1
+smpl 1974q2 1974q4
+frzbulg = -3.666
+
+
+
+' For the output-sector ratio, we use the median unbiased approach of Stock 
+' and Watson (1998). Thus, tau_oti is the ratio of the variances of the level 
+' and drift shocks.
+
+scalar tau_oti = .033260  ' modifier for the drift totfactor (OSR*) error term
+
+
+'**********************************************************************************
+
+' 2. Prior starting values for states.
+
+'    For mean zero level states, set prior to zero.
+'    For other level states, set prior to a data-based
+'    	 value near the start of the sample.
+'    For most drift terms, set prior to zero.  
+'    	 Exception is trend MFP, set equal to sample average.
+
+' Cycle
+scalar     icycle  =      0 
+scalar     icycle1 =      0 
+scalar     icycle2 = 	  0 
+
+' Measurement error
+scalar     ie3p = 	  0 
+scalar     ie3i =         0 
+
+' Levels of trends
+scalar     itotfactor =	        @elem(gdp,%eststart) - @elem(bp,%eststart) 
+scalar     itmfp =	       .965*(@elem(bp,%eststart) - 0.725*(@elem(eb,%eststart) _
+	   	 	           + @elem(bww,%eststart))  - 0.275*@elem(lks,%eststart) _
+				   - 0.725*@elem(llqualt,%eststart) _
+				   - (.035/.965)*@elem(lveoa,%eststart))
+scalar     itww =	        @elem(bww,%eststart) 
+scalar     ithtfactor =         @elem(eb,%eststart) - @elem(erate,%eststart) _
+	   	      		- @elem(lfpr,%eststart) 
+scalar     itlfpr =	        @elem(lfpr,%eststart) 
+scalar     iterate = 	        @elem(erate,%eststart) 
+
+' Initial drift terms
+scalar     igtotfactor =        0.0
+scalar     igtmfp = 	        1.7
+scalar     igtww =	        0.0
+scalar     igthtfactor =        0.0
+scalar     igtlfpr = 	        0.0
+
+scalar nstate = 25
+
+' The mpriors *must* be in the same order as the states are in the model object
+vector(nstate) mpriors
+mpriors.fill   0, ie3p, ie3i, 0, 0, _
+               0, 0, icycle, icycle1, icycle2, _
+	       itotfactor, igtotfactor, itmfp, igtmfp, itww, _
+               itww, igtww, ithtfactor, ithtfactor, igthtfactor, _
+               itlfpr, itlfpr, igtlfpr, iterate, iterate
+     
+
+' Set starting values for variance priors
+'     Variance priors set at a high value.  In estimation, variance 
+'     drops sharply in early periods of estimation sample.
+
+
+sym(nstate) vpriors
+for !d = 1 to nstate
+   vpriors(!d, !d) = 3
+   next
+
+' A tighter prior for drift variances,
+vpriors(12,12) = 1    ' igtotfactor
+vpriors(14,14) = 1    ' igtmfp
+vpriors(17,17) = 1    ' igtww
+vpriors(20,20) = 1    ' igthtfactor
+
+endsub
+@ %def data_transformations
 
 \section{Estimation Code}
 
-\section{Estimate Model}
+<<estimation code>>=
+subroutine ss_estimation()
+
+' Subroutine for FRB/US state-space model package to 
+' estimate the model parameters.
+
+'**********************************************************************************
+
+' 1. Starting values for parameters.
+
+' All of the coefficients in equations appear as beta or phi.  
+' Note that some values that are set here are hard coded in the estimation code below.
+
+call initial_values
+
+'**********************************************************************************
+'  Model
+
+sspace {%modname}  ' Declare a new state-space model object
+
+' 2. Output equations.
+
+' In the output equations, trend output is related to the capital stock, energy intensity,
+' and trends for labor input using a production function.  The parameters of the production 
+' function are hard-coded to the values in the FRB/US model.
+
+' GDP observable
+{%modname}.append @signal gdp = totfactor + tmfp/.965 + 0.725*(terate + tlfpr + thtfactor + tww) _
+    		      	      + 0.275*lks + 0.725*llqualt + (.035/.965)*lveoa _
+    		      	      + cycle + beta(11)*beta(6) + beta(11)*e3p  + rexo
+{%modname}.append @state rexo = [var=0.0000001^2]
+
+' Buisines sector product-side observable
+{%modname}.append @signal bp = tmfp/.965 + 0.725*(terate + tlfpr  + thtfactor + tww) _
+    		      	      + 0.275*lks + 0.725*llqualt + (.035/.965)*lveoa  _
+    		      	      + beta(10)*cycle  +   beta(6) + e3p
+{%modname}.append @state e3p =  beta(602)*e3p(-1) + re3p
+{%modname}.append @ename re3p 'business prod error
+{%modname}.append @evar var(re3p) =  (beta(125)^2)
+
+' Business sector income-side observable
+{%modname}.append @signal bi =  tmfp/.965  + 0.725*(terate + tlfpr  + thtfactor + tww) _
+    		      	      + 0.275*lks + 0.725*llqualt + (.035/.965)*lveoa _
+ 		      	      + beta(10)*cycle - beta(6) + e3i   
+{%modname}.append @state e3i =   beta(602)*e3i(-1) + re3i
+{%modname}.append @ename re3i 'business income error
+{%modname}.append @evar var(re3i) =  (beta(126)^2)
+
+' 3. Labor equations.
+ 
+' Workweek observable
+' To make this equation more consistent with the FRB/US workweek specification,
+' a contemporaneous change in the cycle is included as well as the level of the
+' cycle.  In addition, the coefficient on the lagged gap term in this equation is
+' hard-coded at a value similar to that implicit in the FRB/US model.
+
+{%modname}.append @signal bww =  tww _
+	     + phi(20)*(cycle-cycle1) _
+             + phi(22)*cycle1 _
+	     + 0.82*(bww(-1)-tww1) _	     
+	     + eww
+{%modname}.append @state eww =  [var=beta(104)^2]
+
+' Employment observable
+{%modname}.append @signal eb = terate + tlfpr + thtfactor + _
+	     + phi(30)*cycle _
+	     + phi(31)*(eb(-1)-(terate1 + tlfpr1 +thtfactor1)) _
+	     + eeb
+{%modname}.append @state eeb = [var=beta(105)^2]
+
+' Employment rate observable
+{%modname}.append @signal erate = terate + phi(50)*cycle _
+   		     + phi(51)*(erate(-1)-terate1) _
+		     + eerate
+{%modname}.append @state eerate =  [var=beta(106)^2]
+
+' Labor force participation observable
+{%modname}.append @signal lfpr =  tlfpr + phi(40)*cycle _
+   		     + phi(41)*(lfpr(-1)-tlfpr1) _
+		     + elfpr
+{%modname}.append @state elfpr = [var=beta(107)^2]
+
+' 4. Price observable
+        {%modname}.append @ename ec
+        {%modname}.append @evar var(ec) = (beta(109)^2)
+          {%modname}.append @signal c1pcex = _
+	  beta(401)*c1pcex(-1) + (1-beta(401))*(ptr(-1)+.1) _
+	+ beta(404)*(((.50*cycle + .33*cycle1 + .17*cycle2 )) )  _
+                + beta(405)*@movav(engylag_pcex(-1),6) _
+		+ beta(406)*@movav(dum84*engylag_pcex(-1),6)  _
+	+ beta(407)*frzbulg _
+	+ beta(408)*sw_coreimp_pcex + beta(409)*sw_coreimp_pcex(-1) _
+	+ ec
+     
+' 5. State equations          
+
+' Cycle state
+{%modname}.append @state cycle = beta(1)*cycle(-1) + beta(2)*cycle1(-1) + ecycle 
+{%modname}.append @state cycle1 = cycle(-1)
+{%modname}.append @state cycle2 = cycle1(-1)
+{%modname}.append @ename ecycle
+{%modname}.append @evar var(ecycle) = (beta(111)^2)
+
+' Trends
+
+'  Totfactor = OSR* in F.R.(2011)
+'  tau_oti is taken from FR(2011)
+{%modname}.append @state totfactor = totfactor(-1) + 0.25*.95*(gtotfactor(-1) ) + 0.25*.05*beta(213) + _
+                                     etotfactor + 0.25*egtotfactor
+{%modname}.append @state gtotfactor = .95*gtotfactor(-1) + .05*beta(213) + egtotfactor
+{%modname}.append @ename etotfactor
+{%modname}.append @evar var(etotfactor) = (beta(112)^2)
+{%modname}.append @ename egtotfactor 
+{%modname}.append @evar var(egtotfactor) = (4*((tau_oti))*beta(112))^2
+
+' Multi-Factor Productivity (OPH*)
+{%modname}.append @state tmfp = tmfp(-1) +  etmfp + 0.25*.95*(gtmfp(-1)) + 0.25*0.05*beta(214) + 0.25*egtmfp
+{%modname}.append @state gtmfp = 0.95*gtmfp(-1) + 0.05*beta(214) + egtmfp 
+{%modname}.append @ename etmfp
+{%modname}.append @evar var(etmfp) = beta(114)^2
+{%modname}.append @ename egtmfp
+{%modname}.append @evar var(egtmfp) = 0.14^2 ' beta(115)^2
+
+'     For the workweek, employment-sector ratio, and LFPR, the level variances are hard-coded.  
+'     This hard-coding is done for convenience in production work.  In particular, the imposed 
+'     values are close to the values these parameters take on when they are freely estimated.  
+'     However, the t-ratios for these parameters are not very high, and that imprecision leads 
+'     to sluggish convergence; imposing these values shortens the time needed for estimation.
+
+' Workweek (WW*)
+{%modname}.append @state tww = tww(-1) + 0.25*.95*(gtww(-1) ) +  etww + 0.25*.05*beta(216)+ 0.25*egtww
+{%modname}.append @state tww1 = tww(-1)
+{%modname}.append @state gtww = .95*gtww(-1) + .05*beta(216) + egtww
+{%modname}.append @ename etww
+{%modname}.append @ename egtww
+{%modname}.append @evar var(etww)  =  0.1^2
+{%modname}.append @evar var(egtww) =  beta(117)^2
+
+' Employment Sector Ratio (ESR*)
+{%modname}.append @state thtfactor = thtfactor(-1) + 0.25*.95*gthtfactor(-1) + _
+                                     0.25*egthtfactor + ethtfactor 
+{%modname}.append @state thtfactor1 = thtfactor(-1)
+{%modname}.append @state gthtfactor = 0.95*gthtfactor(-1) + egthtfactor
+{%modname}.append @ename ethtfactor
+{%modname}.append @evar var(ethtfactor) = .01^2 ' beta(118)^2
+{%modname}.append @ename egthtfactor 
+{%modname}.append @evar var(egthtfactor) = (beta(119)^2)
+
+' Labor Force Participation (LFPR*)
+{%modname}.append @state tlfpr = tlfpr(-1) + 0.25*(.95*gtlfpr(-1) + egtlfpr) +  etlfpr 
+{%modname}.append @state tlfpr1 = tlfpr(-1)
+{%modname}.append @state gtlfpr = 0.95*gtlfpr(-1) + egtlfpr
+{%modname}.append @ename etlfpr 
+{%modname}.append @evar var(etlfpr) = .05^2 ' beta(122)^2
+{%modname}.append @ename egtlfpr 
+{%modname}.append @evar var(egtlfpr) = beta(123)^2
+
+' Employment Rate (ER*), no drift
+{%modname}.append @state terate = terate(-1) + eterate
+{%modname}.append @state terate1 = terate(-1)
+{%modname}.append @ename eterate
+{%modname}.append @evar var(eterate) = beta(124)^2
+
+
+{%modname}.append @vprior vpriors
+
+{%modname}.append @mprior mpriors
+
+freeze({%modname}_results) {%modname}.ml(m=100,showopts)
+
+endsub
+@ %def estimation_code ss_estimation
+
+\section{Supply Filter}
+
+<<supply filter>>=
+' Program is part of the FRB/US state-space model package.
+' frbus_supply_filter takes a previously estimated state-space model and
+' generates estimates of model states.  
+
+
+' Subroutines:
+'    To transform data
+include "./data_transformations"
+
+
+close @all
+wfcreate kf_data q 1949:1 2020:4
+
+%estend    = "2014q3"
+%eststart  = "1963q2" 
+%datastart = "1949q1"
+
+sample estsample  %eststart  %estend
+sample datasample %datastart %estend
+
+%modname = "ss_model"
+
+
+'**********************************************************************************
+' Retrieve variables from the database
+
+' Definitions of series in database
+'    See FRB/US model documentation for more complete descriptions
+
+' XGDP   - GDP, cw 2009$
+' XGDPN  - GDP
+' XB   - BLS NFB output, 2009$ 
+' XBN  - BLS NFB output 
+' XGDIN  - GDI
+
+' PGDP   - Price index for GDP, cw
+' PXB  - BLS NFB price 
+
+' LEP    - Employment in nonfarm business sector (employee and self-employed)
+' LHP    - Aggregate labor hours, nonfarm business sector (employee and self-employed) 
+' LUR    - Civilian unemployment rate (break adjusted) 
+' LF     - Civilian labor force (break adjusted) 
+' N16    - Noninstitutional population, aged 16 and over (break adjusted) 
+
+' KS     - Capital services, 2009 $ 
+' LQUALT - Labor quality, trend level
+' VEOA   - Average energy-output ratio of existing capital stock 
+
+' PCXFE  - Price index for personal consumption expendits ex. food and energy, cw (NIA def.) 
+' PCER   - Price index for personal consumption expenditures on energy (relative to PCXFE) 
+
+' PMO    - Price index for imports ex. petroleum, cw 
+' UCES   - Energy share of nominal consumption expenditures 
+' EMON   - Imports of goods and services ex. petroleum 
+' XGDEN  - Nominal Absorption 
+' PTR    - 10-year expected inflation (Hoey/Philadelphia survey) 
+
+
+smpl datasample
+%dbin = "./state_space_data"
+dbopen %dbin as histdata
+fetch(d=histdata) *
+
+'**************************************************
+' Make model observable series, set priors
+
+smpl datasample
+
+call data_transformations
+
+'**************************************************
+' Load saved model; run estimation step with previously estimated
+' parameters as starting values (converges quickly).
+
+smpl estsample
+
+wfopen saved_results
+copy saved_results::untitled\saved_results kf_data::untitled\{%modname}
+wfclose saved_results
+freeze({%modname}_results) {%modname}.ml(m=100,showopts)
+
+
+'*************************************************************
+' Create states 
+
+{%modname}.makestates(t=pred) *_prs        ' one-step ahead state predictions
+{%modname}.makestates(t=filt) *_1          ' filter states
+{%modname}.makestates(t=smooth) *_2        ' smoothed states
+{%modname}.makestates(t=disturb) *err      ' estimate of the disturbances
+{%modname}.makestates(t=filtse) *se        ' RMSE of the filtered states
+{%modname}.makestates(t=smoothse) *se2     ' RMSE of the smoothed states
+
+{%modname}.makesignals(t=pred) *_pr        ' one-step ahead signal predictions
+{%modname}.makesignals(t=resid) *_res      ' error in one-step ahead signal predictions  
+{%modname}.makesignals(t=stdresid) *_sres  ' standardized one-step ahead prediction residual
+
+
+'*************************************************************
+' Transformation into FRB/US mnemonics
+
+
+
+series xbt  = exp((tmfp_2/.965 + 0.725*(terate_2 + tlfpr_2  + thtfactor_2 + tww_2) + _
+                0.275*lks + 0.725*llqualt + (.035/.965)*lveoa +lpop)/100)
+series hmfpt  = gtmfp_2
+series qlfpr  = exp(tlfpr_2/100)
+series hqlfpr = (gtlfpr_2/400)*qlfpr(-1)
+series hqlww  = gtww_2
+series huxb   = gtotfactor_2
+series leppot = exp((tlfpr_2+terate_2+thtfactor_2)/100) * n16
+series lurnat = 100*(1-exp(terate_2/100))
+series qlww   = exp(tww_2/100)
+series uxbt   = exp(totfactor_2/100)
+series xgdpt  = xbt * uxbt
+series xgdo   = exp(cycle_2/100)*xgdpt
+
+
+@ %def frbus.supply.filter
+
+\section{Initial Values}
+
+<<initial values>>=
+subroutine initial_values
+
+
+coef(703) beta
+coef(60) phi
+beta(1)         = 1.497516
+beta(2)         = -0.540927
+beta(213)       = -0.328852
+beta(214)       = 1.061453
+beta(216)       = -0.266658
+beta(10)        = 1.325310
+beta(401)       = 0.625693
+beta(404)       = 0.090059
+beta(405)       = 0.440360
+beta(406)       = -0.324208
+beta(407)       = -0.435237
+beta(408)       = 0.293555
+beta(409)       = 0.253904
+beta(6)         = 0.331366
+beta(602)       = 0.927692
+
+phi(20)         = 0.301616
+phi(22)         = 0.020651
+phi(30)         = 0.452297
+phi(31)         = 0.649965
+phi(40)         = 0.042475
+phi(41)         = 0.727876
+phi(50)         = 0.299981
+phi(51)         = 0.528947
+
+beta(105)       = 0.176896
+beta(106)       = 0.086226
+beta(107)       = 0.210419
+beta(104)       = 0.229143
+beta(100)       = 0.000001
+beta(109)       = 0.803236
+beta(111)       = 0.566205
+beta(119)       = 0.099423
+beta(123)       = 0.129325
+beta(115)       = 0.140001
+beta(117)       = 0.081062
+beta(124)       = 0.136532
+beta(118)       = 0.010000
+beta(122)       = 0.050000
+beta(114)       = 0.107852
+beta(112)       = 0.044151
+beta(126)       = 0.476765
+beta(125)       = 0.534807
+beta(11) = 1/beta(10) 
+
+
+endsub
+@ %def initial_values
 
 
 \chapter{Data Only Package}
@@ -4155,1127 +6941,32 @@ addin(proc="ld_varinfo",desc="Load variable information file") ".\ld_varinfo/ld_
 \subsection[example1]{srcEview/frbus.package/programs/example1.prg}
 
 <<srcEview/frbus.package/programs/example1.prg>>=
-' Program for simple simulation under VAR expectations
-'
-' See FRB/US Simulation Basics document for information about
-' this program
-
-' *************************************************************
-' Initial filename and parameter settings
-' *************************************************************
-
-' Subroutines
-  include ../subs/master_library
-
-' Workfile    
-  %wfstart = "1975q1"
-  %wfend = "2030q4"
-  %mainpage = "main"
-  wfcreate(wf=aaa,page={%mainpage}) q {%wfstart} {%wfend}
-
-' FRB/US model name and location
-  %varmod = "stdver"
-  %varpath = "../mods/"
-
-' Input datbase
-  %dbin  = "../data/longbase"
-
-' Simulation range
-  %simstart = "2020q1"
-  %simend   = "2025q4"
-
-
-' ****************************************************************
-' Retrieve data, model equations and coefficients, set
-' policy options, and compute tracking residuals 
-' ****************************************************************
-
-' Load equations and coefficients
-  ld_frbus_eqs(modelname=%varmod,modelpath=%varpath)  
-  ld_frbus_cfs(modelname=%varmod,modelpath=%varpath)
-
-' Load data
-  dbopen %dbin as longbase
-  fetch(d=longbase) *
-
-' Set monetary policy rule
-  smpl @all
-  call set_mp("dmpintay")
-
-' Turn off zero bound and policy thresholds; hold policymaker's
-' perceived equilibrium real interest rate constant
-  smpl @all
-  dmptrsh = 0
-  rffmin = -9999
-  drstar = 0
-
-' Set fiscal policy
-  smpl @all
-  call set_fp("dfpsrp")
-
-' Set _aerr variables to zero
-  smpl @all
-  {%varmod}.makegroup(a,n) endog @endog
-  call groupnew("endog","_aerr")
-  call group2zero("endog_aerr")
-
-' Standard solution options
-  {%varmod}.solveopt(o=b,g=12,z=1e-12)
-
-' Assign baseline tracking add factors
-  %suftrk = "_0"
-  smpl %simstart %simend 
-  {%varmod}.addassign @all
-  {%varmod}.addinit(v=n) @all
-  {%varmod}.scenario(n,a={%suftrk}) "track"
-  {%varmod}.solve
-  scalar mm = @max(@abs(xgap{%suftrk}-xgap))
-  if mm > .0001 then
-    statusline dynamic tracking simulation failed for {%varmod}
-    stop
-    endif
-
-' *************************************************************
-' Simulate a shock to monetary policy rule
-' *************************************************************
-
-  %sufsim = "_1"
-  {%varmod}.scenario(n,a={%sufsim}) "sim"
-
-  smpl %simstart %simstart
-  rffintay_aerr = rffintay_aerr + 1
-
-  smpl %simstart %simend
-  {%varmod}.solve
-
-
-'***********************************************************
-' Make a graph
-'***********************************************************
-
-  smpl %simstart %simend
-  series zero = 0
-  series d_rff = rff{%sufsim} - rff
-  series d_rg10 = rg10{%sufsim} - rg10
-  series d_lur = lur{%sufsim} - lur
-  series d_pic4 = pic4{%sufsim} - pic4
-
-  graph fig1a.line zero d_rff
-  fig1a.addtext(t,just(c),font("arial",12)) Federal Funds Rate
-  fig1a.legend -display
-
-  graph fig1b.line zero d_rg10
-  fig1b.addtext(t,just(c),font("arial",12)) 10-Year Treasury Yield
-  fig1b.legend -display
-
-  graph fig1c.line zero d_lur
-  fig1c.addtext(t,just(c),font("arial",12)) Unemployment Rate
-  fig1c.legend -display
-
-  graph fig1d.line zero d_pic4
-  fig1d.addtext(t,just(c),font("arial",12)) Inflation Rate (4-Quarter)
-  fig1d.legend -display
-
-  graph fig1.merge fig1a fig1b fig1c fig1d
-  fig1.addtext(t,just(c),font("Arial",16)) Macroeconomic Effects of Funds Rate Perturbation\r(VAR Expectations)
-  fig1.align(2,1,1.25)
-  show fig1
-
-
-@ %def example1
+<<frbus example1>>
+@
 
 \subsection[example2]{srcEview/frbus.package/programs/example2.prg}
 
 <<srcEview/frbus.package/programs/example2.prg>>=
-' Program for simple simulation with MCE expectations
-'
-' The switch variables %mcvars_wp and %mcvars_all control whether
-' the assumption of MC expectations extends beyond the financial
-' sector
-
-' See the Simulation Basics document for information about
-' this program
-
-
-' *************************************************************
-' Initial filename and parameter settings
-' *************************************************************
-
-' Subroutines
-  include ../subs/master_library
-  include ../subs/mce_solve_library
-
-' Workfile    
-  %wfstart = "1975q1"
-  %wfend = "2100q4"
-  %mainpage = "main"
-  wfcreate(wf=aaa,page={%mainpage}) q {%wfstart} {%wfend}
-
-' FRB/US model names and locations
-  %varmod = "stdver"
-  %varpath = "../mods/"
-  %mcemod = "pfver"
-  %mcepath = "../mods/"
-
-' Input datbase
-  %dbin  = "../data/longbase"
-
-' Simulation range
-  %simstart = "2020q1"
-  %simend   = "2069q4"
-
-
-' ****************************************************************
-' Retrieve data, model equations and coefficients, set
-' policy options, and compute tracking residuals 
-' ****************************************************************
-
-' Specify MC expectations variables
-  %mcvars_wp = "yes"
-  %mcvars_all = "no"
- 
-' MCE asset pricing
-  %zvars = "zdivgr zgap05 zgap10 zgap30 zrff5 zrff10 zrff30 zpi10 zpi10f zpic30 zpib5 zpic58 "
-
-' MCE elsewhere
-  if %mcvars_wp = "yes" and %mcvars_all = "no" then
-    %zvars = %zvars + "zpicxfe zpieci "
-    endif
-  if %mcvars_all = "yes" then
-    %zvars = %zvars + "zpicxfe zpieci "
-    %zvars = %zvars + "zecd zeco zeh zgapc2 zlhp zpi5 zvpd zvpi zvps zxbd zxbi zxbs zyh zyhp zyht zynid "
-    endif
-
-' Load equations and coefficients
-  call mce_load_frbus("mce_vars=%zvars,mod_b=%varmod,path_b=%varpath,mod_f=%mcemod,path_f=%mcepath")
-
-' Load data
-  dbopen %dbin as longdata
-  fetch(d=longdata) *
-
-' Data for extra variables associated with MC expectations
-  smpl @all
-  call make_frbus_mcevars(%zvars)
-
-' Set monetary policy
-  smpl @all
-  call set_mp("dmpintay")
-
-' Turn off zero bound and policy thresholds; hold policymaker's
-' perceived equilibrium real interest rate constant
-  smpl @all
-  dmptrsh = 0
-  rffmin = -9999
-  drstar = 0
-
-' Set fiscal policy
-  smpl @all
-  call set_fp("dfpsrp")
-
-' Set _aerr variables to zero
-  smpl @all
-  {%varmod}.makegroup(a,n) endog @endog
-  call groupnew("endog","_aerr")
-  call group2zero("endog_aerr")
-
-' Standard solution options
-  {%varmod}.solveopt(o=b,g=12,z=1e-12)
-  {%mcemod}.solveopt(o=b,g=12,z=1e-12)
-
-' Assign baseline tracking add factors
-  %suftrk = "_0"
-  smpl %simstart %simend 
-  {%varmod}.addassign @all
-  {%varmod}.addinit(v=n) @all
-  {%varmod}.scenario(n,a={%suftrk}) "track"
-  {%varmod}.solve
-  scalar mm = @max(@abs(xgap{%suftrk}-xgap))
-  if mm > .0001 then
-    statusline dynamic tracking simulation failed for {%varmod}
-    stop
-    endif
-  {%mcemod}.addassign @all
-  {%mcemod}.addinit(v=n) @all
-
-' *************************************************************
-' Simulate a monetary policy shock 
-' *************************************************************
-
-  %sufsim = "_1"
-  {%varmod}.scenario(n,a={%sufsim}) "sim"
-  {%mcemod}.scenario(n,a={%sufsim}) "sim"
-
-  smpl %simstart %simstart
-  rffintay_a = rffintay_a + 1
-
-  %modstr = "mod_b=%varmod,mod_f=%mcemod,mce_vars=%zvars"
-  %algstr = "meth=qnewton"
-  %simstr = "type=single"
-  smpl %simstart %simend
-  call mce_run(%modstr,%algstr,%simstr)
-
-
-'***********************************************************
-' Make a graph
-'***********************************************************
-
-  smpl %simstart %simstart + 39
-  series zero = 0
-  series d_rff = rff{%sufsim} - rff
-  series d_rg10 = rg10{%sufsim} - rg10
-  series d_lur = lur{%sufsim} - lur
-  series d_pic4 = pic4{%sufsim} - pic4
-
-  graph fig1a.line zero d_rff
-  fig1a.addtext(t,just(c),font("arial",12)) Federal Funds Rate
-  fig1a.legend -display
-
-  graph fig1b.line zero d_rg10
-  fig1b.addtext(t,just(c),font("arial",12)) 10-Year Treasury Yield
-  fig1b.legend -display
-
-  graph fig1c.line zero d_lur
-  fig1c.addtext(t,just(c),font("arial",12)) Unemployment Rate
-  fig1c.legend -display
-
-  graph fig1d.line zero d_pic4
-  fig1d.addtext(t,just(c),font("arial",12)) Inflation Rate (4-Quarter)
-  fig1d.legend -display
-
-  graph fig1.merge fig1a fig1b fig1c fig1d
-  %title = " Macroeconomic Effects of Funds Rate Shock\r"
-  if %mcvars_wp = "no" and %mcvars_all = "no" then
-    %title = %title + "(MC Expectations in Asset Pricing)"
-    endif
-  if %mcvars_wp = "yes" and %mcvars_all = "no" then
-    %title = %title + "(MC Expectations in Asset Pricing and Price-Wage Setting)"
-    endif
-  if %mcvars_all = "yes" then
-    %title = %title + "(MC Expectations in All Sectors)"
-    endif
-  fig1.addtext(t,just(c),font("Arial",16)) {%title}
-  fig1.align(2,1,1.25)
-  show fig1
-
-
-@ %def example2
+<<frbus example2>>
+@
 
 \subsection[example3]{srcEview/frbus.package/programs/example3.prg}
 
 <<srcEview/frbus.package/programs/example3.prg>>=
-' Program for simulation under VAR expectations that illustrates how
-' to set the monetary policy options that impose the zero lower bound
-' on the funds rate and delay the liftoff of the funds rate from the
-' ZLB until either the unemployment rate falls below a threshold or
-' inflation rises above a threshold.
-'
-' See FRB/US Simulation Basics document for general information about
-' this program.
-
-' Additional notes:
-
-' 1. The scenario involves a set of negative aggregate demand 
-' shocks and a positive risk premium shock that start in 2003q3,
-' when the baseline (historical) funds rate is about one percent.
-' The shocks are equal to the equation errors actually observed
-' in the four quarters starting in 2008q4.
-
-' 2. To impose the ZLB set %zb = "yes" (rather than "no")
-
-' 3. To impose the policy liftfoff threshold conditions set both
-' %zb = "yes" and %threshold = "yes".  For illustrative purposes
-' and reflecting the baseline conditions in 2003 and the years
-' that immediately follow, the inflation threshold is set to 3.0
-' and the unemployment threshold is set to 7.0, subject to the
-' the adjustments described next.
-
-' 4. Because the threshold conditions only make sense once the ZLB is
-' binding, unemployment is above its threshold level (lurtrsh),
-' and inflation is below its threshold (pitrsh), which is not the
-' case in the initial simulation quarters, the program turns on the
-' threshold code (using dmptrsh) in the 5th simulation quarter,
-' at which point these conditions hold. In addition, for the threshold 
-' code to work properly, the endogenous switch variable dmptr must be 
-' zero in the quarter prior to the quarter in which the threshold code is 
-' turned on.  This is accomplished by setting the baseline data on dmptr 
-' to zero and by setting the unemployment and inflation thresholds
-' (lurtrsh, pitrsh) to values in the first four simulation quarters that
-' would not flip the dmptr switch to one. 
-
-' 4. Choose one of the five available policy rules by setting
-' %policy to one of rffintay, rfftay, rfftlr, rffalt, or rffgen.
-
-' 5. If neither the ZLB or thresholds are imposed, the monetary policy
-' equations have baseline-tracking adds and the simulation is
-' a standard deviations-from-baseline exercise. 
-
-' 6. If either the ZLB or thresholds are imposed, the add factors on 
-' monetary policy equations are set to zero after the tracking adds
-' are computed so that the ZLB and threshold conditions are based on the
-' actual simulated outcomes for the funds rate and inflation and unemployment,
-' not their deviations from baseline. 
-
-' *************************************************************
-' Initial filename and parameter settings
-' *************************************************************
-
-' Subroutines
-  include ../subs/master_library
-
-' Workfile    
-  %wfstart = "1975q1"
-  %wfend = "2012q4"
-  %mainpage = "main"
-  wfcreate(wf=aaa,page={%mainpage}) q {%wfstart} {%wfend}
-
-' FRB/US model name and location
-  %varmod = "stdver"
-  %varpath = "../mods/"
-
-' Input datbase
-  %dbin  = "../data/longbase"
-
-' Simulation range
-  %simstart = "2003q3"
-  %simend   = "2008q2"
-
-' Policy 
-  %zb = "yes"
-  %threshold = "yes"
-  %policy = "rfftay"
-
-
-' ****************************************************************
-' Retrieve data, model equations and coefficients, set
-' policy options, and compute tracking residuals 
-' ****************************************************************
-
-' Load equations and coefficients
-  ld_frbus_eqs(modelname=%varmod,modelpath=%varpath)  
-  ld_frbus_cfs(modelname=%varmod,modelpath=%varpath)
-
-' Load data
-  dbopen %dbin as longbase
-  fetch(d=longbase) *
-
-' Set monetary policy rule
-  smpl @all
-  %policydmp = @replace(%policy,"rff","dmp")
-  call set_mp(%policydmp)
-
-' Set ZLB
-  if %zb = "yes" then
-    rffmin = .125
-    else
-    rffmin = -9999
-    endif
-
-' Set threshold variables 
-  if %threshold = "yes" then
-    if %zb = "no" then
-      @uiprompt("When policy thresholds are imposed, the zero bound must also be imposed")
-      stop
-      endif
-    smpl @all
-    call dateshift(%simstart,%quarter4,3)
-  ' thresholds (dmptrsh and dmptr) not active in first 4 qtrs
-    smpl %simstart - 1 %quarter4
-    dmptrsh = 0
-    lurtrsh = -9999
-    pitrsh = 9999
-    dmptr = 0
-  ' thresholds (dmptrsh and dmptr) active starting in qtr 5
-    smpl %quarter4 + 1 %simend
-    dmptrsh = 1
-    lurtrsh = 7.0
-    pitrsh = 3.0
-    smpl @all
-    else
-    smpl @all
-    dmptrsh = 0
-    endif
-
-  smpl @all
-  drstar = 0
-
-' Set fiscal policy
-  smpl @all
-  call set_fp("dfpsrp")
-
-' Set _aerr variables to zero
-  smpl @all
-  {%varmod}.makegroup(a,n) endog @endog
-  call groupnew("endog","_aerr")
-  call group2zero("endog_aerr")
-
-' Standard solution options
-  {%varmod}.solveopt(o=b,g=12,z=1e-12)
-
-' Assign baseline tracking add factors
-  %suftrk = "_0"
-  smpl %simstart 2012q4
-  {%varmod}.addassign @all
-  {%varmod}.addinit(v=n) @all
-  {%varmod}.scenario(n,a={%suftrk}) "track"
-  {%varmod}.solve
-  scalar mm = @max(@abs(xgap{%suftrk}-xgap))
-  if mm > .0001 then
-    statusline dynamic tracking simulation failed for {%varmod}
-    stop
-    endif
-
-' Set monetary policy add factors to zero when ZLB or threshold are
-' imposed
-
-  if %zb = "yes" then
-    smpl @all
-    {%policy}_a = 0
-    rffrule_a = 0
-    rffe_a = 0
-    if %threshold = "yes" then
-      dmptpi_a = 0
-      dmptlur_a = 0
-      dmptmax_a = 0
-      dmptr_a = 0
-      endif
-    endif
-
-' *************************************************************
-' Simulation
-' *************************************************************
-
-  %sufsim = "_1"
-  {%varmod}.scenario(n,a={%sufsim}) "sim"
-
-' shock values are taken from equation residuals for 2008q4-2009q3
-  eco_a.fill(o=%simstart) -.006, -.006, -.011, -.001
-  ecd_a.fill(o=%simstart) -.091, -.018, -.021,  .029
-  eh_a.fill(o=%simstart)  -.076, -.078, -.040,  .073
-  epd_a.fill(o=%simstart) -.096, -.062,  .014,  .032
-  eps_a.fill(o=%simstart) -.018, -.046, -.036, -.017
-  rbbbp_a.fill(o=%simstart) 2.70, 0.38, -0.89, -1.35
-
-  smpl %simstart %simend
-  {%varmod}.solve
-
-
-'***********************************************************
-' Make a graph
-'***********************************************************
-
-  smpl %simstart %simend
-
-  graph fig1a.line rff rff{%sufsim}
-  fig1a.addtext(t,just(c),font("arial",12)) Federal Funds Rate
-  fig1a.legend -display
-
-  graph fig1b.line rg10 rg10{%sufsim}
-  fig1b.addtext(t,just(c),font("arial",12)) 10-Year Treasury Yield
-  fig1b.legend -display
-
-  graph fig1c.line lur lur{%sufsim}
-  fig1c.addtext(t,just(c),font("arial",12)) Unemployment Rate
-  fig1c.legend -display
-
-  graph fig1d.line pic4 pic4{%sufsim}
-  fig1d.addtext(t,just(c),font("arial",12)) Inflation Rate (4-Quarter)
-  fig1d.legend -display
-
-  %title = "Macroeconomic Effects of Negative AD Shock\r(VAR Expectations"
-  %title = %title + "; Policy = " + %policy + ")"
-  if %zb = "yes" and %threshold = "no" then
-    %title = %title + "\r(ZLB Imposed)"
-    endif
-  if %zb = "yes" and %threshold = "yes" then
-    %title = %title + "\r(ZLB and Thresholds Imposed)"
-    endif
-
-  graph fig1.merge fig1a fig1b fig1c fig1d
-  fig1.addtext(t,just(c),font("Arial",16)) {%title}
-  fig1.addtext(b,just(c),font("Arial",16)) Blue:  Actual;  Red:  Simulated
-  fig1.align(2,1,1.25)
-  show fig1
-
-
-@ %def example3
+<<frbus example3>>
+@
 
 \subsection[example4]{srcEview/frbus.package/programs/example4.prg}
 
 <<srcEview/frbus.package/programs/example4.prg>>=
-' This MCE example program illustrates:
-'
-' 1. how to use a monetary policy rule that is not one of the policy
-'   alternatives included in FRB/US;
-' 2. how to add new MCE expectations variables;
-' 3. how to drop one of the regular FRB/US equations as part of the process
-'   of loading the model
-
-' Most of the code needed illustrate these issues is located between
-' the "start of new code" and "end of new code" comments below
-
-' The switch variables %mcvars_wp and %mcvars_all control whether
-' the assumption of MC expectations extends beyond the financial
-' sector
-
-' See the Simulation Basics document for information about
-' this program
-
-
-' *************************************************************
-' Initial filename and parameter settings
-' *************************************************************
-
-' Subroutines
-  include ../subs/master_library
-  include ../subs/mce_solve_library
-
-' Workfile    
-  %wfstart = "1975q1"
-  %wfend = "2100q4"
-  %mainpage = "main"
-  wfcreate(wf=aaa,page={%mainpage}) q {%wfstart} {%wfend}
-
-' FRB/US model names and locations
-  %varmod = "stdver"
-  %varpath = "../mods/"
-  %mcemod = "pfver"
-  %mcepath = "../mods/"
-
-' Input datbase
-  %dbin  = "../data/longbase"
-
-' Simulation range
-  %simstart = "2010q1"
-  %simend   = "2069q4"
-
-
-' ****************************************************************
-' Retrieve data, model equations and coefficients, set
-' policy options, and compute tracking residuals 
-' ****************************************************************
-
-' Specify MC expectations variables
-  %mcvars_wp = "no"
-  %mcvars_all = "yes"
- 
-' MCE asset pricing
-  %zvars = "zdivgr zgap05 zgap10 zgap30 zrff5 zrff10 zrff30 zpi10 zpi10f zpic30 zpib5 zpic58 "
-
-' MCE elsewhere
-  if %mcvars_wp = "yes" and %mcvars_all = "no" then
-    %zvars = %zvars + "zpicxfe zpieci "
-    endif
-  if %mcvars_all = "yes" then
-    %zvars = %zvars + "zpicxfe zpieci "
-    %zvars = %zvars + "zecd zeco zeh zgapc2 zlhp zpi5 zvpd zvpi zvps zxbd zxbi zxbs zyh zyhp zyht zynid "
-    endif
-
-' Load equations and coefficients
-
-' drop one of the FRB/US monetary policy rule equations (rffgen) so that it can be
-' replaced below with an alternative rule 
-  %allbut = "rffgen"
-  call mce_load_frbus("mce_vars=%zvars,mod_b=%varmod,path_b=%varpath,mod_f=%mcemod,path_f=%mcepath,allbut=%allbut")
-
-' Load data
-  dbopen %dbin as longdata
-  fetch(d=longdata) *
-
-' *****************************************************************************
-' *****************************************************************************
-' start of new code (aside from the change above to mce_load_frbus and
-'                    the change below to the call to set_mp)
-
-' Code a first-difference interest rate rule as rffgen.  The first-difference rule depends on
-' the expected output gap three quarters ahead (zgap3) and on expected 4-qtr inflation three
-' quarters ahead (zpic43).  The name of each new expectation must start with a "z".
-  {%varmod}.append rffgen-rffgen_aerr = rffe(-1) + .5*(zpic43-pitarg) + .5*(zgap3-zgap3(-4))
-
-' Add the MCE definitions of zgap3 and zpic43 to the forward-looking model,
-' noting that the MCE names of these variables must start with a "w" rather than a "z".
-  {%mcemod}.append wgap3-wgap3_aerr = xgap2(3)
-  {%mcemod}.append wpic43-wpic43_aerr = picx4(3)
-' Add expectations error equations to the MCE model
-  {%mcemod}.append ezgap3 = zgap3-wgap3
-  {%mcemod}.append ezpic43 = zpic43-wpic43
-
-' Add to the backward-looking model simple equations for the new expectations variables.
-' Technically, these equations should be the appropriate VAR expectations formulas, but
-' because in this program these expectations will always be MCE, the form of their 
-' backward-looking identities is not very important.
-  {%varmod}.append zgap3-zgap3_aerr = .5*xgap2(-1)
-  {%varmod}.append zpic43-zpic43_aerr = .5*picx4(-1)+.5*ptr(-1)
-
-' Add the new MCE variables to the %zvars string
-  %zvars = %zvars + " zgap3 zpic43"
-
-' Define baseline values of the new expectations variables
-  smpl @all
-  series zgap3 = xgap2(3)
-  series zpic43 = picx4(3)
-
-' Make sure that the baseline data for rffgen matches the baseline data for rffe
-  rffgen = rffe
-
-' end of new code
-' *****************************************************************************
-' *****************************************************************************
-
-' Data for extra variables associated with MC expectations
-  smpl @all
-  call make_frbus_mcevars(%zvars)
-
-' Set monetary policy to use the first-difference policy rule (coded as rffgen)
-  smpl @all
-  call set_mp("dmpgen")
-
-' Turn off zero bound and policy thresholds; hold policymaker's
-' perceived equilibrium real interest rate constant
-  smpl @all
-  dmptrsh = 0
-  rffmin = -9999
-  drstar = 0
-
-' Set fiscal policy
-  smpl @all
-  call set_fp("dfpsrp")
-
-' Set _aerr variables to zero
-  smpl @all
-  {%varmod}.makegroup(a,n) endog @endog
-  call groupnew("endog","_aerr")
-  call group2zero("endog_aerr")
-
-' Standard solution options
-  {%varmod}.solveopt(o=b,g=12,z=1e-12)
-  {%mcemod}.solveopt(o=b,g=12,z=1e-12)
-
-' Assign baseline tracking add factors
-  %suftrk = "_0"
-  smpl %simstart %simend 
-  {%varmod}.addassign @all
-  {%varmod}.addinit(v=n) @all
-  {%varmod}.scenario(n,a={%suftrk}) "track"
-  {%varmod}.solve
-  scalar mm = @max(@abs(xgap{%suftrk}-xgap))
-  if mm > .0001 then
-    statusline dynamic tracking simulation failed for {%varmod}
-    stop
-    endif
-  {%mcemod}.addassign @all
-  {%mcemod}.addinit(v=n) @all
-
-' *************************************************************
-' Simulate the effects of a one-percent consumption shock 
-' *************************************************************
-
-  %sufsim = "_1"
-  {%varmod}.scenario(n,a={%sufsim}) "sim"
-  {%mcemod}.scenario(n,a={%sufsim}) "sim"
-
-  smpl %simstart %simstart
-  eco_a = eco_a + .01
-
-  %modstr = "mod_b=%varmod,mod_f=%mcemod,mce_vars=%zvars"
-  %algstr = "meth=qnewton"
-  %simstr = "type=single"
-  smpl %simstart %simend
-  call mce_run(%modstr,%algstr,%simstr)
-
-
-'***********************************************************
-' Make a graph
-'***********************************************************
-
-  smpl %simstart %simstart + 39
-  series zero = 0
-  series d_rff = rff{%sufsim} - rff
-  series d_rg10 = rg10{%sufsim} - rg10
-  series d_lur = lur{%sufsim} - lur
-  series d_pic4 = pic4{%sufsim} - pic4
-
-  graph fig1a.line zero d_rff
-  fig1a.addtext(t,just(c),font("arial",12)) Federal Funds Rate
-  fig1a.legend -display
-
-  graph fig1b.line zero d_rg10
-  fig1b.addtext(t,just(c),font("arial",12)) 10-Year Treasury Yield
-  fig1b.legend -display
-
-  graph fig1c.line zero d_lur
-  fig1c.addtext(t,just(c),font("arial",12)) Unemployment Rate
-  fig1c.legend -display
-
-  graph fig1d.line zero d_pic4
-  fig1d.addtext(t,just(c),font("arial",12)) Inflation Rate (4-Quarter)
-  fig1d.legend -display
-
-  graph fig1.merge fig1a fig1b fig1c fig1d
-  %title = " Macroeconomic Effects of a Shock to Consumption\r"
-  if %mcvars_wp = "no" and %mcvars_all = "no" then
-    %title = %title + "(MC Expectations in Asset Pricing)"
-    endif
-  if %mcvars_wp = "yes" and %mcvars_all = "no" then
-    %title = %title + "(MC Expectations in Asset Pricing and Price-Wage Setting)"
-    endif
-  if %mcvars_all = "yes" then
-    %title = %title + "(MC Expectations in All Sectors)"
-    endif
-  fig1.addtext(t,just(c),font("Arial",16)) {%title}
-  fig1.align(2,1,1.25)
-  show fig1
-
-
-@ %def example4
+<<frbus example4>>
+@
 
 \subsection[ocpolicy]{srcEview/frbus.package/programs/ocpolicy.prg}
 
 <<srcEview/frbus.package/programs/ocpolicy.prg>>=
-' Routine to simulate how the SEP baseline forecast would change if
-' policymakers commit to a path for the federal funds rate that is 
-' determined by optimal-control (OC) techniques to minimize a 
-' quadratic loss function.
-'
-' Detailed information on the mechanics of the OC algorithm and the
-' various required and optional parameters that set up and guide its
-' execution is available in the MCE Solve Users Guide in the
-' documentation directory.  Most relevant is the part of section 5
-' that describes the "opt" simulation type as well as table 7.  
-
-' As specified below, the loss function penalizes equally weighted 
-' squared deviations of the unemployment rate from the natural rate,
-' squared deviations of inflation from a 2 percent, and squared 
-' quarterly changes in the funds rate.
-
-' In the SEP baseline, agents with model-consistent (MC) expectations
-' are initially assumed to project that the funds rate will follow the
-' baseline path and to set their baseline expectations 
-' accordingly.  At the start of the optimal control simulation, however, 
-' these agents immediately and fully revise their expectations to be 
-' consistent with the revision to the funds rate path that occurs under 
-' optimal control -- that is, agents have rational expectations and 
-' announced policy actions are completely credible.
-'
-' The experiment can be run with the zero lower bound (ZLB) imposed
-' (%zerobound = "yes") or not imposed (%zerobound = "no").  When
-' the ZLB is imposed, a penalty term is added to the loss function.
-
-' *************************************************************
-' Initial filename and parameter settings
-' *************************************************************
-
-' Subroutines
-  include ../subs/master_library
-  include ../subs/mce_solve_library
-
-' Workfile    
-  %wfstart = "1975q1"
-  %wfend = "2100q4"
-  %mainpage = "main"
-  wfcreate(wf=aaa,page={%mainpage}) q {%wfstart} {%wfend}
-
-' FRB/US model names and locations
-  %varmod = "stdver"
-  %varpath = "../mods/"
-  %mcemod = "pfver"
-  %mcepath = "../mods/"
-
-' Input datbase
-  %dbin  = "../data/longbase"
-
-' Simulation range
-  %simstart = "2014q4"
-  %simend   = "2070q4"
-
-' Primary loss function parameters:  The value of the policy instrument
-' is chosen optimally from %drvstart to %drvend (60 qtrs) to minimize
-' the loss function from %evlstart to %evlend (80 qtrs).  The three
-' arguments of the period loss function are weighted by the the
-' weight parameters and over time losses are discounted at the rate
-' %discount
-  %evlstart = %simstart
-  %drvstart = %simstart
-  call dateshift(%evlstart,%evlend,79)
-  call dateshift(%drvstart,%drvend,59)
-  %discount = ".99"
-  %u_weight = "1.0"
-  %p_weight = "1.0"
-  %r_weight = "1.0"
-  
-' Optionally impose the zero lower bound
-  %zerobound = "yes"
-
-
-' ****************************************************************
-' Retrieve data, model equations and coefficients, set
-' policy options, and compute tracking residuals 
-' ****************************************************************
-
-' Specify MC expectations variables
-  %mcvars_wp = "yes"
-  %mcvars_all = "no"
- 
-' MCE asset pricing
-  %zvars = "zdivgr zgap05 zgap10 zgap30 zrff5 zrff10 zrff30 zpi10 zpi10f zpic30 zpib5 zpic58 "
-
-' MCE elsewhere
-  if %mcvars_wp = "yes" and %mcvars_all = "no" then
-    %zvars = %zvars + "zpicxfe zpieci "
-    endif
-  if %mcvars_all = "yes" then
-    %zvars = %zvars + "zpicxfe zpieci "
-    %zvars = %zvars + "zecd zeco zeh zgapc2 zlhp zpi5 zvpd zvpi zvps zxbd zxnfbi zxnfbs zyh zyhp zyht zynid "
-    endif
-
-' Load equations and coefficients
-  call mce_load_frbus("mce_vars=%zvars,mod_b=%varmod,path_b=%varpath,mod_f=%mcemod,path_f=%mcepath")
-
-' Add a ugap equation
-  {%varmod}.append ugap - ugap_aerr = lur - lurnat
-
-' Load data
-  dbopen %dbin as longdata
-  fetch(d=longdata) *
-
-' Define SEP-consistent ustar and ugap series; this step is needed because 
-' the baseline value of lurnat may not be fully SEP-consistent in the 
-' short-to-medium ruun
-  smpl @all
-  series ustar = lurnat
-  smpl %simstart 2025q4
-  ustar = 5.35
-  smpl @all
-  series ugap = lur-ustar
-  series ugap_aerr = 0
-
-' Data for extra variables associated with MC expectations
-  smpl @all
-  call make_frbus_mcevars(%zvars)
-
-' Set monetary policy option (the residual on the equation of
-' the chosen option is the OC policy instrument)
-  smpl @all
-  call set_mp("dmptay")
-
-' Initially turn off zero lower bound; if %zerobound = "yes", it will be
-' imposed below by adding a penalty term to the loss function.
-  smpl @all
-  rffmin = -9999
-' Turn off policy thresholds
-  dmptrsh = 0
-' Let the perceived equilibrium real interest rate vary
-  drstar = 1
-
-' Set fiscal policy so that it is exogenous for first 20 qtrs and then
-' turns on debt targeting rule
-  smpl %simstart %simstart + 19
-  call set_fp("dfpex")
-  smpl %simstart + 20 %simend
-  call set_fp("dfpdbt")
-
-' Set _aerr variables to zero
-  smpl @all
-  {%varmod}.makegroup(a,n) endog @endog
-  call groupnew("endog","_aerr")
-  call group2zero("endog_aerr")
-
-' Standard solution options
-  {%varmod}.solveopt(o=b,g=12,z=1e-12)
-  {%mcemod}.solveopt(o=b,g=12,z=1e-12)
-
-' Assign baseline tracking add factors
-  %suftrk = "_0"
-  smpl %simstart %simend 
-  {%varmod}.addassign @all
-  {%varmod}.addinit(v=n) @all
-  {%varmod}.scenario(n,a={%suftrk}) "track"
-  {%varmod}.solve
-  scalar mm = @max(@abs(xgap{%suftrk}-xgap))
-  if mm > .0001 then
-    statusline dynamic tracking simulation failed for {%varmod}
-    stop
-    endif
-  {%mcemod}.addassign @all
-  {%mcemod}.addinit(v=n) @all
-
-
-
-'*************************************************************
-' optimal policy setup
-'*************************************************************
-
-' The policy instrument is a time varying constant in the equation
-' for the selected policy rule
-  group opt_instrus rfftay_aerr
-
-' Loss function variables (unemployment gap, 4-qtr PCE inflation, 
-' and the first difference of the federal funds rate)
-  group opt_targs ugap pic4 delrff
-
-' The desired paths of the loss function variables are specified in
-' series with "_t" suffix.
-  smpl @all
-  series ugap_t   = 0
-  series delrff_t = 0
-  series pic4_t   = 2.0
-
-' The weights on the loss function arguments are specified in
-' series with "_w" suffix.
-  series ugap_w   = @val(%u_weight)
-  series pic4_w   =  @val(%p_weight)
-  series delrff_w =  @val(%r_weight)
-
-  !discount = @val(%discount)
-  smpl %simstart+1 %simend
-  ugap_w   = !discount * ugap_w(-1)     
-  pic4_w   = !discount * pic4_w(-1)     
-  delrff_w = !discount * delrff_w(-1)     
-
-' Zero bound penalty function
-  if %zerobound = "yes" then
-    {%varmod}.append penalty - penalty_aerr = _
-       @recode(rff<(rff_lo_bnd+rff_lo_shift), _ 
-         3.0*((rff_lo_bnd+rff_lo_shift)-rff),  _
-         0) _
-     + @recode(rff<(rff_lo_bnd+rff_lo_shift), _
-       .10*exp(10*(rff-(rff_lo_bnd+rff_lo_shift))), _
-       .10*exp(-20*(rff-(rff_lo_bnd+rff_lo_shift))))
-    smpl @all
-    series rff_lo_bnd = .125
-    series rff_lo_shift = .00
-    series penalty = 0
-    series penalty_aerr = 0
-    series rffmin = -9999
-    %penalty_weight = "10.0"
-    opt_targs.add penalty
-    smpl @all
-    series penalty_a = 0
-    series penalty_t = 0
-    series penalty_w = @val(%penalty_weight)
-    smpl %simstart+1 %simend
-    penalty_w = !discount * penalty_w(-1)     
-    endif
-
-
-
-'*************************************************************
-' optimal policy simulation
-'*************************************************************
-
-  %sufcontrol = "_1"
-
-' In %simstr, the "type=opt" string designates a commitment-based 
-' OC simulation.  The required "instrus" and "targs" keywords point to
-' the groups containing the policy instrument(s) and target variables.
-' FRB/US simulations of this type generally run much more quickly with
-' the newton MCE algorithm than they do with qnewton. 
-  %modstr = "mod_b=%varmod,mod_f=%mcemod,mce_vars=%zvars"
-  %algstr = "jinit=interp(4), meth=newton"
-  %simstr = "type=opt,instrus=opt_instrus,targs=opt_targs"
-  %simstr = %simstr + ",scen,suf=" + %sufcontrol+ ",solveopt=%sopt"
-  %simstr = %simstr + ",lend=" + %evlend + ",iend=" + %drvend + ",lmax=20"
-  smpl {%simstart} {%simend}
-  call mce_run(%modstr,%algstr,%simstr)
-
-' When the ZLB is imposed, run the OC algorithm a second time, 
-' after adjusting the intercept of the penalty function,
-' to hit ZLB more closely
-  if %zerobound = "yes" then
-    smpl if rff{%sufcontrol} <.2
-    rff_lo_shift = .125 - rff{%sufcontrol} 
-    %modstr = ""
-    %algstr = ""
-    %simstr = "type=opt,instrus=opt_instrus,targs=opt_targs"
-    %simstr = %simstr + ",solveopt=%sopt"
-    %simstr = %simstr + ",lend=" + %evlend + ",iend=" + %drvend + ",lmax=20"
-    smpl {%simstart} {%simend}
-    call mce_run(%modstr,%algstr,%simstr)
-    endif
-
-
-'***********************************************************
-' graph results
-'***********************************************************
-
-  call dateshift(%simstart,%graphstart,-8)
-  call dateshift(%simstart,%graphend,32)
-
-  smpl %graphstart %graphend
-  graph fig1a.line rff{%sufcontrol} rff
-  fig1a.options size(7,4.2)
-  fig1a.legend display -inbox position(3.8,2.8) font("arial",15)
-  fig1a.datelabel format(yy)
-  fig1a.addtext(6.4,-.30,font("arial",13),keep) percent
-  fig1a.axis(left) font("arial",15)
-  fig1a.axis(bottom) font("arial",15)
-  fig1a.setelem(1) lcolor(red)  legend("optimal control") lwidth(2)
-  fig1a.setelem(2) lcolor(black) legend("SEP-consistent baseline") lwidth(2)
-  fig1a.addtext(t,just(c),font("arial",18)) Federal Funds Rate
-
-
-  smpl %graphstart %graphend
-  graph fig1b.line rg10{%sufcontrol} rg10
-  fig1b.options size(7,4.2)
-  fig1b.legend display -inbox position(3.8,2.8) font("arial",15)
-  fig1b.datelabel format(yy)
-  fig1b.addtext(6.4,-.30,font("arial",13),keep) percent
-  fig1b.axis(left) font("arial",15)
-  fig1b.axis(bottom) font("arial",15)
-  fig1b.setelem(1) lcolor(red)  legend("optimal control") lwidth(2)
-  fig1b.setelem(2) lcolor(black) legend("SEP-consistent baseline") lwidth(2)
-  fig1b.addtext(t,just(c),font("arial",18)) 10-Year Treasury Yield
-
-
-  smpl %graphstart %graphend
-  graph fig1c.line lur{%sufcontrol} lur
-  fig1c.options size(7,4.2)
-  fig1c.legend display -inbox position(3.9,0.3) font("arial",15)
-  fig1c.datelabel format(yy)
-  fig1c.addtext(6.4,-.30,font("arial",13),keep) percent
-  fig1c.axis(left) font("arial",15)
-  fig1c.axis(bottom) font("arial",15)
-  fig1c.setelem(1) lcolor(red)  legend("optimal control") lwidth(2)
-  fig1c.setelem(2) lcolor(black) legend("SEP-consistent baseline") lwidth(2)
-  fig1c.addtext(t,just(c),font("arial",18)) Unemployment Rate
-
-
-  smpl %graphstart %graphend
-  graph fig1d.line pic4{%sufcontrol} pic4
-  fig1d.options size(7,4.2)
-  fig1d.legend display -inbox position(0.5,0.2) font("arial",15)
-  fig1d.datelabel format(yy)
-  fig1d.addtext(6.4,-.30,font("arial",13),keep) percent
-  fig1d.axis(left) font("arial",15)
-  fig1d.axis(bottom) font("arial",15)
-  fig1d.setelem(1) lcolor(red)  legend("optimal control") lwidth(2)
-  fig1d.setelem(2) lcolor(black) legend("SEP-consistent baseline") lwidth(2)
-  fig1d.addtext(t,just(c),font("arial",18)) PCE Inflation Rate (4-Quarter)
-
-
-  graph fig1.merge fig1a fig1b fig1c fig1d
-  if %mcvars_wp = "no" and %mcvars_all = "no" then
-    %title = "Macroeconomic Effects of Optimal-Control Policy with Rational Expectations only in Financial Markets"
-    endif
-  if %mcvars_wp = "yes" and %mcvars_all = "no" then
-    %title = "Macroeconomic Effects of Optimal-Control Policy\n With Rational Expectationsin Financial Markets and Wage-Price Setting"
-    endif 
-  if %mcvars_all = "yes" then
-    %title = "Macroeconomic Effects of Optimal-Control Policy With Full Rational Expectations"
-    endif
-
-  if %zerobound = "yes" then
-    %title = %title + "\rZLB Imposed"
-    else
-    %title = %title + "\rZLB not Imposed"
-    endif    
-
-  fig1.addtext(t,just(c),font("Arial",20)) {%title}
-  fig1.align(2,1,1.25)
-  show fig1
-
-
-
-@ %def ocpolicy
+<<frbus ocpolicy>>
+@
 
 \subsection[pings]{srcEview/frbus.package/programs/pings.prg}
 
@@ -5299,389 +6990,6 @@ addin(proc="ld_varinfo",desc="Load variable information file") ".\ld_varinfo/ld_
 
 
 @ %def pings
-
-<<simulate six ping simulations, aka simple IRFs>>=
-' Simulate six ping simulations (AKA simple IRFs) 
-'
-' Notes:
-'
-' 1. Choose between VAR expectations and several MCE alternatives
-' with the %mcevars parameter.
-'
-'   - %mcevars = "none"   => VAR expectations everywhere
-'   - %mcevars = "mcap"   => MCE in asset pricing, VAR expectations elsewhere
-'   - %mcevars = "mcapwp" => MCE in asset pricing and price-wage setting;
-'        VAR expectations elsewhere
-'   - %mcevars = "all"    => MCE everywhere
-'
-' Note that even when %mcevars = "none", the program does many
-' of the setup steps for an MCE simulation even though it never
-' uses what they create.
-
-' 2. Seven of the pings are one-time shocks to the residual of an
-' equation whose structure contains a large autoregressive
-' element.  The remaining ping involves a permanent increase in the
-' level of trend MFP.
-
-' 3. The eight pings are:
-'
-'   - A 100 basis point upward shock to the rffintay monetary
-'     policy rule
-'   - An increase in federal purchases equal to one percent of
-'     baseline GDP
-'   - A one percent permanent increase in the level of trend MPF 
-'   - A 100 bp increase in the equity premium
-'   - A $10 per barrel increase in the price of oil
-'   - A 1 percent (ar) increase in the growth rate of 
-'     multifactor productivity
-'   - Increases of 100 basis points to the 10-year Treasury term premium, 
-'     75 basis points to the 5-year premium, and 30 basis points to the
-'     30-year premium 
-'   - A 10 percent increase in the (real) exchange rate
-
-' *************************************************************
-' Initial filename and parameter settings
-' *************************************************************
-
-' Subroutines
-  include ../subs/master_library
-  include ../subs/mce_solve_library
-
-' Workfile    
-  %wfstart = "1975q1"
-  %wfend = "2100q4"
-  %mainpage = "main"
-  wfcreate(wf=aaa,page={%mainpage}) q {%wfstart} {%wfend}
-
-' FRB/US model names and locations
-  %varmod = "stdver"
-  %varpath = "../mods/"
-  %mcemod = "pfver"
-  %mcepath = "../mods/"
-
-' Input datbase
-  %dbin  = "../data/longbase"
-
-' Simulation range
-  %simstart = "2020q1"
-  %simend   = "2069q4"
-
-' Choose an expectations option ("none" => VAR expectations, "mcap", "mcapwp", "all") 
-  %mcevars = "none"
-
-' ****************************************************************
-' Retrieve data, model equations and coefficients, set
-' policy options, and compute tracking residuals 
-' ****************************************************************
-
-' MCE variable setup 
-  if %mcevars = "none" then
-    %zvars = "zpic58 "
-    else
-    %zvars = "zdivgr zgap05 zgap10 zgap30 zrff5 zrff10 zrff30 zpi10 zpi10f zpic30 zpib5 zpic58 "
-    if %mcevars = "mcapwp" or %mcevars = "all" then
-      %zvars = %zvars + "zpicxfe zpieci "
-      endif
-    if %mcevars = "all" then
-      %zvars = %zvars + "zecd zeco zeh zgapc2 zlhp zpi5 zvpd zvpi zvps zxbd zxbi zxbs zyh zyhp zyht zynid "
-      endif
-    endif
-
-' Load equations and coefficients
-  call mce_load_frbus("mce_vars=%zvars,mod_b=%varmod,path_b=%varpath,mod_f=%mcemod,path_f=%mcepath")
-
-' Load data
-  dbopen %dbin as longdata
-  fetch(d=longdata) *
-
-' Data for extra variables associated with MC expectations
-  smpl @all
-  call make_frbus_mcevars(%zvars)
-
-' Set monetary policy
-  smpl @all
-  call set_mp("dmpintay")
-
-' Turn off zero bound and policy thresholds; hold policymaker's
-' perceived equilibrium real interest rate constant
-  smpl @all
-  dmptrsh = 0
-  rffmin = -9999
-  drstar = 0
-
-' Set fiscal policy
-  smpl @all
-  call set_fp("dfpsrp")
-
-' Set _aerr variables to zero
-  smpl @all
-  {%varmod}.makegroup(a,n) endog @endog
-  call groupnew("endog","_aerr")
-  call group2zero("endog_aerr")
-
-' Standard solution options
-  {%varmod}.solveopt(o=b,g=12,z=1e-12)
-  {%mcemod}.solveopt(o=b,g=12,z=1e-12)
-
-' Assign baseline tracking add factors
-  %suftrk = "_0"
-  smpl %simstart %simend 
-  {%varmod}.addassign @all
-  {%varmod}.addinit(v=n) @all
-  {%varmod}.scenario(n,a={%suftrk}) "track"
-  {%varmod}.solve
-  scalar mm = @max(@abs(xgap{%suftrk}-xgap))
-  if mm > .0001 then
-    statusline dynamic tracking simulation failed for {%varmod}
-    stop
-    endif
-  {%mcemod}.addassign @all
-  {%mcemod}.addinit(v=n) @all
-
-
-
-
-  
-' ****************************************************************
-' Ping simulations
-' ****************************************************************
-
-  %suf = "_1"
-  {%varmod}.scenario(n,a={%suf}) "ping"
-  {%mcemod}.scenario(n,a={%suf}) "ping"
-  
-' **********************************
-' Federal Funds Rate: RFF ping 
-
-  %ping = "rff"
-
-  smpl %simstart %simstart
-  rffintay_aerr = rffintay_aerr + 1
-  smpl %simstart %simend
-  if %mcevars = "none" then
-    {%varmod}.solve
-    else
-    %modstr = "mod_b=%varmod,mod_f=%mcemod,mce_vars=%zvars"
-    %algstr = "meth=qnewton"
-    %simstr = "type=single,solveopt=%sopt,suf=" + %suf
-    call mce_run(%modstr,%algstr,%simstr)
-    endif
-  smpl %simstart %simstart
-  rffintay_aerr = rffintay_aerr - 1
-  call copyit
-
-' **********************************
-' Treasury Term Premium: RG10P, RG5P, and RG30P ping 
-
-  %ping = "prem"
-  smpl @all
-  series rg30p_aerr = 0
-  smpl %simstart %simstart
-  rg10p_aerr = rg10p_aerr + 1
-  rg5p_aerr = rg5p_aerr + .75
-  rg30p_aerr = rg30p_aerr + .35
-  smpl %simstart %simend
-  if %mcevars = "none" then
-    {%varmod}.solve
-    else
-    %modstr = "mod_b=%varmod,mod_f=%mcemod,mce_vars=%zvars"
-    %algstr = "meth=qnewton"
-    %simstr = "type=single,solveopt=%sopt,suf=" + %suf
-    call mce_run(%modstr,%algstr,%simstr)
-    endif
-  smpl %simstart %simstart
-  rg10p_aerr = rg10p_aerr - 1
-  rg5p_aerr = rg5p_aerr - 0.75
-  rg30p_aerr = rg30p_aerr - .35
-  call copyit
-  smpl %simstart %simend
-  series rg10p_{%ping} = rg10p{%suf} - rg10p
-
-' **********************************
-' Federal Purchases: EGFO ping
-
-  %ping = "eg"
-  smpl %simstart %simstart
-  egfo_aerr = egfo_aerr + .01*xgdpn/egfon
-  smpl %simstart %simend
-  if %mcevars = "none" then
-    {%varmod}.solve
-    else
-    %modstr = "mod_b=%varmod,mod_f=%mcemod,mce_vars=%zvars"
-    %algstr = "meth=qnewton"
-    %simstr = "type=single,solveopt=%sopt,suf=" + %suf
-    call mce_run(%modstr,%algstr,%simstr)
-    endif
-  smpl %simstart %simstart
-  egfo_aerr = egfo_aerr - .01*xgdpn/egfon
-  call copyit
-  smpl %simstart %simend
-  series egfn_shr_{%ping} = 100*(egfn{%suf}/xgdpn{%suf} - egfn/xgdpn)
-
-' **********************************
-' Equity Premium: REQP ping
-
-  %ping = "reqp"
-  smpl %simstart %simstart
-  reqp_aerr = reqp_aerr + 1
-  smpl %simstart %simend
-  if %mcevars = "none" then
-    {%varmod}.solve
-    else
-    %modstr = "mod_b=%varmod,mod_f=%mcemod,mce_vars=%zvars"
-    %algstr = "meth=qnewton"
-    %simstr = "type=single,solveopt=%sopt,suf=" + %suf
-    call mce_run(%modstr,%algstr,%simstr)
-    endif
-  smpl %simstart %simstart
-  reqp_aerr = reqp_aerr - 1
-  call copyit
-  smpl %simstart %simend
-  series reqp_{%ping} = reqp{%suf} - reqp
-
-
-' **********************************
-' Oil Prices: POILR ping
-
-  %ping = "oil"
-  smpl %simstart %simstart
-  poilr_aerr = poilr_aerr + 10/pxb
-  smpl %simstart %simend
-  if %mcevars = "none" then
-    {%varmod}.solve
-    else
-    %modstr = "mod_b=%varmod,mod_f=%mcemod,mce_vars=%zvars"
-    %algstr = "meth=qnewton"
-    %simstr = "type=single,solveopt=%sopt,suf=" + %suf
-    call mce_run(%modstr,%algstr,%simstr)
-    endif
-  smpl %simstart %simstart
-  poilr_aerr = poilr_aerr - 10/pxb
-  call copyit
-  smpl %simstart %simend
-  series poil_{%ping} = poil{%suf} - poil
-
-
-
-' **********************************
-' Exchange Rate: FPXRR ping
-
-  %ping = "exch"
-  smpl %simstart %simstart
-  series shock_fpxr = log(1.1)
-  fpxrr_aerr = fpxrr_aerr + shock_fpxr
-
-  smpl %simstart %simend
-  if %mcevars = "none" then
-    {%varmod}.solve
-    else
-    %modstr = "mod_b=%varmod,mod_f=%mcemod,mce_vars=%zvars"
-    %algstr = "meth=qnewton"
-    %simstr = "type=single,solveopt=%sopt,suf=" + %suf
-    call mce_run(%modstr,%algstr,%simstr)
-    endif
-   
-  series fpxr_{%ping} = fpxr{%suf} - fpxr 
-  smpl %simstart %simstart
-  fpxrr_aerr = fpxrr_aerr - shock_fpxr
-  call copyit
-
-
-' **********************************
-' HMFPT ping
-
-  %ping = "hmfp"
-  smpl %simstart %simstart
-  hmfpt_aerr = hmfpt_aerr + 1
-  smpl %simstart %simend
-  if %mcevars = "none" then
-    {%varmod}.solve
-    else
-    %modstr = "mod_b=%varmod,mod_f=%mcemod,mce_vars=%zvars"
-    %algstr = "meth=qnewton"
-    %simstr = "type=single,solveopt=%sopt,suf=" + %suf
-    call mce_run(%modstr,%algstr,%simstr)
-    endif
-  smpl %simstart %simstart
-  hmfpt_aerr = hmfpt_aerr - 1
-  call copyit
-  smpl %simstart %simend
-  series hmfpt_{%ping} = hmfpt{%suf} - hmfpt
-
-
-' **********************************
-' MFPT ping
-
-  %ping = "mfp"
-  smpl %simstart %simstart
-  mfpt_aerr = mfpt_aerr + .01
-  smpl %simstart %simend
-  if %mcevars = "none" then
-    {%varmod}.solve
-    else
-    %modstr = "mod_b=%varmod,mod_f=%mcemod,mce_vars=%zvars"
-    %algstr = "meth=qnewton"
-    %simstr = "type=single,solveopt=%sopt,suf=" + %suf
-    call mce_run(%modstr,%algstr,%simstr)
-    endif
-  smpl %simstart %simstart
-  mfpt_aerr = mfpt_aerr - .01
-  call copyit
-  smpl %simstart %simend
-  series mfpt_{%ping} = 100*(mfpt{%suf}/mfpt - 1)
-
-
-' ****************************************************************
-' Individual ping graphs
-' ****************************************************************
-  call graphit
-
-
-' ****************************************************************
-' Composite figures
-' ****************************************************************
-
-  if %mcevars = "none" then
-    %exp = "VAR Expectations"
-    endif
-  if %mcevars = "mcap" then
-    %exp = "MC (MCAP) Expectations"
-    endif
-  if %mcevars = "mcapwp" then
-    %exp = "MC (MCAP+WP) Expectations"
-    endif
-  if %mcevars = "all" then
-    %exp = "MC (ALL) Expectations"
-    endif
-
-  %t1 = "FRB/US Ping Simulations:  " + %exp + " -- I"
-  %t2 = "FRB/US Ping Simulations:  " + %exp + " -- II"
-  %t3 = "FRB/US Ping Simulations:  " + %exp + " -- III"
-
-' Figure 1
-
-  graph fig_1.merge gr_rff gr_eg gr_reqp
-  fig_1.align(3,.4,1.0)
-  fig_1.addtext(t,just(c),font(12)) %t1
-  show fig_1
-
-
-
-' Figure 2
-
-  graph fig_2.merge gr_oil gr_hmfp gr_mfp
-  fig_2.align(3,.4,1.0)
-  fig_2.addtext(t,just(c),font(12)) %t2
-  show fig_2
-
-
-' Figure 3
-
-  graph fig_3.merge gr_prem gr_exch
-  fig_3.align(3,.4,1.0)
-  fig_3.addtext(t,just(c),font(12)) %t3
-  show fig_3
-@
 
 <<copy it>>=
   subroutine copyit
@@ -6748,690 +8056,32 @@ subroutine makestats(string %trkname)
 \subsection[example1]{srcEview/mce.solve.package/example1.prg}
 
 <<srcEview/mce.solve.package/example1.prg>>=
-' This example illustrates:
-'
-'   - The automated approach to constructing the two operational
-'     models
-'   - How to define the multiplier shock in a text
-'     file whose lines are executed from within the call to
-'     mce_run
-'   - How to declare the model scenario and the scenario
-'     scenario alias within the call to mce_run
-'   - The use of the "linear" option of the "newton" algorithm
-'     for a linear model in which the maximum endogenous lead and
-'     lag is one period
-
-'************************************************************
-'************************************************************
-'************************************************************
-' Section 1:  Workfile, model name, simulation range
-
-  include  mce_solve_library
-
-' Workfile
-  %wfstart = "2000q1"
-  %wfend = "2100q4"
-  %mainpage = "main"
-  wfcreate(wf=aaa,page={%mainpage}) q {%wfstart} {%wfend}
-
-' Model name
-  %mod = "simple"
-
-' Simulation range
-  %simstart = "2001q1"
-  %simend = "2025q4"
-
-
-'************************************************************
-'************************************************************
-'************************************************************
-' Section 2:  Model, coefficients, and data
-
-' equations
-
-  model {%mod}
-  {%mod}.append pinf = cp(1) * pinf(-1) + (.98-cp(1))*pinf(1)+ cp(2) * ygap
-  {%mod}.append rate = cr(1)*rate(-1)+(1-cr(1))*(cr(2)*pinf + cr(3)*ygap)
-  {%mod}.append ygap = cy(1) * ygap(-1) + (.98-cy(1))*ygap(1) + cy(2) * (rate - pinf(1))
-
-
-' coefficients
-
-  coef(2) cy
-  cy.fill .50, -.02
-  coef(2) cp
-  cp.fill .50, .02
-  coef(3) cr
-  cr.fill .75, 1.5, 0.5 
-
-' set all data to zero
-  smpl @all
-  %vars = {%mod}.@varlist
-  for !i = 1 to @wcount(%vars)
-    %tmp = @word(%vars,!i)
-    series {%tmp} = 0
-    next
-
-
-'************************************************************
-'************************************************************
-'************************************************************
-' Section 3: Simulation
-
-  text shock1
-  shock1.append smpl {%simstart} {%simstart}
-  shock1.append series rate_a = rate_a + 1
-
-  %mopts = "create,mod=%mod,adds,track"
-  %aopts = "jinit=linear"
-  %sopts = "type=single,txt=shock1,scen,suf=_1"
-  smpl {%simstart} {%simend}
-  call mce_run(%mopts,%aopts,%sopts)
-  copy mce_sim_spool mce_sim_spool_1
-  show mce_sim_spool_1
-
-  series zero = 0
-  smpl %simstart %simstart + 39
-  graph gr1.line zero rate_1 pinf_1 ygap_1
-  gr1.addtext(t,c,font(14)) "Positive interest rate shock"
-  show gr1
-
-
-
-@ %def example1
+<<mce example1>>
+@
 
 \subsection[example2]{srcEview/mce.solve.package/example2.prg}
 
 <<srcEview/mce.solve.package/example2.prg>>=
-' This example illustrates:
-'
-'   - A manual approach to constructing the two operational
-'     models that mimics what the automated approach does
-'   - How to define the multiplier shock in a text
-'     file whose lines are executed from within the call to
-'     mce_run
-'   - How to declare the model scenario and the scenario
-'     scenario alias within the call to mce_run
-'   - The use of the "linear" option of the "newton" algorithm
-'     for a linear model in which the maximum endogenous lead and
-'     lag is one period
-
-'************************************************************
-'************************************************************
-'************************************************************
-' Section 1:  Workfile, model name, simulation range
-
-  include  mce_solve_library
-
-' Workfile
-  %wfstart = "2000q1"
-  %wfend = "2100q4"
-  %mainpage = "main"
-  wfcreate(wf=aaa,page={%mainpage}) q {%wfstart} {%wfend}
-
-' Model names
-  %modb = "simpleb"
-  %modf = "simplef"
-
-' Simulation range
-  %simstart = "2001q1"
-  %simend = "2025q4"
-
-
-'************************************************************
-'************************************************************
-'************************************************************
-' Section 2:  Model, coefficients, and data
-
-' equations in backward-looking model
-
-  model {%modb}
-  {%modb}.append pinf = cp(1) * pinf(-1) + (.98-cp(1))*zpinf+ cp(2) * ygap
-  {%modb}.append rate = cr(1)*rate(-1)+(1-cr(1))*(cr(2)*pinf + cr(3)*ygap)
-  {%modb}.append ygap = cy(1) * ygap(-1) + (.98-cy(1))*zygap + cy(2) * (rate - zpinf)
-
-' equations in expectations errors model
-
-  model {%modf}
-  {%modf}.append ezpinf = zpinf - pinf(1)
-  {%modf}.append ezygap = zygap - ygap(1)
-
-' coefficients
-
-  coef(2) cy
-  cy.fill .50, -.02
-  coef(2) cp
-  cp.fill .50, .02
-  coef(3) cr
-  cr.fill .75, 1.5, 0.5 
-
-' set all data to zero
-  smpl @all
-  %vars = {%modb}.@varlist
-  for !i = 1 to @wcount(%vars)
-    %tmp = @word(%vars,!i)
-    series {%tmp} = 0
-    next
-  %vars = {%modf}.@varlist
-  for !i = 1 to @wcount(%vars)
-    %tmp = @word(%vars,!i)
-    series {%tmp} = 0
-    next
-
-' declare mce variables and instruments
-  %instrus = "zpinf zygap"
-  %errs = "ezpinf ezygap"
-
-'************************************************************
-'************************************************************
-'************************************************************
-' Section 3: Simulation
-
-
-  text shock1
-  shock1.append smpl {%simstart} {%simstart}
-  shock1.append series rate_a = rate_a + 1
-
-  %mopts = "mod_b=%modb,mod_f=%modf,mce_instrus=%instrus,mce_errs=%errs,adds,track"
-  %aopts = "jinit=linear"
-  %sopts = "type=single,txt=shock1,scen,suf=_1"
-  smpl {%simstart} {%simend}
-  call mce_run(%mopts,%aopts,%sopts)
-  copy mce_sim_spool mce_sim_spool_1
-  show mce_sim_spool_1
-
-  series zero = 0
-  smpl %simstart %simstart + 39
-  graph gr1.line zero rate_1 pinf_1 ygap_1
-  gr1.addtext(t,c,font(14)) "Positive interest rate shock"
-  show gr1
-
-
-
-@ %def example2
+<<mce example2>>
+@
 
 \subsection[example3]{srcEview/mce.solve.package/example3.prg}
 
 <<srcEview/mce.solve.package/example3.prg>>=
-' This example illustrates:
-'
-'   - Another manual approach to constructing the two operational
-'     models that introduces new endogenous variables for the
-'     expectations leads along with simple equations for the new
-'     endogenous variables.
-'   - The MCE instruments are the add factors on the equations for
-'     the new endogenous variables; this circumstance requires that
-'     add factors be assigned to the operational models prior to 
-'     the call to mce_run.
-'   - The option of defining the multiplier shock in commands that
-'     are executed prior to the call to mce_run, when the manual
-'     approach is used.
-'   - The option of declaring model scenarios and the scenario
-'     scenario alias prior to the call to mce_run, when the manual
-'     approach is used.
-'   - The model no longer satisfies the conditions for which the
-'     "jinit=linear" option of the "newton" algorithm is designed.
-'     This example uses "jinit=interp(4)" to specify a
-'     particular approximate Jacobian.
-'
-'   - This example runs three simulations.  In the second and third 
-'     simulations, the assignment of null strings to the first two 
-'     arguments of the mce_run subroutine causes the simulations to be
-'     run with the same internal models and algorithm (including
-'     the Newton MCE Jacobian) that were created or declared in the
-'     first simulation.  
-
-'************************************************************
-'************************************************************
-'************************************************************
-' Section 1:  Workfile, model name, simulation range
-
-  include  mce_solve_library
-
-' Workfile
-  %wfstart = "2000q1"
-  %wfend = "2100q4"
-  %mainpage = "main"
-  wfcreate(wf=aaa,page={%mainpage}) q {%wfstart} {%wfend}
-
-' Model names
-  %modb = "simpleb"
-  %modf = "simplef"
-
-' Simulation range
-  %simstart = "2001q1"
-  %simend = "2025q4"
-
-
-'************************************************************
-'************************************************************
-'************************************************************
-' Section 2:  Model, coefficients, and data
-
-' equations in backward-looking model
-
-  model {%modb}
-  {%modb}.append pinf = cp(1) * pinf(-1) + (.98-cp(1))*zpinf+ cp(2) * ygap
-  {%modb}.append rate = cr(1)*rate(-1)+(1-cr(1))*(cr(2)*pinf + cr(3)*ygap)
-  {%modb}.append ygap = cy(1) * ygap(-1) + (.98-cy(1))*zygap + cy(2) * (rate - zpinf)
-  {%modb}.append zpinf = @movav(pinf(-1),4)
-  {%modb}.append zygap = @movav(ygap(-1),4)
-
-' equations in expectations errors model
-
-  model {%modf}
-  {%modf}.append ezpinf = zpinf - pinf(1)
-  {%modf}.append ezygap = zygap - ygap(1)
-
-' coefficients
-
-  coef(2) cy
-  cy.fill .50, -.02
-  coef(2) cp
-  cp.fill .50, .02
-  coef(3) cr
-  cr.fill .75, 1.5, 0.5 
-
-' set all data to zero
-  smpl @all
-  %vars = {%modb}.@varlist
-  for !i = 1 to @wcount(%vars)
-    %tmp = @word(%vars,!i)
-    series {%tmp} = 0
-    next
-  %vars = {%modf}.@varlist
-  for !i = 1 to @wcount(%vars)
-    %tmp = @word(%vars,!i)
-    series {%tmp} = 0
-    next
-
-' declare mce variables and instruments
-  %instrus = "zpinf_a zygap_a"
-  %errs = "ezpinf ezygap"
-
-' assign tracking add factors
-  smpl %simstart %simend
-  {%modb}.addassign @all
-  {%modb}.addinit(v=n) @all
-  {%modf}.addassign @all
-  {%modf}.addinit(v=n) @all
-
-'************************************************************
-'************************************************************
-'************************************************************
-' Section 3: Simulations
-
-  %sufm = "_1"
-  {%modb}.scenario(n,a=%sufm) "multiplier"
-  {%modf}.scenario(n,a=%sufm) "multiplier"
-
-
-' Sim 1:  interest rate shock
-
-  smpl {%simstart} {%simstart}
-  rate_a = rate_a + 1
-
-  %mopts = "mod_b=%modb,mod_f=%modf,mce_instrus=%instrus,mce_errs=%errs"
-  %aopts = "jinit=interp(4)"
-  %sopts = "type=single"
-  smpl {%simstart} {%simend}
-  call mce_run(%mopts,%aopts,%sopts)
-  smpl {%simstart} {%simstart}
-  rate_a = rate_a - 1
-
-  series zero = 0
-  smpl %simstart %simstart + 39
-  graph gr1.line zero rate{%sufm} pinf{%sufm} ygap{%sufm}
-  gr1.addtext(t,c,font(14)) "Positive interest rate shock"
-  show gr1
-
-
-' Sim 2:  output gap shock
-
-  smpl {%simstart} {%simstart}
-  ygap_a = ygap_a + 1
-
-  %mopts = ""
-  %aopts = ""
-  %sopts = "type=single"
-  smpl {%simstart} {%simend}
-  call mce_run(%mopts,%aopts,%sopts)
-  smpl {%simstart} {%simstart}
-  ygap_a = ygap_a - 1
-
-  series zero = 0
-  smpl %simstart %simstart + 39
-  graph gr2.line zero rate{%sufm} pinf{%sufm} ygap{%sufm}
-  gr2.addtext(t,c,font(14)) "Positive output gap shock"
-  show gr2
-
-' Sim 3:  inflation shock
-
-  smpl {%simstart} {%simstart}
-  pinf_a = pinf_a + 1
-
-  %mopts = ""
-  %aopts = ""
-  %sopts = "type=single"
-  smpl {%simstart} {%simend}
-  call mce_run(%mopts,%aopts,%sopts)
-  smpl {%simstart} {%simstart}
-  pinf_a = pinf_a - 1
-
-  series zero = 0
-  smpl %simstart %simstart + 39
-  graph gr3.line zero rate{%sufm} pinf{%sufm} ygap{%sufm}
-  gr3.addtext(t,c,font(14)) "Positive inflation shock"
-  show gr3
-
-
-
-@ %def example3 
+<<mce example3>>
+@
 
 \subsection[example4]{srcEview/mce.solve.package/example4.prg}
 
 <<srcEview/mce.solve.package/example4.prg>>=
-' This example illustrates:
-'
-'   - The simulation of a nonlinear model (zero bound imposed)
-'     (because the baseline data is set to zero; the zero-bound
-'     is set illustratively to -1)
-'   - The use of the qnewton algorithm
-
-'************************************************************
-'************************************************************
-'************************************************************
-' Section 1:  Workfile, model name, simulation range
-
-  include  mce_solve_library
-
-' Workfile
-  %wfstart = "2000q1"
-  %wfend = "2100q4"
-  %mainpage = "main"
-  wfcreate(wf=aaa,page={%mainpage}) q {%wfstart} {%wfend}
-
-' Model names
-  %modb = "simpleb"
-  %modf = "simplef"
-
-' Simulation range
-  %simstart = "2001q1"
-  %simend = "2025q4"
-
-
-'************************************************************
-'************************************************************
-'************************************************************
-' Section 2:  Model, coefficients, and data
-
-' equations in backward-looking model
-
-  model {%modb}
-  {%modb}.append pinf = cp(1) * pinf(-1) + (.98-cp(1))*zpinf+ cp(2) * ygap
-  {%modb}.append rate_u = cr(1)*rate(-1)+(1-cr(1))*(cr(2)*pinf + cr(3)*ygap)
-  {%modb}.append rate = @recode( rate_u>rate_min,rate_u,rate_min)
-  {%modb}.append ygap = cy(1) * ygap(-1) + (.98-cy(1))*zygap + cy(2) * (rate - zpinf)
-  {%modb}.append zpinf = @movav(pinf(-1),4)
-  {%modb}.append zygap = @movav(ygap(-1),4)
-
-' equations in expectations errors model
-
-  model {%modf}
-  {%modf}.append ezpinf = zpinf - pinf(1)
-  {%modf}.append ezygap = zygap - ygap(1)
-
-' coefficients
-
-  coef(2) cy
-  cy.fill .50, -.02
-  coef(2) cp
-  cp.fill .50, .02
-  coef(3) cr
-  cr.fill .75, 1.5, 0.5 
-
-' set all data to zero
-  smpl @all
-  %vars = {%modb}.@varlist
-  for !i = 1 to @wcount(%vars)
-    %tmp = @word(%vars,!i)
-    series {%tmp} = 0
-    next
-  %vars = {%modf}.@varlist
-  for !i = 1 to @wcount(%vars)
-    %tmp = @word(%vars,!i)
-    series {%tmp} = 0
-    next
-
-' declare mce variables and instruments
-  %instrus = "zpinf_a zygap_a"
-  %errs = "ezpinf ezygap"
-
-' assign tracking add factors
-  smpl %simstart %simend
-  {%modb}.addassign @all
-  {%modb}.addinit(v=n) @all
-  {%modf}.addassign @all
-  {%modf}.addinit(v=n) @all
-
-'************************************************************
-'************************************************************
-'************************************************************
-' Section 3: Simulation
-
-  %zb = "yes"
-
-  %sufm = "_1"
-  {%modb}.scenario(n,a=%sufm) "multiplier"
-  {%modf}.scenario(n,a=%sufm) "multiplier"
-
-  if %zb = "yes" then
-    smpl @all
-    rate_min = -1
-    else
-    rate_min = -9999
-    endif
-
-  smpl {%simstart} {%simstart}
-  ygap_a = ygap_a - 5
-
-  %mopts = "mod_b=%modb,mod_f=%modf,mce_instrus=%instrus,mce_errs=%errs"
-  %aopts = "meth=qnewton"
-  %sopts = "type=single"
-  smpl {%simstart} {%simend}
-  tic
-  call mce_run(%mopts,%aopts,%sopts)
-  scalar elapsed = @toc
-  show elapsed
-
-  series zero = 0
-  smpl %simstart %simstart + 39
-  graph gr1.line zero rate{%sufm} pinf{%sufm} ygap{%sufm}
-  %title = "Negative Output Shock"
-  if %zb = "yes" then
-    %title = %title + "\r(zero bound imposed)"
-    else
-    %title = %title + "\r(zero bound not imposed)"
-    endif
-  gr1.addtext(t,c,font(14)) %title
-  show gr1
-
-
-
-@ %def example4
+<<mce example4>>
+@
 
 \subsection[example5]{srcEview/mce.solve.package/example5.prg}
 
 <<srcEview/mce.solve.package/example5.prg>>=
-' This example illustrates the two optimal policy simulation types
-' 
-'   - Simulate the effects of a positive shock to the output gap
-'     using sequentially 
-'
-'     (a) the model's interest rate rule
-'
-'     (b) the opt simulation type to find the optimal interest rate
-'     path under commitment
-'
-'     (c) the opttc simulation type to find the optimal time-consistent
-'     or discretionary interest rate path; note that the solution in 
-'     this case is only approximate
-'
-'     In both (b) and (c) the policy instrument is the residual of
-'     the interest rule
-'
-'   - The illustrative loss function penalizes equally weighted,
-'     discounted, squared deviations of the output gap,
-'     inflation, and the first difference of the interest rate.
-'
-
-'************************************************************
-'************************************************************
-'************************************************************
-' Section 1:  Workfile, model name, simulation range
-
-  include  mce_solve_library
-
-' Workfile
-  %wfstart = "2000q1"
-  %wfend = "2100q4"
-  %mainpage = "main"
-  wfcreate(wf=aaa,page={%mainpage}) q {%wfstart} {%wfend}
-
-' Model name
-  %mod = "simple"
-
-' Simulation range
-  %simstart = "2001q1"
-  %simend = "2025q4"
-
-'************************************************************
-'************************************************************
-'************************************************************
-' Section 2:  Model, coefficients, and data
-
-' equations
-
-  model {%mod}
-  {%mod}.append pinf = cp(1) * pinf(-1) + (.98-cp(1))*pinf(1)+ cp(2) * ygap
-  {%mod}.append rate - rate_aerr = cr(1)*rate(-1)+(1-cr(1))*(cr(2)*pinf + cr(3)*ygap)
-  {%mod}.append ygap = cy(1) * ygap(-1) + (.98-cy(1))*ygap(1) + cy(2) * (rate - pinf(1))
-  {%mod}.append drate = rate - rate(-1)
-
-
-' coefficients
-
-  coef(2) cy
-  cy.fill .50, -.02
-  coef(2) cp
-  cp.fill .50, .02
-  coef(3) cr
-  cr.fill .75, 1.5, 0.5 
-
-' set all data to zero
-  smpl @all
-  %vars = {%mod}.@varlist
-  for !i = 1 to @wcount(%vars)
-    %tmp = @word(%vars,!i)
-    series {%tmp} = 0
-    next
-
-'************************************************************
-'************************************************************
-'************************************************************
-' Section 3: Optimal policy setup
-
-' targets, instruments
-  group opt_instrus rate_aerr
-  group opt_targs pinf ygap drate
-
-' desired target trajectories 
-  smpl @all
-  series pinf_t = 0
-  series ygap_t = 0
-  series drate_t = 0
-
-' loss function weights
-  %discount = ".99"
-  %y_weight = "1.0"
-  %p_weight = "1.0"
-  %r_weight = "1.0"
-  smpl @all
-  series ygap_w = @val(%y_weight)
-  series pinf_w =  @val(%p_weight)
-  series drate_w  =  @val(%r_weight)
-  !discount = @val(%discount)
-  smpl %simstart+1 %simend
-  ygap_w = !discount * ygap_w(-1)     
-  pinf_w = !discount * pinf_w(-1)     
-  drate_w = !discount * drate_w(-1)     
-
-
-'************************************************************
-'************************************************************
-'************************************************************
-' Section 3: Simulations
-
-  text shock1
-  shock1.append smpl {%simstart} {%simstart}
-  shock1.append series ygap_a = ygap_a + 3
-
-' run the simulation using the monetary policy rule
-
-  %mopts = "create,mod=%mod,adds,track"
-  %aopts = "jinit=linear"
-  %sopts = "type= single,txt=shock1,scen,suf=_1"
-  smpl {%simstart} {%simend}
-  call mce_run(%mopts,%aopts,%sopts)
-
-  smpl @all
-  series rate_rule = rate_1
-  series pinf_rule = pinf_1
-  series ygap_rule = ygap_1
-
-
-' run the simulation using opt
-
-  %mopts = ""
-  %aopts = ""
-  %sopts = "type=opt,instrus=opt_instrus,targs=opt_targs"
-  smpl {%simstart} {%simend}
-  call mce_run(%mopts,%aopts,%sopts)
-
-  smpl @all
-  series rate_opt = rate_1
-  series pinf_opt = pinf_1
-  series ygap_opt = ygap_1
-
-
-' run the simulation using opttc
-
-  %mopts = ""
-  %aopts = ""
-  %sopts = "type=opttc,instrus=opt_instrus,targs=opt_targs"
-  smpl {%simstart} {%simend}
-  call mce_run(%mopts,%aopts,%sopts)
-
-  smpl @all
-  series rate_opttc = rate_1
-  series pinf_opttc = pinf_1
-  series ygap_opttc = ygap_1
-
-'graph
-
-  smpl %simstart %simstart + 39
-  series zero = 0
-  graph gr1.line zero rate_rule rate_opt rate_opttc
-  graph gr2.line zero pinf_rule pinf_opt pinf_opttc
-  graph gr3.line zero ygap_rule ygap_opt ygap_opttc
-  graph gr4.merge gr1 gr2 gr3
-  %title = "Effects of Positive Output Shock Under Three Policy Responses"
-  %title = %title + "\r1.  An intertial interest rate rule (_rule)"
-  %title = %title + "\r2.  Optimal policy under committment (_opt)"
-  %title = %title + "\r3.  Optimal time-consistent policy (_opttc)"
-  gr4.addtext(t,c,font(14)) %title
-  show gr4
-@ %def example5
+<<mce example5>>
+@
 
 \subsection[mce.solve.library]{srcEview/mce.solve.package/mce.solve.library.prg}
 
@@ -7439,625 +8089,37 @@ subroutine makestats(string %trkname)
 <<mce solve library>>
 @ %def mce_solve_library
 
-\section{State Space Package}
+\section{state space package}
 
 \subsection[data.transformations]{srcEview/state.space.package/data.transformations.prg}
 
 <<srcEview/state.space.package/data.transformations.prg>>=
-subroutine data_transformations()
-
-' Subroutine for FRB/US state-space model package to
-' transform raw data from EViews database to observables
-' used in the estimation of the state-space model.
-
-' 1. Data transformations
-
-series lpop = 100*log(n16)
- 
-'Business - product side
-series nbp = xbn
-series bp = log(xb)*100 -lpop
-
-'GDP
-series gdp = log(xgdp)*100 -lpop
-
-'Buseness - income side
-series dsnst_q = xgdpn - xgdin
-series nbi = nbp - dsnst_q
-series rbi = nbi/(pxb/100)
-series bi = log(rbi)*100 -lpop
-
-' Employment Business sector
-series eb = log(lep)*100  - lpop
-
-' Workweek
-series hb = log(lhp)*100 - lpop
-series bww = hb - eb
-
-' Employment Rate
-series erate = 100*log((100-lur)/100)
-
-' Participation Rate
-series lfpr = 100*log(lf/n16)
-
-' Variables for TMFP:
-series lks = 100*log(ks) - lpop
-series llqualt = 100*log(lqualt)
-series lveoa = 100*log(veoa)
-
-' Series for the price equation
-series c1pcex = @pca(pcxfe)
-series engylag_pcex = 0.5*(uces(-1)+uces(-2))*@pca(pcer(-1))
-series sw_coreimp_pcex = 0.5*((emon/xgden)+(emon(-1)/xgden(-1)))*@pca(pmo/pcxfe)
-series dum84 = @year>=1985
-series frzbulg = 0   ''' Nixon wage-price control programs
-smpl 1971q3 1974q1
-frzbulg = 1
-smpl 1974q2 1974q4
-frzbulg = -3.666
-
-
-
-' For the output-sector ratio, we use the median unbiased approach of Stock 
-' and Watson (1998). Thus, tau_oti is the ratio of the variances of the level 
-' and drift shocks.
-
-scalar tau_oti = .033260  ' modifier for the drift totfactor (OSR*) error term
-
-
-'**********************************************************************************
-
-' 2. Prior starting values for states.
-
-'    For mean zero level states, set prior to zero.
-'    For other level states, set prior to a data-based
-'    	 value near the start of the sample.
-'    For most drift terms, set prior to zero.  
-'    	 Exception is trend MFP, set equal to sample average.
-
-' Cycle
-scalar     icycle  =      0 
-scalar     icycle1 =      0 
-scalar     icycle2 = 	  0 
-
-' Measurement error
-scalar     ie3p = 	  0 
-scalar     ie3i =         0 
-
-' Levels of trends
-scalar     itotfactor =	        @elem(gdp,%eststart) - @elem(bp,%eststart) 
-scalar     itmfp =	       .965*(@elem(bp,%eststart) - 0.725*(@elem(eb,%eststart) _
-	   	 	           + @elem(bww,%eststart))  - 0.275*@elem(lks,%eststart) _
-				   - 0.725*@elem(llqualt,%eststart) _
-				   - (.035/.965)*@elem(lveoa,%eststart))
-scalar     itww =	        @elem(bww,%eststart) 
-scalar     ithtfactor =         @elem(eb,%eststart) - @elem(erate,%eststart) _
-	   	      		- @elem(lfpr,%eststart) 
-scalar     itlfpr =	        @elem(lfpr,%eststart) 
-scalar     iterate = 	        @elem(erate,%eststart) 
-
-' Initial drift terms
-scalar     igtotfactor =        0.0
-scalar     igtmfp = 	        1.7
-scalar     igtww =	        0.0
-scalar     igthtfactor =        0.0
-scalar     igtlfpr = 	        0.0
-
-scalar nstate = 25
-
-' The mpriors *must* be in the same order as the states are in the model object
-vector(nstate) mpriors
-mpriors.fill   0, ie3p, ie3i, 0, 0, _
-               0, 0, icycle, icycle1, icycle2, _
-	       itotfactor, igtotfactor, itmfp, igtmfp, itww, _
-               itww, igtww, ithtfactor, ithtfactor, igthtfactor, _
-               itlfpr, itlfpr, igtlfpr, iterate, iterate
-     
-
-' Set starting values for variance priors
-'     Variance priors set at a high value.  In estimation, variance 
-'     drops sharply in early periods of estimation sample.
-
-
-sym(nstate) vpriors
-for !d = 1 to nstate
-   vpriors(!d, !d) = 3
-   next
-
-' A tighter prior for drift variances,
-vpriors(12,12) = 1    ' igtotfactor
-vpriors(14,14) = 1    ' igtmfp
-vpriors(17,17) = 1    ' igtww
-vpriors(20,20) = 1    ' igthtfactor
-
-endsub
-@ %def data_transformations
+<<data transformations>>
+@
 
 \subsection[estimation.code]{srcEview/state.space.package/estimation.code.prg}
 
 <<srcEview/state.space.package/estimation.code.prg>>=
-subroutine ss_estimation()
-
-' Subroutine for FRB/US state-space model package to 
-' estimate the model parameters.
-
-'**********************************************************************************
-
-' 1. Starting values for parameters.
-
-' All of the coefficients in equations appear as beta or phi.  
-' Note that some values that are set here are hard coded in the estimation code below.
-
-call initial_values
-
-'**********************************************************************************
-'  Model
-
-sspace {%modname}  ' Declare a new state-space model object
-
-' 2. Output equations.
-
-' In the output equations, trend output is related to the capital stock, energy intensity,
-' and trends for labor input using a production function.  The parameters of the production 
-' function are hard-coded to the values in the FRB/US model.
-
-' GDP observable
-{%modname}.append @signal gdp = totfactor + tmfp/.965 + 0.725*(terate + tlfpr + thtfactor + tww) _
-    		      	      + 0.275*lks + 0.725*llqualt + (.035/.965)*lveoa _
-    		      	      + cycle + beta(11)*beta(6) + beta(11)*e3p  + rexo
-{%modname}.append @state rexo = [var=0.0000001^2]
-
-' Buisines sector product-side observable
-{%modname}.append @signal bp = tmfp/.965 + 0.725*(terate + tlfpr  + thtfactor + tww) _
-    		      	      + 0.275*lks + 0.725*llqualt + (.035/.965)*lveoa  _
-    		      	      + beta(10)*cycle  +   beta(6) + e3p
-{%modname}.append @state e3p =  beta(602)*e3p(-1) + re3p
-{%modname}.append @ename re3p 'business prod error
-{%modname}.append @evar var(re3p) =  (beta(125)^2)
-
-' Business sector income-side observable
-{%modname}.append @signal bi =  tmfp/.965  + 0.725*(terate + tlfpr  + thtfactor + tww) _
-    		      	      + 0.275*lks + 0.725*llqualt + (.035/.965)*lveoa _
- 		      	      + beta(10)*cycle - beta(6) + e3i   
-{%modname}.append @state e3i =   beta(602)*e3i(-1) + re3i
-{%modname}.append @ename re3i 'business income error
-{%modname}.append @evar var(re3i) =  (beta(126)^2)
-
-' 3. Labor equations.
- 
-' Workweek observable
-' To make this equation more consistent with the FRB/US workweek specification,
-' a contemporaneous change in the cycle is included as well as the level of the
-' cycle.  In addition, the coefficient on the lagged gap term in this equation is
-' hard-coded at a value similar to that implicit in the FRB/US model.
-
-{%modname}.append @signal bww =  tww _
-	     + phi(20)*(cycle-cycle1) _
-             + phi(22)*cycle1 _
-	     + 0.82*(bww(-1)-tww1) _	     
-	     + eww
-{%modname}.append @state eww =  [var=beta(104)^2]
-
-' Employment observable
-{%modname}.append @signal eb = terate + tlfpr + thtfactor + _
-	     + phi(30)*cycle _
-	     + phi(31)*(eb(-1)-(terate1 + tlfpr1 +thtfactor1)) _
-	     + eeb
-{%modname}.append @state eeb = [var=beta(105)^2]
-
-' Employment rate observable
-{%modname}.append @signal erate = terate + phi(50)*cycle _
-   		     + phi(51)*(erate(-1)-terate1) _
-		     + eerate
-{%modname}.append @state eerate =  [var=beta(106)^2]
-
-' Labor force participation observable
-{%modname}.append @signal lfpr =  tlfpr + phi(40)*cycle _
-   		     + phi(41)*(lfpr(-1)-tlfpr1) _
-		     + elfpr
-{%modname}.append @state elfpr = [var=beta(107)^2]
-
-' 4. Price observable
-        {%modname}.append @ename ec
-        {%modname}.append @evar var(ec) = (beta(109)^2)
-          {%modname}.append @signal c1pcex = _
-	  beta(401)*c1pcex(-1) + (1-beta(401))*(ptr(-1)+.1) _
-	+ beta(404)*(((.50*cycle + .33*cycle1 + .17*cycle2 )) )  _
-                + beta(405)*@movav(engylag_pcex(-1),6) _
-		+ beta(406)*@movav(dum84*engylag_pcex(-1),6)  _
-	+ beta(407)*frzbulg _
-	+ beta(408)*sw_coreimp_pcex + beta(409)*sw_coreimp_pcex(-1) _
-	+ ec
-     
-' 5. State equations          
-
-' Cycle state
-{%modname}.append @state cycle = beta(1)*cycle(-1) + beta(2)*cycle1(-1) + ecycle 
-{%modname}.append @state cycle1 = cycle(-1)
-{%modname}.append @state cycle2 = cycle1(-1)
-{%modname}.append @ename ecycle
-{%modname}.append @evar var(ecycle) = (beta(111)^2)
-
-' Trends
-
-'  Totfactor = OSR* in F.R.(2011)
-'  tau_oti is taken from FR(2011)
-{%modname}.append @state totfactor = totfactor(-1) + 0.25*.95*(gtotfactor(-1) ) + 0.25*.05*beta(213) + _
-                                     etotfactor + 0.25*egtotfactor
-{%modname}.append @state gtotfactor = .95*gtotfactor(-1) + .05*beta(213) + egtotfactor
-{%modname}.append @ename etotfactor
-{%modname}.append @evar var(etotfactor) = (beta(112)^2)
-{%modname}.append @ename egtotfactor 
-{%modname}.append @evar var(egtotfactor) = (4*((tau_oti))*beta(112))^2
-
-' Multi-Factor Productivity (OPH*)
-{%modname}.append @state tmfp = tmfp(-1) +  etmfp + 0.25*.95*(gtmfp(-1)) + 0.25*0.05*beta(214) + 0.25*egtmfp
-{%modname}.append @state gtmfp = 0.95*gtmfp(-1) + 0.05*beta(214) + egtmfp 
-{%modname}.append @ename etmfp
-{%modname}.append @evar var(etmfp) = beta(114)^2
-{%modname}.append @ename egtmfp
-{%modname}.append @evar var(egtmfp) = 0.14^2 ' beta(115)^2
-
-'     For the workweek, employment-sector ratio, and LFPR, the level variances are hard-coded.  
-'     This hard-coding is done for convenience in production work.  In particular, the imposed 
-'     values are close to the values these parameters take on when they are freely estimated.  
-'     However, the t-ratios for these parameters are not very high, and that imprecision leads 
-'     to sluggish convergence; imposing these values shortens the time needed for estimation.
-
-' Workweek (WW*)
-{%modname}.append @state tww = tww(-1) + 0.25*.95*(gtww(-1) ) +  etww + 0.25*.05*beta(216)+ 0.25*egtww
-{%modname}.append @state tww1 = tww(-1)
-{%modname}.append @state gtww = .95*gtww(-1) + .05*beta(216) + egtww
-{%modname}.append @ename etww
-{%modname}.append @ename egtww
-{%modname}.append @evar var(etww)  =  0.1^2
-{%modname}.append @evar var(egtww) =  beta(117)^2
-
-' Employment Sector Ratio (ESR*)
-{%modname}.append @state thtfactor = thtfactor(-1) + 0.25*.95*gthtfactor(-1) + _
-                                     0.25*egthtfactor + ethtfactor 
-{%modname}.append @state thtfactor1 = thtfactor(-1)
-{%modname}.append @state gthtfactor = 0.95*gthtfactor(-1) + egthtfactor
-{%modname}.append @ename ethtfactor
-{%modname}.append @evar var(ethtfactor) = .01^2 ' beta(118)^2
-{%modname}.append @ename egthtfactor 
-{%modname}.append @evar var(egthtfactor) = (beta(119)^2)
-
-' Labor Force Participation (LFPR*)
-{%modname}.append @state tlfpr = tlfpr(-1) + 0.25*(.95*gtlfpr(-1) + egtlfpr) +  etlfpr 
-{%modname}.append @state tlfpr1 = tlfpr(-1)
-{%modname}.append @state gtlfpr = 0.95*gtlfpr(-1) + egtlfpr
-{%modname}.append @ename etlfpr 
-{%modname}.append @evar var(etlfpr) = .05^2 ' beta(122)^2
-{%modname}.append @ename egtlfpr 
-{%modname}.append @evar var(egtlfpr) = beta(123)^2
-
-' Employment Rate (ER*), no drift
-{%modname}.append @state terate = terate(-1) + eterate
-{%modname}.append @state terate1 = terate(-1)
-{%modname}.append @ename eterate
-{%modname}.append @evar var(eterate) = beta(124)^2
-
-
-{%modname}.append @vprior vpriors
-
-{%modname}.append @mprior mpriors
-
-freeze({%modname}_results) {%modname}.ml(m=100,showopts)
-
-endsub
-@ %def estimation_code ss_estimation
+<<estimation code>>
+@
 
 \subsection[frbus.supply.estimation]{srcEview/state.space.package/frbus.supply.estimation.prg}
 
 <<srcEview/state.space.package/frbus.supply.estimation.prg>>=
-' Program to estimate the FRB/US state-space model and
-' generate estimates of model states.  
-
-
-' Subroutines:
-'    To transform data
-include "./data_transformations"
-
-'    To estimate the model
-include "./estimation_code"
-include "./initial_values"
-
-close @all
-wfcreate kf_data q 1949:1 2020:4
-
-%estend    = "2013q4"
-%eststart  = "1963q2" 
-%datastart = "1949q1"
-
-
-
-sample estsample  %eststart  %estend
-sample datasample %datastart %estend
-%datasmpl = %datastart + " " + %estend
-%modname = "ss_model"
-
-
-'**********************************************************************************
-' Retrieve variables from the database
-
-' Definitions of series in database
-'    See FRB/US model documentation for more complete descriptions
-
-' XGDP   - GDP, cw 2009$
-' XGDPN  - GDP
-' XB   - BLS Business output, 2009$ 
-' XBN  - BLS Business output 
-' XGDIN  - GDI
-
-' PGDP   - Price index for GDP, cw
-' PXB  - BLS Business price 
-
-' LEP    - Employment in business sector (employee and self-employed)
-' LHP    - Aggregate labor hours, business sector (employee and self-employed) 
-' LUR    - Civilian unemployment rate (break adjusted) 
-' LF     - Civilian labor force (break adjusted) 
-' N16    - Noninstitutional population, aged 16 and over (break adjusted) 
-
-' KS     - Capital services, 2009 $ 
-' LQUALT - Labor quality, trend level
-' VEOA   - Average energy-output ratio of existing capital stock 
-
-' PCXFE  - Price index for personal consumption expendits ex. food and energy, cw (NIA def.) 
-' PCER   - Price index for personal consumption expenditures on energy (relative to PCXFE) 
-
-' PMO    - Price index for imports ex. petroleum, cw 
-' UCES   - Energy share of nominal consumption expenditures 
-' EMON   - Imports of goods and services ex. petroleum 
-' XGDEN  - Nominal Absorption 
-' PTR    - 10-year expected inflation (Hoey/Philadelphia survey) 
-
-
-%dbin = "state_space_data"
-dbopen %dbin as dbin
-
-string varlist = " xgdpn xbn pgdp pxb pcxfe pcer xgdp xb lep uces emon xgden ptr "
-varlist = varlist + " ks lqualt veoa lhp lur lf n16 pmo xgdin "
-
-fetch(d=dbin) {varlist}
-
-
-
-'**************************************************
-' Make model observable series, set priors
-
-smpl datasample
-
-call data_transformations
-
-'**************************************************
-' Specify and estimate model, save for re-use
-
-smpl estsample
-
-statusline Estimating model
-call ss_estimation
-
-{%modname}.makefilter saved_results
-
-
-
-'*************************************************************
-' Create states 
-
-{%modname}.makestates(t=pred) *_prs        ' one-step ahead state predictions
-{%modname}.makestates(t=filt) *_1          ' filter states
-{%modname}.makestates(t=smooth) *_2        ' smoothed states
-{%modname}.makestates(t=disturb) *err      ' estimate of the disturbances
-{%modname}.makestates(t=filtse) *se        ' RMSE of the filtered states
-{%modname}.makestates(t=smoothse) *se2     ' RMSE of the smoothed states
-
-{%modname}.makesignals(t=pred) *_pr        ' one-step ahead signal predictions
-{%modname}.makesignals(t=resid) *_res      ' error in one-step ahead signal predictions  
-{%modname}.makesignals(t=stdresid) *_sres  ' standardized one-step ahead prediction residual
-
-
-'*************************************************************
-' Transformation into FRB/US mnemonics
-
-series xbt  = exp((tmfp_2/.965 + 0.725*(terate_2 + tlfpr_2  + thtfactor_2 + tww_2) + _
-                0.275*lks + 0.725*llqualt + (.035/.965)*lveoa +lpop)/100)
-series hmfpt  = gtmfp_2
-series qlfpr  = exp(tlfpr_2/100)
-series hqlfpr = (gtlfpr_2/400)*qlfpr(-1)
-series hqlww  = gtww_2
-series huxb   = gtotfactor_2
-series leppot = exp((tlfpr_2+terate_2+thtfactor_2)/100) * n16
-series lurnat = 100*(1-exp(terate_2/100))
-series qlww   = exp(tww_2/100)
-series uxbt   = exp(totfactor_2/100)
-series xgdpt  = xbt * uxbt
-series xgdo   = exp(cycle_2/100)*xgdpt
-
-
-wfsave saved_results_new
-
-
-@ %def frbus_supply_estimation
+<<estimation model>>
+@
 
 \subsection[frbus.supply.filter]{srcEview/state.space.package/frbus.supply.filter.prg}
 
 <<srcEview/state.space.package/frbus.supply.filter.prg>>=
-' Program is part of the FRB/US state-space model package.
-' frbus_supply_filter takes a previously estimated state-space model and
-' generates estimates of model states.  
-
-
-' Subroutines:
-'    To transform data
-include "./data_transformations"
-
-
-close @all
-wfcreate kf_data q 1949:1 2020:4
-
-%estend    = "2014q3"
-%eststart  = "1963q2" 
-%datastart = "1949q1"
-
-sample estsample  %eststart  %estend
-sample datasample %datastart %estend
-
-%modname = "ss_model"
-
-
-'**********************************************************************************
-' Retrieve variables from the database
-
-' Definitions of series in database
-'    See FRB/US model documentation for more complete descriptions
-
-' XGDP   - GDP, cw 2009$
-' XGDPN  - GDP
-' XB   - BLS NFB output, 2009$ 
-' XBN  - BLS NFB output 
-' XGDIN  - GDI
-
-' PGDP   - Price index for GDP, cw
-' PXB  - BLS NFB price 
-
-' LEP    - Employment in nonfarm business sector (employee and self-employed)
-' LHP    - Aggregate labor hours, nonfarm business sector (employee and self-employed) 
-' LUR    - Civilian unemployment rate (break adjusted) 
-' LF     - Civilian labor force (break adjusted) 
-' N16    - Noninstitutional population, aged 16 and over (break adjusted) 
-
-' KS     - Capital services, 2009 $ 
-' LQUALT - Labor quality, trend level
-' VEOA   - Average energy-output ratio of existing capital stock 
-
-' PCXFE  - Price index for personal consumption expendits ex. food and energy, cw (NIA def.) 
-' PCER   - Price index for personal consumption expenditures on energy (relative to PCXFE) 
-
-' PMO    - Price index for imports ex. petroleum, cw 
-' UCES   - Energy share of nominal consumption expenditures 
-' EMON   - Imports of goods and services ex. petroleum 
-' XGDEN  - Nominal Absorption 
-' PTR    - 10-year expected inflation (Hoey/Philadelphia survey) 
-
-
-smpl datasample
-%dbin = "./state_space_data"
-dbopen %dbin as histdata
-fetch(d=histdata) *
-
-'**************************************************
-' Make model observable series, set priors
-
-smpl datasample
-
-call data_transformations
-
-'**************************************************
-' Load saved model; run estimation step with previously estimated
-' parameters as starting values (converges quickly).
-
-smpl estsample
-
-wfopen saved_results
-copy saved_results::untitled\saved_results kf_data::untitled\{%modname}
-wfclose saved_results
-freeze({%modname}_results) {%modname}.ml(m=100,showopts)
-
-
-'*************************************************************
-' Create states 
-
-{%modname}.makestates(t=pred) *_prs        ' one-step ahead state predictions
-{%modname}.makestates(t=filt) *_1          ' filter states
-{%modname}.makestates(t=smooth) *_2        ' smoothed states
-{%modname}.makestates(t=disturb) *err      ' estimate of the disturbances
-{%modname}.makestates(t=filtse) *se        ' RMSE of the filtered states
-{%modname}.makestates(t=smoothse) *se2     ' RMSE of the smoothed states
-
-{%modname}.makesignals(t=pred) *_pr        ' one-step ahead signal predictions
-{%modname}.makesignals(t=resid) *_res      ' error in one-step ahead signal predictions  
-{%modname}.makesignals(t=stdresid) *_sres  ' standardized one-step ahead prediction residual
-
-
-'*************************************************************
-' Transformation into FRB/US mnemonics
-
-
-
-series xbt  = exp((tmfp_2/.965 + 0.725*(terate_2 + tlfpr_2  + thtfactor_2 + tww_2) + _
-                0.275*lks + 0.725*llqualt + (.035/.965)*lveoa +lpop)/100)
-series hmfpt  = gtmfp_2
-series qlfpr  = exp(tlfpr_2/100)
-series hqlfpr = (gtlfpr_2/400)*qlfpr(-1)
-series hqlww  = gtww_2
-series huxb   = gtotfactor_2
-series leppot = exp((tlfpr_2+terate_2+thtfactor_2)/100) * n16
-series lurnat = 100*(1-exp(terate_2/100))
-series qlww   = exp(tww_2/100)
-series uxbt   = exp(totfactor_2/100)
-series xgdpt  = xbt * uxbt
-series xgdo   = exp(cycle_2/100)*xgdpt
-
-
-@ %def frbus.supply.filter
+<<supply filter>>
+@
 
 \subsection[initial.values]{srcEview/state.space.package/initial.values.prg}
 
 <<srcEview/state.space.package/initial.values.prg>>=
-subroutine initial_values
-
-
-coef(703) beta
-coef(60) phi
-beta(1)         = 1.497516
-beta(2)         = -0.540927
-beta(213)       = -0.328852
-beta(214)       = 1.061453
-beta(216)       = -0.266658
-beta(10)        = 1.325310
-beta(401)       = 0.625693
-beta(404)       = 0.090059
-beta(405)       = 0.440360
-beta(406)       = -0.324208
-beta(407)       = -0.435237
-beta(408)       = 0.293555
-beta(409)       = 0.253904
-beta(6)         = 0.331366
-beta(602)       = 0.927692
-
-phi(20)         = 0.301616
-phi(22)         = 0.020651
-phi(30)         = 0.452297
-phi(31)         = 0.649965
-phi(40)         = 0.042475
-phi(41)         = 0.727876
-phi(50)         = 0.299981
-phi(51)         = 0.528947
-
-beta(105)       = 0.176896
-beta(106)       = 0.086226
-beta(107)       = 0.210419
-beta(104)       = 0.229143
-beta(100)       = 0.000001
-beta(109)       = 0.803236
-beta(111)       = 0.566205
-beta(119)       = 0.099423
-beta(123)       = 0.129325
-beta(115)       = 0.140001
-beta(117)       = 0.081062
-beta(124)       = 0.136532
-beta(118)       = 0.010000
-beta(122)       = 0.050000
-beta(114)       = 0.107852
-beta(112)       = 0.044151
-beta(126)       = 0.476765
-beta(125)       = 0.534807
-beta(11) = 1/beta(10) 
-
-
-endsub
-@ %def initial_values
+<<initial values>>
+@
 
 
 \chapter{Notes, Bibliography and Indexes}
