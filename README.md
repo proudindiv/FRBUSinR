@@ -24,19 +24,20 @@ My project is at [proudindiv/FRBUSinR](https://github.com/proudindiv/FRBUSinR) o
 1. frbus.nw, and frbus.pdf which is derived from it, is my first reverse engineering of the variables, equations, and coefficients of the standard version of the model. The frbus.nw noweb file is a literate probram that produces copies of the contents of four of the files (stdver_varinfo, stdver_eqs.txt, stdver_coeffs.txt, and variables.txt).
 1. frbuseview.nw, and frbuseview.pdf which is derived from it, is the start of my second reverse engineering of the model creating copies of all of the Eview program files in the srcEview directory and the setup.sh and check.sh scripts that I use with them.  This is a very early rough draft and will drastically change as I work on the model.
 1. (future) frbusdata.Rnw and frbusdata.pdf which will be derived from it, will study the data used in the model.
-1. (future) frbusmodel.
+1. (future) frbusmodel.Rnw and frbusmodel.pdf which will be derived from it, will be my modeling using the Fed's data.
+1. (possible future) frbusR.Rnw and frbusR.pdf which will be derived from it, may possibly be my port of the FRB/US Model in the R programming language.
 
 ### Tools Used:
 
-I use TeXstudio and ReText, with noweb and CRAN R on the ubuntu mate operating system:
+I use TeXstudio and ReText, with noweb and R, on the ubuntu mate operating system:
 
-To compile the noweb .nw files:
+To compile the noweb .nw files I use this user command in TeXstudio:
 
 ```
 noweb %.nw | pdflatex -synctex=1 -interaction=nonstopmode %.tex
 ```
 
-To compile the knitr .Rnw files:
+To compile the knitr .Rnw files I use this user command in TeXstudio:
 
 ```
 Rscript -e "library(knitr);knit('%.Rnw')" | pdflatex -synctex=1 -interaction=nonstopmode %.tex
