@@ -1,3 +1,8 @@
+cfile=frbus_package/mods/stdver_coeffs.txt; ofile=stdver.coeffs.txt; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=frbus_package/mods/stdver_eqs.txt; ofile=stdver.eqs.txt; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=frbus_package/mods/stdver_varinfo; ofile=stdver.varinfo; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=data_only_package/variables.txt; ofile=variables.txt; echo "XX $cfile XX"; diff -w $cfile $ofile
+
 cfile=frbus_package/addins/ld_frbus_cfs/ld_frbus_cfs.prg; ofile=srcEview/frbus.package/addins/ld.frbus.cfs/ld.frbus.cfs.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
 cfile=frbus_package/addins/ld_frbus_eqs/ld_frbus_eqs.prg; ofile=srcEview/frbus.package/addins/ld.frbus.eqs/ld.frbus.eqs.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
 cfile=frbus_package/addins/ld_mce_cfs/ld_mce_cfs.prg; ofile=srcEview/frbus.package/addins/ld.mce.cfs/ld.mce.cfs.prg; echo "XX $cfile XX"; diff -w $cfile $ofile

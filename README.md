@@ -46,7 +46,7 @@ Rscript -e "library(knitr);knit('%.Rnw')" | pdflatex -synctex=1 -interaction=non
 ### Web References to Release of the FRB/US Model:
 
 * [Board of Governors of the Federal Reserve System: FRB/US Model](http://www.federalreserve.gov/econresdata/frbus/us-models-about.htm)
-* [Stephen Williamson: New Monetarist Economics](http://newmonetarism.blogspot.com/2014/04/the-frbus-model-and-inflation.html)
+* [Stephen Williamson: The FRB/US Model and Inflation](http://newmonetarism.blogspot.com/2014/04/the-frbus-model-and-inflation.html)
 * [John B. Taylor: Transparency for Policy Wonk](https://economicsone.com/2014/04/05/transparency-for-policy-wonks/)
 * [Noahpinion: The foxy Fed](http://noahpinionblog.blogspot.com/2014/04/the-foxy-fed_7.html)
 * [Jon Hilsenrath WSJ: The Fed Wants to Introduce You to Its Friend Ferbus](http://blogs.wsj.com/economics/2014/04/03/the-fed-wants-to-introduce-you-to-its-friend-ferbus/)

@@ -1537,6 +1537,410 @@
   show fig_3
 @
 
+\section{stochsim program}
+
+<<stochastic simulations under variable expectations>>=
+' Program for stochastic sims under VAR expectations
+
+' The stochastic shocks are bootstrapped from the de-meaned
+' historical errors of stochastic equations.  The parameters
+' %residstart and %residend declare the historical error range.
+' A list of stochastic equations is extracted from the file
+' pointed to by %varinfo.
+
+' The bootstrap procedure randomly draws one historical quarter 
+' at a time when the parameter %errorblock = 1; alternatively, if
+' %errorblock = 2, then the procedure would randomly draw two
+' successive quarters at a time.
+
+' The stochastic replications are simulated in a simple loop,
+' rather than using the built-in EViews stochastic simulation
+' procedure, so that shocks in the first simulation quarter can
+' be scaled down by the parameter %q1_shock_damp.  This feature
+' is useful when uncertainty about the first simulation quarter
+' in real-time analysis by known information.  The shocks are
+' not rescaled when %q1_shock_damp = 1. 
+
+' Similarly, the parameter %rff_weight_q1 is also designed to be
+' used in real-time analysis when the first simulation quarter
+' corresponds to a quarter that is already under way.  The
+' parameter provides the fractional value to be given to the 
+' monetary policy rule; the remaining fractional value is given to
+' an exogenous value.
+
+' The document Simulation Basics discusses the effects of
+' imposing the zero lower bound (ZLB) on the federal funds rate
+' (%zerobound parameter) and imposing threshold conditions
+' on the liftoff of the funds rate from a ZLB episode 
+' (%threshold parameter).
+
+' *************************************************************
+' Initial filename and parameter settings
+' *************************************************************
+
+' Subroutines
+  include ../subs/master_library
+
+' Workfile    
+  %wfstart = "1965q1"
+  %wfend = "2020q4"
+  %mainpage = "main"
+  wfcreate(wf=aaa,page={%mainpage}) q {%wfstart} {%wfend}
+
+' FRB/US model name and location
+  %varmod = "stdver"
+  %varpath = "../mods/"
+  %varinfo = "../mods/stdver_varinfo"
+
+' Input database
+  %dbin  = "../data/longbase"
+
+' Simulation range
+  %simstart = "2014q1"
+  %simend   = "2018q4"
+
+' Stochastic parameters
+  rndseed 12345
+  %errorblock = "1"
+  %residstart = "1970q1"
+  %residend   = "2012q4"
+  %nsims      = "1000"
+  %q1_shock_damp = ".5"
+  %dbout_series = "rff lur picxfe picnia picx4 xgap2 hggdp anngr"
+
+' Monetary policy
+  %zerobound  = "yes"
+  %threshold  = "yes"
+  %rff_weight_q1  = ".25"
+
+' ****************************************************************
+' Retrieve data, model equations and coefficients, set
+' policy options, and compute tracking residuals 
+' ****************************************************************
+
+' Load equations, coefficients, and variable information
+  ld_frbus_eqs(modelname=%varmod,modelpath=%varpath)  
+  ld_frbus_cfs(modelname=%varmod,modelpath=%varpath)
+  ld_varinfo(pathname=%varinfo)
+
+' add 4-qtr gdp growth equation
+  {%varmod}.append anngr - anngr_aerr = 100*((xgdp/xgdp(-4))-1)
+
+' Load data
+  dbopen %dbin as longbase
+  fetch(d=longbase) *
+  smpl @all
+  series anngr = 100*((xgdp/xgdp(-4))-1)
+
+' Set monetary policy to inertial Taylor rule (dmpintay, rffintay)
+  smpl @all
+  call set_mp("dmpintay")
+  if %zerobound = "yes" then
+    rffmin = .250
+    else
+    rffmin = -9999
+    endif
+  if %threshold = "yes" and %zerobound = "no" then
+    %err = "Error: policy threshold conditions can only be used when the ZLB is imposed"
+    @uiprompt(%err)
+    stop
+    endif
+  if %threshold = "yes" and %zerobound = "yes" then
+    dmptrsh = 1
+    dmptr = 0
+    else
+    dmptrsh = 0
+    endif
+  drstar = 0
+
+  smpl {%simstart} {%simstart}
+  dmpintay = @val(%rff_weight_q1)
+  dmpex = 1 - dmpintay
+
+' Set fiscal policy
+  smpl @all
+  call set_fp("dfpex")
+
+  dmpstb = 1
+
+' Set _aerr variables to zero
+  smpl @all
+  {%varmod}.makegroup(a,n) endog @endog
+  call groupnew("endog","_aerr")
+  call group2zero("endog_aerr")
+
+' Standard solution options
+  {%varmod}.solveopt(o=b,g=14,z=1e-14)
+
+' Assign baseline tracking add factors
+  %suftrk = "_0"
+  smpl %residstart %simend 
+  {%varmod}.addassign @all
+  {%varmod}.addinit(v=n) @all
+  {%varmod}.scenario(n,a={%suftrk}) "track"
+  {%varmod}.solve
+  scalar mm = @max(@abs(xgap{%suftrk}-xgap))
+  if mm > .0001 then
+    statusline dynamic tracking simulation failed for {%varmod}
+    stop
+    endif
+
+' ****************************************************************
+' More monetary policy settings
+' ****************************************************************
+
+
+' if policy thresholds are turned on, set add factors on endogenous
+' threshold switch variables to zero
+  if %threshold = "yes" then
+    smpl @all
+    dmptpi_a = 0
+    dmptlur_a = 0
+    dmptmax_a = 0
+    dmptr_a = 0
+    endif
+
+' if the zero bound is binding in part or all of the baseline, the
+' adds (_a) on the policy rule and the funds rate equations are
+' determined so as to satisfy the following conditions.
+'
+' a.  the stochastic funds rate equals the maximum of the zero bound and
+'     the prediction of the chosen policy rule (this simply requires that
+'     rffe_a and rffe_aerr be zero)
+' b.  the prediction of the chosen policy rule is subject to _a add factors
+'     that are determined as follows:
+'     (1) in quarters when the zero bound is not binding in the baseline,
+'         the associated add factors equal the values that make
+'         the policy rule equation match the baseline funds rate under
+'         baseline conditions (this is satisfied by the tracking adds on
+'         the policy rule as long as the baseline value of the policy rule
+'         variable equals the baseline funds rate);
+'     (2) in quarters when the zero bound is binding in the baseline,
+'         the associated add factors are determined by linear interpolation
+'         of the add factors generated according to b(1) for the
+'         unbound quarters;
+'     (3) when the zero bound is binding in all baseline quarters, the
+'         policy rule add factors are zero;
+'     (4) the zero bound is assumed to be binding in the baseline whenever
+'         the baseline funds rate (rffe) is within 25 basis points of the
+'         zero bound variable (rffmin).
+
+  smpl %simstart %simend
+  series not_constrnd = ((rffe - rffmin) >= .25)
+  !tmp_max = @max(not_constrnd)
+  !tmp_min = @min(not_constrnd)
+
+' zero bound binding in some quarters
+  if (!tmp_max = 1) and (!tmp_min = 0) then
+    smpl %simstart %simend
+    rffe_a = 0
+    rffe_aerr = 0
+    rffintay_aerr = 0
+    smpl %simstart %simend if (not_constrnd = 0)
+    rffintay_a = NA
+    %series_in = "rffintay_a"
+    %series_out = %series_in + "_int"
+    call interp_lin(%series_in,%series_out,%simstart,%simend)
+    rffintay_a = {%series_out}
+    endif
+ 
+' zero bound binding in all quarters
+  if (!tmp_max = 0) and (!tmp_min = 0) then
+    smpl %simstart %simend
+    rffe_a = 0
+    rffe_aerr = 0
+    rffintay_aerr = 0
+    rffintay_a = 0
+    endif
+
+' ****************************************************************
+' Stochastic shocks
+' ****************************************************************
+
+' copy historical residuals into series whose names have _err suffixes
+  smpl %residstart %residend
+  copy *_a *_err
+
+' use vinfo table to create list/group of equations to receive shocks
+  %tmp = " "
+  for !i = 1 to vinfo_size 
+    %vname = @word(vinfo_vname,!i)
+    %stoch = @word(vinfo_stoch,!i)
+    if %stoch <> "NO" then
+      %tmp = %tmp + " " + %vname
+      endif
+    next
+  group shock {%tmp}
+
+' demean historical residuals and store them in a matrix
+
+  smpl %residstart %residend
+  %error_names = " "
+  for !i = 1 to shock.@count
+    %temp = shock.@seriesname(!i) + "_err"
+    scalar mm = @mean({%temp})
+      series {%temp} =  {%temp} - mm
+      %error_names = %error_names + " " + %temp 
+      next
+
+  group errors {%error_names}
+  smpl %residstart %residend
+  stom(errors,errormat)
+
+' create table of error statistics
+  !nrows = 3 + errors.@count
+  !ncols = 3
+  table(!nrows,!ncols) error_tab
+  error_tab.setjust(r1c1:r{!nrows}c1) left
+  error_tab.setwidth(1) 20
+  error_tab(1,1) = "error"
+  error_tab(1,2) = "mean"
+  error_tab(1,3) = "std-dev"
+  smpl %residstart %residend
+  for !i = 1 to errors.@count
+    series tseries = errors(!i)
+    error_tab(!i+3,1) = errors.@seriesname(!i)
+    error_tab(!i+3,2) = @mean(tseries)
+    error_tab(!i+3,3) = @stdev(tseries)
+    next
+
+' miscellaneous
+
+  smpl %simstart %simend
+  scalar nqtrs = @obssmpl
+  scalar nrepl = {%nsims}
+  scalar nsims = {%nsims}
+  scalar nerrors = @rows(errormat)
+  scalar bbbb = nqtrs-nerrors
+
+  call groupnew("shock","_aerr")
+
+  group track {%dbout_series}
+  call groupnames2string("track",%tracknames)  
+
+' for tracked variables, set up matrices to hold stochastic results
+  for !i = 1 to track.@count
+    %temp = track.@seriesname(!i)
+    matrix(nqtrs,nrepl) {%temp}_mat
+    next
+
+
+' ****************************************************************
+' Stochastic sims
+' ****************************************************************
+
+  %sufstoch = "_1"
+  {%varmod}.scenario(n,a={%sufstoch}) "stoch sims"
+
+  
+' *********************************************
+' stochastic simulation loop (sims are run one at a time)
+
+  smpl %simstart %simend
+  for !i = 1 to nrepl
+    statusline running stochastic sim number  !i
+  ' draw nqtrs random rows from the matrix of historical errors,
+  ' damp the shocks in the first drawn row, and load the shocks
+  ' into the respective  _aerr error series
+    matrix stocherrors = @resample(errormat,bbbb,{%errorblock})
+    for !j = 1 to @columns(stocherrors)
+      stocherrors(1,!j) = @val(%q1_shock_damp) * stocherrors(1,!j)
+      next
+    mtos(stocherrors,shock_aerr)
+    {%varmod}.solve
+  ' store solution values 
+    for !j = 1 to track.@count
+      %temp = track.@seriesname(!j)
+      %temp1 = %temp + "_mat"
+      stom({%temp}{%sufstoch},tmp)
+      colplace({%temp1},tmp,!i)  
+      next
+    next
+
+' ****************************************************************
+' Statistics
+' ****************************************************************
+
+  statusline computing statistics
+
+  smpl %simstart %simend
+  !index = 2
+  series year = @year
+  series quarter = @quarter
+  alpha yyyyqq = @str(year) + "Q" + @str(quarter)
+  !lqtr = @dtoo(%simstart) - 1
+  !nstats = 8
+
+'create a summary table in which to store key results
+
+  call tableform("summary_tab","100")
+
+' loop over each tracked variable, 
+  for !ii1 = 1 to track.@count
+    %trkname = track.@seriesname(!ii1)
+  ' compute statistics
+    call makestats(%trkname)
+
+  ' load statistics into variable-specific table 
+    %tabname = %trkname + "_tab"
+    call tableform(%tabname,@str(nqtrs+2))
+    for !ii2 = 1 to nqtrs
+      {%trkname}_tab(!ii2+2,1) = yyyyqq(!lqtr + !ii2)
+      for !ii3 = 1 to !nstats
+        {%trkname}_tab(!ii2+2,!ii3+1) = {%trkname}_stats(!ii2,!ii3)
+        next
+      next
+
+  ' load statistics for each q4 observation into summary table 
+    !index = !index + 1
+    summary_tab(!index,1) = %trkname
+    !index = !index + 1
+    for !ii2 = 1 to nqtrs
+      if quarter(!lqtr+!ii2) = 4 then
+        for !ii3 = 1 to !nstats + 1
+          summary_tab(!index,!ii3) = {%trkname}_tab(!ii2+2,!ii3)
+          next
+        !index = !index + 1
+        endif
+      next
+
+  ' make graph showing 70 and 90 percent bands
+    graph {%trkname}_graph.band {%trkname}_lo90 {%trkname}_hi90 {%trkname}_lo70 _
+        {%trkname}_hi70 {%trkname}_base
+    {%trkname}_graph.addtext(t) %trkname
+    {%trkname}_graph.options size(6,4.5)
+
+  next
+
+
+' **************************************
+' summary graph
+
+  lur_graph.addtext(t,just(c),font("arial",12)) Unemployment Rate
+  rff_graph.addtext(t,just(c),font("arial",12)) Federal Funds Rate
+  picx4_graph.addtext(t,just(c),font("arial",12)) 4-qtr Core Inflation Rate
+  anngr_graph.addtext(t,just(c),font("arial",12)) 4-qtr Real GDP Growth Rate
+  lur_graph.legend -display
+  rff_graph.legend -display
+  picx4_graph.legend -display
+  anngr_graph.legend -display
+
+  graph summary_graph.merge lur_graph rff_graph picx4_graph anngr_graph
+  summary_graph.legend -display
+  summary_graph.addtext(t,just(c),font("Arial",16)) Stochastic Simulations\r(70 and 90 percent bands)
+  show summary_graph
+
+
+' **************************************
+' summary spool
+  spool results
+  summary_tab.deleterow(!index) 100
+  results.append summary_tab
+  results.append summary_graph
+  results.append error_tab
+  results.display
+@
+
 
 \chapter{Model Consistent Expectation Solve Package}
 
@@ -6281,7 +6685,7 @@ using either Microsoft or Linux line ending characters.
 
 \section{scripts}
 
-\subsection[setup script]{setup.sh}
+\subsection[setup.sh]{setup script}
 
 <<setup.sh>>=
 mkdir -p srcEview/{frbus.package,mce.solve.package,state.space.package}
@@ -6289,9 +6693,14 @@ mkdir -p srcEview/frbus.package/{addins,programs,subs}
 mkdir -p srcEview/frbus.package/addins/{ld.frbus.cfs,ld.frbus.eqs,ld.mce.cfs,ld.mce.eqs,ld.some.eqs,ld.varinfo}
 @
 
-\subsection[check script]{check.sh}
+\subsection[check.sh]{check script}
 
 <<check.sh>>=
+cfile=frbus_package/mods/stdver_coeffs.txt; ofile=stdver.coeffs.txt; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=frbus_package/mods/stdver_eqs.txt; ofile=stdver.eqs.txt; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=frbus_package/mods/stdver_varinfo; ofile=stdver.varinfo; echo "XX $cfile XX"; diff -w $cfile $ofile
+cfile=data_only_package/variables.txt; ofile=variables.txt; echo "XX $cfile XX"; diff -w $cfile $ofile
+
 cfile=frbus_package/addins/ld_frbus_cfs/ld_frbus_cfs.prg; ofile=srcEview/frbus.package/addins/ld.frbus.cfs/ld.frbus.cfs.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
 cfile=frbus_package/addins/ld_frbus_eqs/ld_frbus_eqs.prg; ofile=srcEview/frbus.package/addins/ld.frbus.eqs/ld.frbus.eqs.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
 cfile=frbus_package/addins/ld_mce_cfs/ld_mce_cfs.prg; ofile=srcEview/frbus.package/addins/ld.mce.cfs/ld.mce.cfs.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
@@ -6324,7 +6733,7 @@ cfile=state_space_package/initial_values.prg; ofile=srcEview/state.space.package
 
 \section{frbus package}
 
-\subsection[ld.frbus.cfs]{srcEview/frbus.package/addins/ld.frbus.cfs/ld.frbus.cfs.prg}
+\subsection[ld{\_}frbus{\_}cfs.prg]{srcEview/frbus.package/addins/ld.frbus.cfs/ld.frbus.cfs.prg}
 
 <<srcEview/frbus.package/addins/ld.frbus.cfs/ld.frbus.cfs.prg>>=
 <<load frbus coefficients>>
@@ -6377,7 +6786,7 @@ endif
 call ld_frbus_cfs(%mname, %mpath)
 @
 
-\subsection[ld.frbus.eqs]{srcEview/frbus.package/addins/ld.frbus.eqs/ld.frbus.eqs.prg}
+\subsection[ld{\_}frbus{\_}eqs.prg]{srcEview/frbus.package/addins/ld.frbus.eqs/ld.frbus.eqs.prg}
 
 <<srcEview/frbus.package/addins/ld.frbus.eqs/ld.frbus.eqs.prg>>=
 <<load frbus equations>>
@@ -6456,7 +6865,7 @@ endif
 call ld_frbus_eqs(%mname, %mpath)
 @
 
-\subsection[ld.mce.cfs]{srcEview/frbus.package/addins/ld.mce.cfs/ld.mce.cfs.prg}
+\subsection[ld{\_}mce{\_}cfs.prg]{srcEview/frbus.package/addins/ld.mce.cfs/ld.mce.cfs.prg}
 
 <<srcEview/frbus.package/addins/ld.mce.cfs/ld.mce.cfs.prg>>=
 <<load mce coefficients>>
@@ -6559,7 +6968,7 @@ endif
 call ld_mce_cfs(%pfname, %pfpath, %mceeqs)
 @
 
-\subsection[ld.mce.eqs]{srcEview/frbus.package/addins/ld.mce.eqs/ld.mce.eqs.prg}
+\subsection[ld{\_}mce{\_}eqs.prg]{srcEview/frbus.package/addins/ld.mce.eqs/ld.mce.eqs.prg}
 
 <<srcEview/frbus.package/addins/ld.mce.eqs/ld.mce.eqs.prg>>=
 <<load mce equations>>
@@ -6721,7 +7130,7 @@ endif
 call ld_mce_eqs(%pfname, %pfpath, %mcename, %mceeqs)
 @
 
-\subsection[ld.some.eqs]{srcEview/frbus.package/addins/ld.some.eqs/ld.some.eqs.prg}
+\subsection[ld{\_}some{\_}eqs.prg]{srcEview/frbus.package/addins/ld.some.eqs/ld.some.eqs.prg}
 
 <<srcEview/frbus.package/addins/ld.some.eqs/ld.some.eqs.prg>>=
 <<load some equations>>
@@ -6859,13 +7268,15 @@ endif
 call ld_some_eqs(%mname, %mpath, %eqnames)
 @
 
-\subsection[ld.varinfo]{srcEview/frbus.package/addins/ld.varinfo/ld.varinfo.prg}
+\subsection[ld{\_}varinfo.prg]{srcEview/frbus.package/addins/ld.varinfo/ld.varinfo.prg}
 
 <<srcEview/frbus.package/addins/ld.varinfo/ld.varinfo.prg>>=
 <<load variable information>>
 
 <<load variable information call>>
 @ %def ld_varinfo
+
+The $[[ld_varinfo]]$ subroutine parses the $[[frbus_package/mods/stdver_varinfo]]$ file.
 
 <<load variable information>>=
 subroutine ld_varinfo(string %pathname)
@@ -6927,7 +7338,7 @@ endif
 call ld_varinfo(%pathname)
 @
 
-\subsection[regadd]{srcEview/frbus.package/addins/regadd.prg}
+\subsection[regadd.prg]{srcEview/frbus.package/addins/regadd.prg}
 
 <<srcEview/frbus.package/addins/regadd.prg>>=
 addin(proc="ld_frbus_eqs",desc="Load FRB/US equations") ".\ld_frbus_eqs/ld_frbus_eqs.prg"
@@ -7217,7 +7628,7 @@ addin(proc="ld_varinfo",desc="Load variable information file") ".\ld_varinfo/ld_
   endsub
 @ %def graphit
 
-\subsection[plot.resids]{srcEview/frbus.package/programs/plot.resids.prg}
+\subsection[plot{\_}resids.prg]{srcEview/frbus.package/programs/plot.resids.prg}
 
 <<srcEview/frbus.package/programs/plot.resids.prg>>=
 <<plot historical residuals of key equations>>
@@ -7359,7 +7770,7 @@ because I was working with only a hex dump.}
   endsub  
 @ %def find_var_description
 
-\subsection[stochsim]{srcEview/frbus.package/programs/stochsim.prg}
+\subsection[stochsim.prg]{srcEview/frbus.package/programs/stochsim.prg}
 
 <<srcEview/frbus.package/programs/stochsim.prg>>=
 <<stochastic simulations under variable expectations>>
@@ -7380,408 +7791,6 @@ because I was working with only a hex dump.}
 '**************************************************************************
 <<make statistics>>
 @ %def stochsim
-
-<<stochastic simulations under variable expectations>>=
-' Program for stochastic sims under VAR expectations
-
-' The stochastic shocks are bootstrapped from the de-meaned
-' historical errors of stochastic equations.  The parameters
-' %residstart and %residend declare the historical error range.
-' A list of stochastic equations is extracted from the file
-' pointed to by %varinfo.
-
-' The bootstrap procedure randomly draws one historical quarter 
-' at a time when the parameter %errorblock = 1; alternatively, if
-' %errorblock = 2, then the procedure would randomly draw two
-' successive quarters at a time.
-
-' The stochastic replications are simulated in a simple loop,
-' rather than using the built-in EViews stochastic simulation
-' procedure, so that shocks in the first simulation quarter can
-' be scaled down by the parameter %q1_shock_damp.  This feature
-' is useful when uncertainty about the first simulation quarter
-' in real-time analysis by known information.  The shocks are
-' not rescaled when %q1_shock_damp = 1. 
-
-' Similarly, the parameter %rff_weight_q1 is also designed to be
-' used in real-time analysis when the first simulation quarter
-' corresponds to a quarter that is already under way.  The
-' parameter provides the fractional value to be given to the 
-' monetary policy rule; the remaining fractional value is given to
-' an exogenous value.
-
-' The document Simulation Basics discusses the effects of
-' imposing the zero lower bound (ZLB) on the federal funds rate
-' (%zerobound parameter) and imposing threshold conditions
-' on the liftoff of the funds rate from a ZLB episode 
-' (%threshold parameter).
-
-' *************************************************************
-' Initial filename and parameter settings
-' *************************************************************
-
-' Subroutines
-  include ../subs/master_library
-
-' Workfile    
-  %wfstart = "1965q1"
-  %wfend = "2020q4"
-  %mainpage = "main"
-  wfcreate(wf=aaa,page={%mainpage}) q {%wfstart} {%wfend}
-
-' FRB/US model name and location
-  %varmod = "stdver"
-  %varpath = "../mods/"
-  %varinfo = "../mods/stdver_varinfo"
-
-' Input database
-  %dbin  = "../data/longbase"
-
-' Simulation range
-  %simstart = "2014q1"
-  %simend   = "2018q4"
-
-' Stochastic parameters
-  rndseed 12345
-  %errorblock = "1"
-  %residstart = "1970q1"
-  %residend   = "2012q4"
-  %nsims      = "1000"
-  %q1_shock_damp = ".5"
-  %dbout_series = "rff lur picxfe picnia picx4 xgap2 hggdp anngr"
-
-' Monetary policy
-  %zerobound  = "yes"
-  %threshold  = "yes"
-  %rff_weight_q1  = ".25"
-
-' ****************************************************************
-' Retrieve data, model equations and coefficients, set
-' policy options, and compute tracking residuals 
-' ****************************************************************
-
-' Load equations, coefficients, and variable information
-  ld_frbus_eqs(modelname=%varmod,modelpath=%varpath)  
-  ld_frbus_cfs(modelname=%varmod,modelpath=%varpath)
-  ld_varinfo(pathname=%varinfo)
-
-' add 4-qtr gdp growth equation
-  {%varmod}.append anngr - anngr_aerr = 100*((xgdp/xgdp(-4))-1)
-
-' Load data
-  dbopen %dbin as longbase
-  fetch(d=longbase) *
-  smpl @all
-  series anngr = 100*((xgdp/xgdp(-4))-1)
-
-' Set monetary policy to inertial Taylor rule (dmpintay, rffintay)
-  smpl @all
-  call set_mp("dmpintay")
-  if %zerobound = "yes" then
-    rffmin = .250
-    else
-    rffmin = -9999
-    endif
-  if %threshold = "yes" and %zerobound = "no" then
-    %err = "Error: policy threshold conditions can only be used when the ZLB is imposed"
-    @uiprompt(%err)
-    stop
-    endif
-  if %threshold = "yes" and %zerobound = "yes" then
-    dmptrsh = 1
-    dmptr = 0
-    else
-    dmptrsh = 0
-    endif
-  drstar = 0
-
-  smpl {%simstart} {%simstart}
-  dmpintay = @val(%rff_weight_q1)
-  dmpex = 1 - dmpintay
-
-' Set fiscal policy
-  smpl @all
-  call set_fp("dfpex")
-
-  dmpstb = 1
-
-' Set _aerr variables to zero
-  smpl @all
-  {%varmod}.makegroup(a,n) endog @endog
-  call groupnew("endog","_aerr")
-  call group2zero("endog_aerr")
-
-' Standard solution options
-  {%varmod}.solveopt(o=b,g=14,z=1e-14)
-
-' Assign baseline tracking add factors
-  %suftrk = "_0"
-  smpl %residstart %simend 
-  {%varmod}.addassign @all
-  {%varmod}.addinit(v=n) @all
-  {%varmod}.scenario(n,a={%suftrk}) "track"
-  {%varmod}.solve
-  scalar mm = @max(@abs(xgap{%suftrk}-xgap))
-  if mm > .0001 then
-    statusline dynamic tracking simulation failed for {%varmod}
-    stop
-    endif
-
-' ****************************************************************
-' More monetary policy settings
-' ****************************************************************
-
-
-' if policy thresholds are turned on, set add factors on endogenous
-' threshold switch variables to zero
-  if %threshold = "yes" then
-    smpl @all
-    dmptpi_a = 0
-    dmptlur_a = 0
-    dmptmax_a = 0
-    dmptr_a = 0
-    endif
-
-' if the zero bound is binding in part or all of the baseline, the
-' adds (_a) on the policy rule and the funds rate equations are
-' determined so as to satisfy the following conditions.
-'
-' a.  the stochastic funds rate equals the maximum of the zero bound and
-'     the prediction of the chosen policy rule (this simply requires that
-'     rffe_a and rffe_aerr be zero)
-' b.  the prediction of the chosen policy rule is subject to _a add factors
-'     that are determined as follows:
-'     (1) in quarters when the zero bound is not binding in the baseline,
-'         the associated add factors equal the values that make
-'         the policy rule equation match the baseline funds rate under
-'         baseline conditions (this is satisfied by the tracking adds on
-'         the policy rule as long as the baseline value of the policy rule
-'         variable equals the baseline funds rate);
-'     (2) in quarters when the zero bound is binding in the baseline,
-'         the associated add factors are determined by linear interpolation
-'         of the add factors generated according to b(1) for the
-'         unbound quarters;
-'     (3) when the zero bound is binding in all baseline quarters, the
-'         policy rule add factors are zero;
-'     (4) the zero bound is assumed to be binding in the baseline whenever
-'         the baseline funds rate (rffe) is within 25 basis points of the
-'         zero bound variable (rffmin).
-
-  smpl %simstart %simend
-  series not_constrnd = ((rffe - rffmin) >= .25)
-  !tmp_max = @max(not_constrnd)
-  !tmp_min = @min(not_constrnd)
-
-' zero bound binding in some quarters
-  if (!tmp_max = 1) and (!tmp_min = 0) then
-    smpl %simstart %simend
-    rffe_a = 0
-    rffe_aerr = 0
-    rffintay_aerr = 0
-    smpl %simstart %simend if (not_constrnd = 0)
-    rffintay_a = NA
-    %series_in = "rffintay_a"
-    %series_out = %series_in + "_int"
-    call interp_lin(%series_in,%series_out,%simstart,%simend)
-    rffintay_a = {%series_out}
-    endif
- 
-' zero bound binding in all quarters
-  if (!tmp_max = 0) and (!tmp_min = 0) then
-    smpl %simstart %simend
-    rffe_a = 0
-    rffe_aerr = 0
-    rffintay_aerr = 0
-    rffintay_a = 0
-    endif
-
-' ****************************************************************
-' Stochastic shocks
-' ****************************************************************
-
-' copy historical residuals into series whose names have _err suffixes
-  smpl %residstart %residend
-  copy *_a *_err
-
-' use vinfo table to create list/group of equations to receive shocks
-  %tmp = " "
-  for !i = 1 to vinfo_size 
-    %vname = @word(vinfo_vname,!i)
-    %stoch = @word(vinfo_stoch,!i)
-    if %stoch <> "NO" then
-      %tmp = %tmp + " " + %vname
-      endif
-    next
-  group shock {%tmp}
-
-' demean historical residuals and store them in a matrix
-
-  smpl %residstart %residend
-  %error_names = " "
-  for !i = 1 to shock.@count
-    %temp = shock.@seriesname(!i) + "_err"
-    scalar mm = @mean({%temp})
-      series {%temp} =  {%temp} - mm
-      %error_names = %error_names + " " + %temp 
-      next
-
-  group errors {%error_names}
-  smpl %residstart %residend
-  stom(errors,errormat)
-
-' create table of error statistics
-  !nrows = 3 + errors.@count
-  !ncols = 3
-  table(!nrows,!ncols) error_tab
-  error_tab.setjust(r1c1:r{!nrows}c1) left
-  error_tab.setwidth(1) 20
-  error_tab(1,1) = "error"
-  error_tab(1,2) = "mean"
-  error_tab(1,3) = "std-dev"
-  smpl %residstart %residend
-  for !i = 1 to errors.@count
-    series tseries = errors(!i)
-    error_tab(!i+3,1) = errors.@seriesname(!i)
-    error_tab(!i+3,2) = @mean(tseries)
-    error_tab(!i+3,3) = @stdev(tseries)
-    next
-
-' miscellaneous
-
-  smpl %simstart %simend
-  scalar nqtrs = @obssmpl
-  scalar nrepl = {%nsims}
-  scalar nsims = {%nsims}
-  scalar nerrors = @rows(errormat)
-  scalar bbbb = nqtrs-nerrors
-
-  call groupnew("shock","_aerr")
-
-  group track {%dbout_series}
-  call groupnames2string("track",%tracknames)  
-
-' for tracked variables, set up matrices to hold stochastic results
-  for !i = 1 to track.@count
-    %temp = track.@seriesname(!i)
-    matrix(nqtrs,nrepl) {%temp}_mat
-    next
-
-
-' ****************************************************************
-' Stochastic sims
-' ****************************************************************
-
-  %sufstoch = "_1"
-  {%varmod}.scenario(n,a={%sufstoch}) "stoch sims"
-
-  
-' *********************************************
-' stochastic simulation loop (sims are run one at a time)
-
-  smpl %simstart %simend
-  for !i = 1 to nrepl
-    statusline running stochastic sim number  !i
-  ' draw nqtrs random rows from the matrix of historical errors,
-  ' damp the shocks in the first drawn row, and load the shocks
-  ' into the respective  _aerr error series
-    matrix stocherrors = @resample(errormat,bbbb,{%errorblock})
-    for !j = 1 to @columns(stocherrors)
-      stocherrors(1,!j) = @val(%q1_shock_damp) * stocherrors(1,!j)
-      next
-    mtos(stocherrors,shock_aerr)
-    {%varmod}.solve
-  ' store solution values 
-    for !j = 1 to track.@count
-      %temp = track.@seriesname(!j)
-      %temp1 = %temp + "_mat"
-      stom({%temp}{%sufstoch},tmp)
-      colplace({%temp1},tmp,!i)  
-      next
-    next
-
-' ****************************************************************
-' Statistics
-' ****************************************************************
-
-  statusline computing statistics
-
-  smpl %simstart %simend
-  !index = 2
-  series year = @year
-  series quarter = @quarter
-  alpha yyyyqq = @str(year) + "Q" + @str(quarter)
-  !lqtr = @dtoo(%simstart) - 1
-  !nstats = 8
-
-'create a summary table in which to store key results
-
-  call tableform("summary_tab","100")
-
-' loop over each tracked variable, 
-  for !ii1 = 1 to track.@count
-    %trkname = track.@seriesname(!ii1)
-  ' compute statistics
-    call makestats(%trkname)
-
-  ' load statistics into variable-specific table 
-    %tabname = %trkname + "_tab"
-    call tableform(%tabname,@str(nqtrs+2))
-    for !ii2 = 1 to nqtrs
-      {%trkname}_tab(!ii2+2,1) = yyyyqq(!lqtr + !ii2)
-      for !ii3 = 1 to !nstats
-        {%trkname}_tab(!ii2+2,!ii3+1) = {%trkname}_stats(!ii2,!ii3)
-        next
-      next
-
-  ' load statistics for each q4 observation into summary table 
-    !index = !index + 1
-    summary_tab(!index,1) = %trkname
-    !index = !index + 1
-    for !ii2 = 1 to nqtrs
-      if quarter(!lqtr+!ii2) = 4 then
-        for !ii3 = 1 to !nstats + 1
-          summary_tab(!index,!ii3) = {%trkname}_tab(!ii2+2,!ii3)
-          next
-        !index = !index + 1
-        endif
-      next
-
-  ' make graph showing 70 and 90 percent bands
-    graph {%trkname}_graph.band {%trkname}_lo90 {%trkname}_hi90 {%trkname}_lo70 _
-        {%trkname}_hi70 {%trkname}_base
-    {%trkname}_graph.addtext(t) %trkname
-    {%trkname}_graph.options size(6,4.5)
-
-  next
-
-
-' **************************************
-' summary graph
-
-  lur_graph.addtext(t,just(c),font("arial",12)) Unemployment Rate
-  rff_graph.addtext(t,just(c),font("arial",12)) Federal Funds Rate
-  picx4_graph.addtext(t,just(c),font("arial",12)) 4-qtr Core Inflation Rate
-  anngr_graph.addtext(t,just(c),font("arial",12)) 4-qtr Real GDP Growth Rate
-  lur_graph.legend -display
-  rff_graph.legend -display
-  picx4_graph.legend -display
-  anngr_graph.legend -display
-
-  graph summary_graph.merge lur_graph rff_graph picx4_graph anngr_graph
-  summary_graph.legend -display
-  summary_graph.addtext(t,just(c),font("Arial",16)) Stochastic Simulations\r(70 and 90 percent bands)
-  show summary_graph
-
-
-' **************************************
-' summary spool
-  spool results
-  summary_tab.deleterow(!index) 100
-  results.append summary_tab
-  results.append summary_graph
-  results.append error_tab
-  results.display
-@
 
 <<form table>>=
 subroutine tableform(string %tabname, string %nrows)
@@ -7846,7 +7855,7 @@ subroutine makestats(string %trkname)
   endsub
 @ %def makestats
 
-\subsection[master.library]{srcEview/frbus.package/subs/master.library.prg}
+\subsection[master{\_}library.prg]{srcEview/frbus.package/subs/master.library.prg}
 
 <<srcEview/frbus.package/subs/master.library.prg>>=
 <<master library routines>>
@@ -7893,7 +7902,7 @@ subroutine makestats(string %trkname)
 <<set monetary policy fed funds rate>>
 @
 
-\subsection[mce.solve.library]{srcEview/frbus.package/subs/mce.solve.library.prg}
+\subsection[mce{\_}solve{\_}library.prg]{srcEview/frbus.package/subs/mce.solve.library.prg}
 
 <<srcEview/frbus.package/subs/mce.solve.library.prg>>=
 <<mce solve library>>
@@ -8083,7 +8092,7 @@ subroutine makestats(string %trkname)
 <<mce example5>>
 @ %def example5
 
-\subsection[mce.solve.library]{srcEview/mce.solve.package/mce.solve.library.prg}
+\subsection[mce{\_}solve{\_}libraryl.prg]{srcEview/mce.solve.package/mce.solve.library.prg}
 
 <<srcEview/mce.solve.package/mce.solve.library.prg>>=
 <<mce solve library>>
@@ -8091,31 +8100,31 @@ subroutine makestats(string %trkname)
 
 \section{state space package}
 
-\subsection[data.transformations]{srcEview/state.space.package/data.transformations.prg}
+\subsection[data{\_}transformations.prg]{srcEview/state.space.package/data.transformations.prg}
 
 <<srcEview/state.space.package/data.transformations.prg>>=
 <<data transformations>>
 @ %def data_transformations
 
-\subsection[estimation.code]{srcEview/state.space.package/estimation.code.prg}
+\subsection[estimation{\_}code.prg]{srcEview/state.space.package/estimation.code.prg}
 
 <<srcEview/state.space.package/estimation.code.prg>>=
 <<estimation code>>
 @ %def estimation_code
 
-\subsection[frbus.supply.estimation]{srcEview/state.space.package/frbus.supply.estimation.prg}
+\subsection[frbus{\_}supply{\_}estimation.prg]{srcEview/state.space.package/frbus.supply.estimation.prg}
 
 <<srcEview/state.space.package/frbus.supply.estimation.prg>>=
 <<estimation model>>
 @ %def frbus_supply_estimation
 
-\subsection[frbus.supply.filter]{srcEview/state.space.package/frbus.supply.filter.prg}
+\subsection[frbus{\_}supply{\_}filter.prg]{srcEview/state.space.package/frbus.supply.filter.prg}
 
 <<srcEview/state.space.package/frbus.supply.filter.prg>>=
 <<supply filter>>
 @ %def frbus_supply_filter
 
-\subsection[initial.values]{srcEview/state.space.package/initial.values.prg}
+\subsection[initial{\_}values.prg]{srcEview/state.space.package/initial.values.prg}
 
 <<srcEview/state.space.package/initial.values.prg>>=
 <<initial values>>
@@ -8123,6 +8132,67 @@ subroutine makestats(string %trkname)
 
 
 \chapter{Notes, Bibliography and Indexes}
+
+\section{Eview Functions}
+
+<<Presumed Eview Functions>>=
+@ %def wfcreate wfopen wfclose wfsave dbopen fetch sspace close
+
+\section{Series Names}
+
+<<Model Data Series Names>>=
+@ %def ceng d01q4 d2002 d2003 d69 d79a d8095 d81 d83 d86
+@ %def d87 dcon ddockm ddockx delrff deuc dfmprr dfpdbt dfpex dfpsrp
+@ %def dglprd dmpalt dmpex dmpgen dmpintay dmprr dmpstb dmptay dmptlr dmptlur
+@ %def dmptmax dmptpi dmptr dmptrsh dpadj dpgap drstar ec ecd ech
+@ %def ecnia ecnian eco egf egfi egfin egfit egfl egfln egflt
+@ %def egfn egfo egfon egfot egpdin egs egsi egsin egsit egsl
+@ %def egsln egslt egsn egso egson egsot eh ehn ei ein
+@ %def em emn emo emon emp empn empt epd epdn epi
+@ %def epin eps epsn ex exn fcbn fcbrn fgdp fgdpt fnicn
+@ %def fniln fnin fnirn fpc fpcm fpi10 fpi10t fpic fpitrg fpx
+@ %def fpxm fpxr fpxrr fpxrrt frl10 frs10 frstar ftcin fxgap fynicn
+@ %def fyniln fynin gfdbtn gfdrt gfintn gfs gfsn gfsrpn gfsrt gfsub
+@ %def gfsubn gft gftn gftrd gftrt gsdbtn gsdrt gsintn gssrpn gssrt
+@ %def gssub gssubn gst gstn gstrd gstrt hgemp hggdp hggdpt hgpcdr
+@ %def hgpdr hgpir hgpkir hgppsr hgvpd hgvpi hgvps hgx hgynid hks
+@ %def hksr hlept hlprdt hmfpt hqlfpr hqlww huqpct huxb hxbt jccacn
+@ %def jccan jkcd jrcd jrh jrpd jrpi jrps jygfen jygfgn jygsen
+@ %def jygsgn jyncn kcd kh ki kpd kpi kps ks lef
+@ %def left leh leo lep leppot les lest leuc lf lfpr
+@ %def lhp lprdt lqualt lur lurbls lurnat lurtrsh lww mei mep
+@ %def mfpt n16 pcdr pceng pcengr pcer pcfr pcfrt pchr pcnia
+@ %def pcor pcpi pcpix pcstar pcxfe pgdp pgfir pgfl pgfor pgsir
+@ %def pgsl pgsor phouse phr pic4 picngr picnia picx4 picxfe pieci
+@ %def pigdp pipl pipxnc pitarg pitrsh pkir pkpdr pl plmin plminr
+@ %def pmo pmp poil poilr poilrt ppdr ppir ppsr ptr pwstar
+@ %def pxb pxg pxnc pxp pxr qec qecd qeco qeh qepd
+@ %def qepi qeps qkir qleor qlep qlf qlfpr qlhp qlww qpcnia
+@ %def qpl qpmo qpxg qpxnc qpxp qynidn rbbb rbbbe rbbbp rcar
+@ %def rccd rcch rcgain req reqp rff rffalt rffe rfffix rffgen
+@ %def rffintay rffmin rffrule rfftay rfftlr rfnict rfrs10 rfynic rfynil rg10
+@ %def rg10e rg10p rg30 rg30e rg30p rg5 rg5e rg5p rgfint rgw
+@ %def rme rpd rrffe rrfix rrmet rrtr rspnia rstar rtb rtbe
+@ %def rtinv rtpd rtpi rtps rtr t47 tapdad tapdd tapddp tapds
+@ %def tapdt tapsad tapsda tapssl tfcin tfdiv tfibn tfpn tfsin trfci
+@ %def trfcim trfib trfp trfpm trfpt trfptx trfsi trsci trscit trsib
+@ %def trsibt trsp trspp trspt trsptx trssi trssit tryh tscin tsibn
+@ %def tspn tssin uces ucfs uemot uemp ufcbr ufnir ufpcm ufpxm
+@ %def uftcin ugfdbt ugsdbt ugsint ugssub ujcca ujccac ujygfe ujygfg ujygse
+@ %def ujygsg ulef ules upcpi upcpix upgfl upgsl upkpd upmp upxb
+@ %def uqpct uveoa uvpd uvpi uvps uxbt uxeng uyd uyhi uyhln
+@ %def uyhptn uyhsn uyhtn uyl uyni uynicp uyp uysen veo veoa
+@ %def vpd vpi vps wdnfcn wpo wpon wps wpsn xb xbn
+@ %def xbo xbt xeng xfs xfsn xg xgap xgap2 xgde xgden
+@ %def xgdi xgdin xgdo xgdp xgdpn xgdpt xgdptn xgn xgo xgpot
+@ %def xp xpn ycsn ydn ygfsn ygssn yh yhgap yhibn yhin
+@ %def yhl yhln yhp yhpcd yhpgap yhpntn yhpshr yhptn yhshr yhsn
+@ %def yht yhtgap yhtn yhtshr ykin ykpdn ykpsn ymsdn ynicpn ynidn
+@ %def yniin yniln ynin ynisen ypn zdivgr zecd zeco zeh zgap05
+@ %def zgap10 zgap30 zgapc2 zlhp zpi10 zpi10f zpi5 zpib5 zpic30 zpic58
+@ %def zpicxfe zpieci zrff10 zrff30 zrff5 zvpd zvpi zvps zxbd zxbi
+@ %def zxbs zyh zyhp zyhpst zyhst zyht zyhtst zynid
+
 
 \section{Chunks}
 \nowebchunks

@@ -6741,7 +6741,7 @@ I'll produce the files so that they can be compared byte for byte to the origina
 "variables.txt", "stdver{\_}varinfo", "stdver{\_}eqs.txt", and "stdver{\_}coeffs.txt".
 Because of file name limitations with noweb, I've had to modify the file names that I create.
 
-\section{List of Variables with the Data}
+\section[variables.txt]{List of Variables with the Data}
 
 <<variables.txt>>=
  <<variable CENG>>
@@ -7255,7 +7255,7 @@ Because of file name limitations with noweb, I've had to modify the file names t
  
 @
 
-\section{Standard Version Variable Information File}
+\section[stdver{\_}varinfo]{Standard Version Variable Information File}
 
 <<stdver.varinfo>>=
   1 CENG     = Consumption of crude energy (oil, coal, natural gas),  2009 $                                  B.4 A sector_c.5   4 OT 1 0 16
@@ -8160,7 +8160,7 @@ Because of file name limitations with noweb, I've had to modify the file names t
 900 ZZZBLANK = empty slot
 @
 
-\section{Standard Version Equations File}
+\section[stdver{\_}eqs.txt]{Standard Version Equations File}
 
 <<stdver.eqs.txt>>=
 <<equation ceng>>
@@ -8552,7 +8552,7 @@ Because of file name limitations with noweb, I've had to modify the file names t
 theend
 @
 
-\section{Standard Version Coefficients File}
+\section[stdver{\_}coeffs.txt]{Standard Version Coefficients File}
 
 <<stdver.coeffs.txt>>=
 
