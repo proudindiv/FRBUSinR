@@ -8137,7 +8137,7 @@ subroutine makestats(string %trkname)
 
 <<Presumed Eview Functions>>=
 @ %def wfcreate wfopen wfclose wfsave dbopen fetch close
-@ %def solve sspace
+@ %def solve sspace xrun xget
 
 \section{Series Names}
 
