@@ -8139,6 +8139,14 @@ subroutine makestats(string %trkname)
 @ %def wfcreate wfopen wfclose wfsave dbopen fetch close
 @ %def solve sspace xrun xget
 
+\section{Variable Information}
+
+<<Presumed varinfo Schema>>=
+@ %def vinfo_text varinfo
+@ %def vinfo_vname vinfo_vtype vinfo_vrule
+@ %def vinfo_sector vinfo_stoch vinfo_decomp
+@ %def vname vdesc vtype vrule sector stoch decomp
+
 \section{Series Names}
 
 <<Model Data Series Names>>=
