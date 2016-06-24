@@ -1,0 +1,21 @@
+\documentclass{book}
+\usepackage{noweb}
+\usepackage{hyperref}
+
+\title{frbusdata.Rnw: Data Study}
+\author{Gary Young}
+
+\begin{document}
+	
+\maketitle
+		
+\section{Introduction}
+
+<<>>=
+@
+
+\section{Chunks}
+\nowebchunks
+\section{Index}
+\nowebindex
+\end{document}
