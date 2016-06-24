@@ -1,0 +1,50 @@
+\documentclass{book}
+\usepackage{noweb}
+\usepackage{hyperref}
+
+\title{frbussupport.Rnw: Create Support Files}
+\author{Gary Young}
+
+\begin{document}
+	
+\maketitle
+		
+\section{stdver{\_}varinfo}
+
+<<>>=
+raw = readLines("frbus_package/mods/stdver_varinfo")
+@
+
+<<>>=
+flds = c("seq","vname","vdesc","vtype","vrule","sector",
+         "var7","stoch","var8","var9","decomp")
+start = c(1,5,16,111,115,117,130,132,135,137,139)
+length = c(3,8,94,4,1,13,1,2,1,1,2)
+parse = data.frame(flds,start,length)
+rownames(parse) = parse$flds
+(parse = subset(parse,select = -c(flds)))
+@
+
+<<>>=
+varinfo = data.frame(lapply(flds,
+            function(x) (trimws(substr(raw,parse[x,"start"],
+                           sum(c(parse[x,"start"],parse[x,"length"],-1)))))))
+colnames(varinfo) = flds
+varinfo = varinfo[varinfo$vname!="ZZZBLANK",]
+rownames(varinfo) = as.character(varinfo[,"vname"])
+varinfo$seq = as.numeric(as.character(varinfo$seq))
+varinfo$var8 = as.numeric(as.character(varinfo$var8))
+varinfo$var9 = as.numeric(as.character(varinfo$var9))
+varinfo$decomp = as.numeric(as.character(varinfo$decomp))
+str(varinfo)
+@
+
+<<>>=
+write.csv(varinfo,"varinfo.csv")
+@
+
+\section{Chunks}
+\nowebchunks
+\section{Index}
+\nowebindex
+\end{document}
