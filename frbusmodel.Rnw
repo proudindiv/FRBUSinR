@@ -1,0 +1,62 @@
+\documentclass{book}
+\usepackage{noweb}
+\usepackage{hyperref}
+
+\title{frbusmodel.Rnw: Data Study}
+\author{Gary Young}
+
+\begin{document}
+	
+\maketitle
+		
+\section{Introduction}
+
+
+\part{Analysis of FRB/US Model(s)}
+
+
+\part{Port FRB/US from Eview to R}
+
+\chapter{FRB/US Package}
+
+\section{example1 program}
+
+\section{example2 program}
+
+\section{example3 program}
+
+\section{example4 program}
+
+\section{ocpolicy program}
+
+\section{pings program}
+
+\section{stochsim program}
+
+
+\chapter{Model Consistent Expectation Solve Package}
+
+\section{example1 program}
+
+\section{example2 program}
+
+\section{example3 program}
+
+\section{example4 program}
+
+\section{example5 program}
+
+
+\chapter{State Space Package}
+
+
+\chapter{Standard Version Model}
+
+
+\part{Other Models}
+
+\section{Chunks}
+\nowebchunks
+\section{Index}
+\nowebindex
+\end{document}
