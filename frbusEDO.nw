@@ -11,8 +11,8 @@
 \colorlet{shadecolor}{green!8}
 \renewenvironment{quote}{\begin{shaded*}\begin{oldquote}}{\end{oldquote}\end{shaded*}}
 
-\title{Examine the FRB/US EDO Model}
-\author{Gary Young}
+\title{Estimated Dynamic Optimization (EDO) Model}
+\author{Gary Young (editor)}
 
 \begin{document}
 \pagestyle{noweb}
@@ -21,7 +21,49 @@
 \tableofcontents
 \newpage
 	
-\chapter{Introduction}
+\chapter{EDO model packages}
+
+The \href{http://www.federalreserve.gov/econresdata/edo/edo-model-package.htm}
+         {Estimated Dynamic Optimization (EDO) Model}
+is available from the Federal Reserve Board of Governors website:
+
+\begin{quote}
+The model package zip file (link below) contains the following files:
+
+\begin{itemize}
+\item 
+A readme file with basic instructions.
+
+\item
+Dynare mod files to run two versions of the EDO model, one with variables in levels and the other with variables in log deviations from steady state.  Both versions include the nonlinear equations derived from household and firm optimization problems.  The version in levels more closely follows the derivations described in the article "Unemployment During the Great Recession in the EDO Model of the U.S. Economy", while the version in log deviations facilitates the reporting of simulation results.  These programs solve the model, report some basic model statistics, and run some basic impulse response simulations.
+\end{itemize}
+
+\end{quote}
+
+Notice that the
+\href{http://www.federalreserve.gov/econresdata/edo/edo-model-package.htm}{edo (zip)}
+is actually contained in the
+"\href{http://www.federalreserve.gov/econresdata/edo/edo-model-package.htm}{EDO variable listing (ZIP)}"
+link and the mentioned "variable listing zip file" doesn't seem to be available anywhere:
+
+\begin{quote}
+The variable listing zip file (link below) contains an HTML representation of the EDO model, showing linkages between variables, parameters, and equations.
+
+EDO variable listing (ZIP)
+\end{quote}
+
+\begin{quote}
+NOTE: The programs for simulating the EDO model are written for use with the Dynare software package.  The Dynare package can be downloaded without cost at
+\href{http://www.dynare.org}{www.dynare.org}
+While Dynare itself is free, it requires the installation of either Matlab or Octave.
+Matlab is a commercial product available at
+\href{http://www.mathworks.com}{www.mathworks.com}. 
+Octave is free-ware, and is available at
+\href{http://www.gnu.org/software/octave}{www.gnu.org/software/octave}
+\end{quote}
+
+Dynare and octave were available in The Ubuntu Software Center for my computer.
+
 
 \begin{appendices}
 
