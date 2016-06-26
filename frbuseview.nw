@@ -8,7 +8,7 @@
 \usepackage{xcolor}
 \let\oldquote=\quote
 \let\endoldquote=\endquote
-\colorlet{shadecolor}{orange!15}
+\colorlet{shadecolor}{green!8}
 \renewenvironment{quote}{\begin{shaded*}\begin{oldquote}}{\end{oldquote}\end{shaded*}}
 
 \title{Reverse Engineering the Eview Code in the FRB/US Model}
@@ -23,6 +23,133 @@
 \mainmatter
 
 \chapter{Introduction}
+
+From the Federal Reserve Board of Governors
+\href{https://www.federalreserve.gov/econresdata/frbus/us-models-package.htm}
+     {FRB/US model packages} website page:
+
+\begin{quote}
+FRB/US Model
+
+\begin{itemize}
+\item \href{https://www.federalreserve.gov/econresdata/frbus/us-models-about.htm}
+           {About}
+\item \href{https://www.federalreserve.gov/econresdata/frbus/us-documentation-papers.htm}
+           {Documentation and Research Papers}
+\item \href{https://www.federalreserve.gov/econresdata/frbus/us-technical-qas.htm}
+           {Technical Q\&As}
+\end{itemize}
+
+Related Information
+\begin{itemize}
+\item FEDS Note:
+\href{https://www.federalreserve.gov/econresdata/notes/feds-notes/2014/a-tool-for-macroeconomic-policy-analysis.html}
+{The FRB/US Model: A Tool for Macroeconomic Policy Analysis}
+\item FEDS Note:
+\href{https://www.federalreserve.gov/econresdata/notes/feds-notes/2014/november-2014-update-of-the-frbus-model-20141121.html}
+{November 2014 Update of the FRB/US Model}
+\item FEDS Note:
+\href{https://www.federalreserve.gov/econresdata/notes/feds-notes/2014/optimal-control-monetary-policy-in-frbus-20141121.html}
+{Optimal-Control Monetary Policy in the FRB/US Model}
+\end{itemize}
+\end{quote}
+
+\begin{quote}
+FRB/US model packages
+
+The main FRB/US model package is a self-contained set of equations, data, programs and documentation
+that enables various types of simulations and provides information about the model's structure.
+The package contains the following files and subdirectories:
+
+\begin{itemize}
+\item A readme file with basic information about the organization of the package and how to get started;
+\item The subdirectory addins with EViews add-in commands that must be installed, following the instructions provided in the readme file;
+\item The subdirectory data containing the EViews database used in simulating the model as described in the readme file;
+\item The subdirectory mods containing model equations and parameter values;
+\item The subdirectory subs containing two libraries of subroutines,
+      including the library mce{\_}solve
+      used for solving FRB/US under model-consistent (rational) expectations in EViews;
+      \href{https://www.federalreserve.gov/econresdata/frbus/us-models-package.htm\#resolver}
+           {the RE Solver Package}
+      is available for those wishing to download the mce\_solve software and documentation by itself;
+\item The subdirectory programs containing some basic applications of the model
+      including those described in the article
+      \href{https://www.federalreserve.gov/econresdata/notes/feds-notes/2014/a-tool-for-macroeconomic-policy-analysis.html}
+           {"The FRB/US Model: A Tool for Macroeconomic Policy Analysis"}
+\item The subdirectory documentation among whose documents are one with basic instructions
+      for simulating FRB/US and another with a description of all of the model's equations.
+\end{itemize}
+
+\href{https://www.federalreserve.gov/econresdata/frbus/files/frbus_package.zip}
+     {FRB/US model package (ZIP)} (Updated database: March 17, 2016)
+
+The following zip file contains only the historical FRB/US database (csv format) and variable list.
+
+\href{https://www.federalreserve.gov/econresdata/frbus/files/data_only_package.zip}
+     {FRB/US dataset and variable listing (ZIP)} (Updated database: March 17, 2016)
+     
+\end{quote}
+
+\begin{quote}
+Supply-side model
+
+The program frbus\_supply.prg estimates a multivariate state-space model
+that forms the basis of the FRB/US specification of potential output and its components.
+The zip file below contains the code and the latest data set used in estimation.
+The zip file also includes a note (latent\_note.pdf) that provides documentation of the state-space model.
+The model is closely related to one presented in Charles Fleischman and John Roberts,
+\href{https://www.federalreserve.gov/pubs/feds/2011/201146/201146abs.html}
+     {"From Many Series, One Cycle: Improved Estimates of the Business Cycle from a Multivariate Unobserved Components Model,"}
+     FEDS Working Paper 2011-46.
+
+\href{https://www.federalreserve.gov/econresdata/frbus/files/state_space_package.zip}
+     {FRB/US supply-side package (ZIP)} (Updated database: December 30, 2015)
+\end{quote}
+
+\begin{quote}
+RE Solver Package 
+
+The software library mce\_solve provides code for the solution of linear and non-linear models
+under model-consistent (MC) or “rational” (RE) expectations in EViews.
+This code is more reliable and efficient than the RE algorithm built into EViews (Fair-Taylor)
+at solving FRB/US when any of its expectations are MC.
+The mce\_solve library includes two RE algorithms: E-Newton and E-QNewton.
+These algorithms iterate to find a model's RE solution with a sequence of updates
+to either exogenous estimates of the model's future-dated endogenous variables
+or exogenous components of such estimates.
+For single simulations of linear RE models,
+E-Newton is likely to be faster for models of small-to-medium size and
+E-QNewton is likely to be faster for larger models.
+For nonlinear models, E-Newton tends to be penalized relative to E-QNewton.
+The E-Newton algorithm has a substantial advantage over E-QNewton
+on experiments that involve a large number of RE solutions,
+as long as the same expectations Jacobian can be used for each E-Newton solution.
+
+The solution algorithms are described in detail in Flint Brayton,
+\href{https://www.federalreserve.gov/pubs/feds/2011/201144/201144abs.html}
+     {"Two Practical Algorithms for Solving Rational Expectations Models”}, FEDS Working Paper 2011-44,
+and in the documentation included in the zip file.
+The zip file also contains some sample programs that illustrate how to use the algorithms.
+
+\href{https://www.federalreserve.gov/econresdata/frbus/files/mce\_solve\_package.zip}
+     {mce\_solve (ZIP)}
+\end{quote}
+
+\begin{quote}
+NOTE: The programs for simulating the FRB/US model are written for use with the software EViews,
+available at \href{www.EViews.com}{www.EViews.com}.
+The current version of FRB/US is compatible with EViews versions 7 and 8.
+
+\href{https://www.federalreserve.gov/disclaimer.htm\#MODELS}
+     {Model disclaimer}
+\end{quote}
+
+\begin{quote}
+Last update: Apr 1, 2016
+
+Home | Economic Research \& Data
+
+\end{quote}
 
 
 \chapter{FRB/US Package}

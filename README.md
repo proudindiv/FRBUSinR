@@ -21,7 +21,7 @@ My project is at [proudindiv/FRBUSinR](https://github.com/proudindiv/FRBUSinR) o
 ### Contents of the FRBUSinR Repository:
 
 1. frbus_package, mce_solve_package, state_space_package, and data_only_package contain the contents of the zip files downloaded from the Federal Reserve site.
-1. frbus.nw, and frbus.pdf which is derived from it, is my first reverse engineering of the variables, equations, and coefficients of the standard version of the model. The frbus.nw noweb file is a literate probram that produces copies of the contents of four of the files (stdver_varinfo, stdver_eqs.txt, stdver_coeffs.txt, and variables.txt).
+1. frbus.nw, and frbus.pdf which is derived from it, is my first reverse engineering of the variables, equations, and coefficients of the standard version of the model. The frbus.nw noweb file is a literate probram that produces copies of the contents of four of the files in srcEview (stdver_varinfo, stdver_eqs.txt, stdver_coeffs.txt, and variables.txt).
 1. frbuseview.nw, and frbuseview.pdf which is derived from it, is the start of my second reverse engineering of the model creating copies of all of the Eview program files in the srcEview directory and the setup.sh and check.sh scripts that I use with them.  This is a very early rough draft and will drastically change as I work on the model.
 1. frbussupport.Rnw, and frbussupport.pdf, creates support files
 1. frbusdata.Rnw, and frbusdata.pdf, will study the data used in the model.

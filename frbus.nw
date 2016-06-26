@@ -8,7 +8,7 @@
 \usepackage{xcolor}
 \let\oldquote=\quote
 \let\endoldquote=\endquote
-\colorlet{shadecolor}{orange!15}
+\colorlet{shadecolor}{green!8}
 \renewenvironment{quote}{\begin{shaded*}\begin{oldquote}}{\end{oldquote}\end{shaded*}}
 
 \title{Reverse Engineering the FRB/US Model in R}
@@ -23,20 +23,385 @@
 
 \chapter{Introduction}
 
-I am starting to reverse engineer\footnote{The pdf was created with noweb, the literate programming tool: "noweb frbus.nw | pdflatex -synctex=1 -interaction=nonstopmode frbus.tex"} the Federal Reserve's \href{https://www.federalreserve.gov/econresdata/frbus/us-models-package.htm}{FRB/US model packages} to create my own version in the R Language.  I quote their
+I am starting to reverse engineer\footnote{The pdf was created with noweb,
+the literate programming tool:
+"noweb frbus.nw | pdflatex -synctex=1 -interaction=nonstopmode frbus.tex"}
+the Federal Reserve's
+\href{https://www.federalreserve.gov/econresdata/frbus/us-models-package.htm}
+     {FRB/US model packages}
+to create my own version in the R Language.
+I quote their
 \href{https://www.federalreserve.gov/econresdata/frbus/us-models-about.htm}{about page}:
 
 \begin{quote}
-The FRB/US model is a large-scale estimated general equilibrium model of the U.S. economy that has been in use at the Federal Reserve Board since 1996. The model is designed for detailed analysis of monetary and fiscal policies. One distinctive feature compared to dynamic stochastic general equilibrium (DSGE) models is the ability to switch between alternative assumptions about expectations formation of economic agents.  Another is the model’s level of detail: FRB/US contains all major components of the product and income sides of the U.S. national accounts.  Since its original development, the model has continuously undergone changes to cope with the evolving structure of the economy, including conceptual revisions to sectoral definitions of the national accounts.
+The FRB/US model is a large-scale estimated general equilibrium model of the U.S. economy
+that has been in use at the Federal Reserve Board since 1996.
+The model is designed for detailed analysis of monetary and fiscal policies.
+One distinctive feature compared to dynamic stochastic general equilibrium (DSGE) models
+is the ability to switch between alternative assumptions about expectations formation of economic agents.
+Another is the model’s level of detail:
+FRB/US contains all major components of the product and income sides of the U.S. national accounts.
+Since its original development,
+the model has continuously undergone changes to cope with the evolving structure of the economy,
+including conceptual revisions to sectoral definitions of the national accounts.
 
-The article \href{https://www.federalreserve.gov/econresdata/notes/feds-notes/2014/a-tool-for-macroeconomic-policy-analysis.html}{"The FRB/US Model: A Tool for Macroeconomic Policy Analysis"} provides a brief overview of the structure of FRB/US, and presents some key properties of the model and some applications, code for which is included with the main FRB/US model package. The article \href{https://www.federalreserve.gov/econresdata/notes/feds-notes/2014/november-2014-update-of-the-frbus-model-20141121.html}{"November 2014 Update of the FRB/US Model"} presents some model properties of the most recently released version of FRB/US.
+The article
+\href{https://www.federalreserve.gov/econresdata/notes/feds-notes/2014/a-tool-for-macroeconomic-policy-analysis.html}
+     {"The FRB/US Model: A Tool for Macroeconomic Policy Analysis"}
+provides a brief overview of the structure of FRB/US, and
+presents some key properties of the model and some applications,
+code for which is included with the main FRB/US model package.
+The article
+\href{https://www.federalreserve.gov/econresdata/notes/feds-notes/2014/november-2014-update-of-the-frbus-model-20141121.html}
+     {"November 2014 Update of the FRB/US Model"}
+presents some model properties of the most recently released version of FRB/US.
 \end{quote}
 
-This is an evolving document, where I will initially create the Fed's model files byte for byte and reverse engineer the structure of the model.  Then I plan to morph it into the \href{https://www.r-project.org/}{R software environment for statistical computing and graphics}, to use to create my own models.  I'm using the \href{https://en.wikipedia.org/wiki/Literate_programming}{literate programming} method of  \href{https://en.wikipedia.org/wiki/Donald_Knuth}{Donald Knuth} to combine the documentation with the actual code.
+This is an evolving document,
+where I will initially create the Fed's model files byte for byte and
+reverse engineer the structure of the model.
+Then I plan to morph it into
+the \href{https://www.r-project.org/}
+         {R software environment for statistical computing and graphics},
+to use to create my own models.
+I'm using
+the \href{https://en.wikipedia.org/wiki/Literate_programming}
+         {literate programming}
+method of
+\href{https://en.wikipedia.org/wiki/Donald_Knuth}{Donald Knuth}
+to combine the documentation with the actual code.
+
+\section[FEDS Notes]{Apr 2014
+The FRB/US Model: A Tool for Macroeconomic Policy Analysis
+Flint Brayton, Thomas Laubach, and David Reifschneider}
+
+\subsection{Introduction}
+
+\begin{quote}
+The FRB/US model of the U.S. economy is one of several that Federal Reserve Board staff consults
+for forecasting and the analysis of macroeconomic issues, including both monetary and fiscal policy.
+To improve public access to and understanding of the model,
+a new page has been introduced on the Federal Reserve Board's website
+from which interested users can download expanded FRB/US documentation;
+model equations, coefficients, and data; and sample simulation programs.
+
+These simulation programs can be run by anyone
+with access to the EViews software package,
+a widely available commercial product.
+This note provides a brief summary of the main features of the model,
+illustrates some applications of the model using sample programs provided on the web page,
+and concludes with an overview of the contents of the web page.
+Because the model continues to undergo changes as both economic theory and empirical evidence evolve,
+any given model release reflects only the state of thinking at the time of the release.
+\end{quote}
+
+\subsection{The FRB/US Model: A Brief Overview}
+
+\begin{quote}
+The FRB/US model is a large-scale model of the U.S. economy
+featuring optimizing behavior by households and firms
+as well as detailed descriptions of monetary policy and the fiscal sector.
+The model's large number of endogenous variables permits the study
+of the effects of a broad range of macroeconomic policies and
+exogenous shocks on real GDP and its major spending components;
+the unemployment rate and other key labor market indicators;
+several measures of inflation and relative prices;
+the main categories of national income;
+a detailed treatment of the government's account;
+and various interest rates, asset prices, and components of wealth.
+FRB/US has a neoclassical core that combines a production function
+with endogenous and exogenous supplies of production factors and
+key aspects of household preferences such as impatience.
+To account for cyclical fluctuations,
+the model features rigidities that apply
+to many decisions made by households and firms;
+these rigidities enable the model
+to generate gradual responses of macroeconomic variables
+to a wide range of exogenous shocks that are consistent with the economic data.
+
+Although a detailed description of the model's equations is beyond the scope of this note,
+a number of resources are available on the new web page.
+Here we provide only an overview of the main specifications of the various agents' behavior and
+how they compare to other models currently used in policy analysis, and
+then focus on illustrating some properties of the model.
+\end{quote}
+
+\subsection{Basic structure of the model}
+
+\begin{quote}
+\begin{itemize}
+
+\item \textit{Households.}
+There are liquidity-constrained and unconstrained households.
+Liquidity-constrained households spend all their income each quarter.
+In contrast, other households consume and
+invest based on their assessment of their lifetime resources.
+This assessment contains different aggregate average propensities
+to spend out of different types of income,
+reflecting variations in the distribution of different types of income across age groups;
+in addition, future labor and transfer income is discounted at a rate
+substantially higher than the discount rate on future income from non-human wealth,
+reflecting uninsurable individual income risk.
+Unconstrained households face adjustment costs that cause them
+to adjust their spending gradually in response to changes in expected income and property wealth.
+As in the national income and product accounts,
+total spending by households consists of consumption of nondurable goods and non-housing services,
+purchases of durable consumer goods, and
+consumption of housing services;
+movements in these three components of total spending are modeled separately.
+Labor supply is assumed to be independent of wealth
+both in the long-run and at higher frequencies.
+Movements in labor force participation are driven by social norms in the long run,
+represented by a stochastic trend, and by the availability of jobs in the short run.
+
+\item \textit{Firms.}
+Forward-looking firms solve optimization problems to determine their hiring and investment.
+Firms' fixed investment is disaggregated into spending on durable equipment,
+intellectual property, and nonresidential structures, and
+is modeled in line with standard neoclassical investment theory.
+In particular, the desired level of investment is a function of the user cost of capital,
+the expected level and growth rate of output, and depreciation,
+with movements of actual spending toward this desired level slowed by adjustment costs.
+Business fixed investment is also affected by current business output directly,
+which could capture either the effects of sales
+on liquidity-constrained firms' ability to invest, or sentiment effects.
+Businesses also aim to keep aggregate hours
+in line with the expected aggregate level of production and
+real compensation per hour (adjusted for trend labor productivity),
+but costly adjustment of both their workforces and the workweek
+may cause them to temporarily deviate from the desired longer-run level of hours in response to shocks.
+
+\item \textit{Domestic financial sector and monetary policy.}
+A variety of interest rates, including yields on Treasury securities at several maturities,
+BBB corporate bond yields, auto loan rates, and conventional 30-year residential mortgage rates,
+are determined as the expected average value
+of the federal funds rate over the appropriate holding period plus endogenous term/risk premiums.
+Equity prices equal the present discounted value of corporate earnings,
+where the discount rate equals the expected real yield on 30-year Treasury bonds
+plus an endogenous equity premium.
+Monetary policy is modeled as a simple rule for the federal funds rate
+subject to the zero lower bound on nominal interest rates;
+the parameters of the policy rule used in simulations can be modified as desired.
+In addition, the model allows for the imposition of the policy thresholds
+that were part of FOMC statements from December 2012 to January 2014
+for the rates of unemployment and
+projected inflation that would need to be crossed before the funds rate
+would be allowed to rise from its effective lower bound.
+
+\item \textit{Supply-side.}
+The key production sector in FRB/US is the nonfarm business sector plus imported energy.
+The production function in this sector is Cobb-Douglas
+with potential output depending on the sustainable full-employment level of labor input,
+actual capital services, trend energy services, and the trend component of multi-factor productivity.
+Because there is no wealth effect on long-run labor supply in FRB/US,
+the sustainable level of aggregate hours depends on the overall population
+and the trend components of the participation rate and the workweek,
+where the latter two factors follow stochastic trends.
+
+\item \textit{Price and wage setting.}
+The key inflation measures modeled in FRB/US are for core PCE prices and ECI hourly compensation,
+following the New Keynesian Phillips curve specification
+in the presence of nonzero trend inflation developed in Cogley and Sbordone (2008).
+In addition to slack and expectations of future inflation,
+other important determinants of total consumer price inflation
+include movements in the relative prices of food, energy, and non-energy imports.
+
+\item \textit{Other.}
+The government sector includes disaggregated components of spending and
+a wide range of tax rates and credits at both the federal and the state and local levels.
+Simulations can be run under fiscal rules
+that adjust the trend component of average personal income tax rates
+to stabilize the ratio of either the budget surplus or debt to GDP.
+The foreign sector affects domestic real activity through equations
+for imports and exports of goods and
+services that depend on real activity in the rest of the world and the terms of trade.
+The trade-weighted dollar exchange rate is modeled assuming uncovered interest parity,
+which links the expected real return on safe long-run assets abroad to those in the U.S.,
+plus a country-risk premium that depends on the level of U.S. net foreign indebtedness.
+Foreign short-term and long-term nominal interest rates are modeled jointly
+with foreign inflation and foreign real activity in reduced form.
+
+\end{itemize}
+\end{quote}
+
+\subsection{Parameterizing the model}
+
+\begin{quote}
+The large size of FRB/US makes it infeasible to estimate all of its equations simultaneously.
+The estimation strategy for major structural equations has several key features.
+First, some of the parameters governing the model's long-run relationships,
+such as factor elasticities in the production function and desired capital-output ratios,
+are calibrated based on priors grounded in evidence on income shares and similar considerations.
+Other long-run relationships are estimated using cointegration techniques.
+Second, the estimation of those equations that contain expectations terms
+involves the separate estimation of a set of smaller models,
+each of which typically combines one of the structural equations
+with a condensed model of the overall economy that features a VAR.
+Projections of the VAR provide proxies for the explicit expectations terms in the structural equation.
+The VARs in the smaller models share a core set of macro variables:
+the federal funds rate, consumer price inflation, and the output gap.
+Sector-specific variables are added to individual VARs as needed
+to form proxies for expectations of variables not in the core set.
+This design can be interpreted as a limited form of rational expectations.
+Third, the rigidities that apply to consumption, investment, and factor inputs in production
+are specified as a generalized form of adjustment costs,
+polynomial adjustment costs, or PAC, see Tinsley (2002).
+PAC permits costs to be associated with time derivatives of the decision variable
+that are of a higher order than the first difference term
+that appears in the quadratic adjustment cost framework.
+The order of adjustment costs in each PAC equation is determined empirically
+as part of the estimation process and
+is typically chosen so as to ensure that residuals are not serially correlated.
+Thus, in these behavioral equations, there is no external source of serial persistence.
+Finally, after estimation the assembled model is subjected to a set of diagnostic tests
+to ensure that the overall system's properties are consistent with the empirical evidence,
+such as the dynamics of a simple VAR model.
+\end{quote}
+
+\subsection{Forming expectations in the model}
+
+\begin{quote}
+FRB/US allows for two alternative assumptions
+about the way in which different groups of agents
+--such as financial market participants, wage-and-price setters, households, and nonfinancial firms--
+form their expectations in simulations of the model.
+Expectations of a particular group can
+be either consistent with full knowledge of the dynamics of the model
+(henceforth called model-consistent expectations or MCE)
+or based on projections from the estimated small-scale auxiliary VAR models
+that are used in the estimation of FRB/US.
+VAR expectations assume only limited knowledge
+of the joint dynamics of the variables on the part of decision-makers and
+correspond to the same restricted information set used
+in the estimation of the model as discussed above.
+This approach allows users of the model
+to explore the implications of alternative characterizations of the expectations-formation process
+--a useful feature given the likelihood that various economic players
+differ significantly in their knowledge about the workings of the economy and its future direction.
+For example, simulations can be run in which financial market participants
+have the sophisticated understanding of policy and the dynamics of the economy implied by MCE,
+while households instead base their expectations on the limited information and
+average historical relationships embedded in the VAR models.
+\end{quote}
+
+\subsection{Comparing the design of FRB/US to the DSGE modeling approach}
+
+\begin{quote}
+As is already evident from this brief description,
+FRB/US differs along several dimensions
+from many dynamic stochastic general equilibrium (DSGE) models in current use.
+For example: 
+
+\begin{itemize}
+
+\item Because FRB/US is not built around a representative household paradigm,
+it is more generously parameterized than typical DSGE models and
+dispenses with many of the cross-equation restrictions imposed by the latter.
+Notably, future income is valued by different discount factors
+depending on whether it accrues to households or firms.
+Also, the marginal propensity of households to consume out of different types of income can vary,
+depending on which group of households receives the income.
+For example, transfer income is disproportionately received by retirees
+who are well-advanced in their lifecycles.
+
+\item Some optimization problems are specified in a different fashion
+in FRB/US than in many DSGE models.
+As noted earlier, the FRB/US specification of consumer spending
+bases the valuation of a large component of human wealth
+on a discount rate that is both fixed and quite large,
+implying that the effective planning horizon for many households in FRB/US
+is closer to the five years advocated by Friedman (1957)
+than to the much longer period embedded in a typical DSGE model (Carroll, 2001).
+In addition, the growth of consumer spending in FRB/US
+is not closely linked to the path of expected future short-term (risk-free) interest rates
+as it is in the Euler equation specification of consumption used in most DSGE models;
+rather, the level of spending in the model depends directly on intermediate-term consumer loan rates and
+indirectly on the long-term bond rates that influence the value of corporate equities.
+
+\item Another important dimension along which FRB/US is different
+from many DSGE models used in policy analysis
+is that the model allows for nonlinear interactions among endogenous variables,
+in contrast to the common practice of writing models as linear approximations
+around a steady state or balanced-growth path.
+For example, the model's estimate of the average interest elasticity of aggregate demand
+has changed markedly over time as the composition of GDP has evolved;
+in particular, the aggregate elasticity fell sharply
+with the recent collapse of residential construction,
+because it is the most interest-sensitive sector of the economy.
+Another important nonlinearity concerns the zero lower bound on nominal interest rates,
+which has constrained the actual and expected future stance of monetary policy markedly since late 2008.
+It is straightforward in FRB/US to model the short-term policy rate
+as a feedback rule subject to the zero lower bound.
+
+\item Broadly speaking, the eclectic approach to the specification of FRB/US
+permits the historical patterns in macroeconomic data
+to influence its structure more substantially
+than is the case for the typical DSGE model,
+whose structure is more tightly imposed by economic theory.
+Recognizing that this and other issues about the best design of a macroeconomic model
+are the subjects of ongoing debate,
+the staff at the Federal Reserve Board has also developed and uses the EDO and SIGMA DSGE models.
+
+\end{itemize}
+\end{quote}
+
+\subsection{Two Applications of the FRB/US Model}
+
+\begin{quote}
+We now illustrate and discuss several key features of the model by means of some applications.
+The code for these applications is available on the web page.
+\end{quote}
+
+\subsubsection{Impulse response functions to funds rate and multi-factor productivity shocks}
+
+\begin{quote}
+\end{quote}
+
+\subsubsection{Stochastic simulations}
+
+\begin{quote}
+\end{quote}
+
+\subsection{Contents of the Web Page}
+
+\begin{quote}
+The main FRB/US web page provides access to the following material:
+
+\begin{itemize}
+
+\item FRB/US model package:
+This contains the package of code needed to simulate FRB/US
+using the EViews software (the EViews software itself needs to be previously installed by the user).
+It includes files containing model equations and parameters as well as a database.
+The database will be updated periodically.
+The model files themselves will be updated occasionally, usually once a year,
+reflecting specification changes or re-estimation of model equations.
+The package also contains the two sample programs described above.
+
+\item FRB/US supply-side model:
+This provides the code and data used for estimating a state-space model
+similar to that developed in Fleischman and Roberts (2011)
+on which the FRB/US specification of potential output and its components is based.
+
+\item RE solver package:
+For users who are primarily interested in the solution algorithms
+for solving linear and nonlinear models under MCE,
+this provides the library of EViews code that implements these algorithms,
+as well as sample programs and specific documentation.
+
+\item Research papers and documentation:
+This page features links to articles that use the FRB/US model
+as well as to published and unpublished documentation of the FRB/US model. 
+
+\end{itemize}
+\end{quote}
+
+
 
 \chapter{Model Equations and Coefficients}
 
-Compare my version of the "Model Equations and Coefficients" to the \href{http://htmlpreview.github.io/?https://github.com/proudindiv/FRBUSinR/blob/ReverseEngineer/frbus_package/documentation/equations.html}{documentation}.
+Compare my version of the "Model Equations and Coefficients" to the \href{http://htmlpreview.github.io/?https://github.com/proudindiv/FRBUSinR/blob/ReverseEngineer/frbus_package/documentation/equations.html}
+     {documentation}.
 
 \section{Household Expenditures}
 
