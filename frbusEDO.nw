@@ -63,7 +63,22 @@ Octave is free-ware, and is available at
 \end{quote}
 
 Dynare and octave were available in The Ubuntu Software Center for my computer.
+From the readme file, to execute the model:
+\begin{quote}
+5) Run the command "dynare linearized" or "dynare Dynare\_edo" from the Matlab/Octave command line to run the two model versions
+\end{quote}
 
+The model fails for me and when googling for the error
+"\href{https://www.google.com/search?client=ubuntu&channel=fs\&q=dynare+linearized+trans_A+undefined\&ie=utf-8\&oe=utf-8}
+      {dynare linearized trans\_A undefined}"
+we get
+\begin{quote}
+At the moment, Octave 4 is not supported yet. See https://github.com/DynareTeam/dynare/issues/1113
+\end{quote}
+at "\href{http://www.dynare.org/phpBB3/viewtopic.php?f=1\&t=7856}
+         {Trans\_A Matrix error}"
+and "\href{https://github.com/DynareTeam/dynare/issues/1113}
+          {Make Dynare compatible with Octave 4.0 \#1113}".
 
 \begin{appendices}
 
