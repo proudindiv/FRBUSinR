@@ -88,13 +88,66 @@ and "\href{https://github.com/DynareTeam/dynare/issues/1113}
 
 <<srcedo/Dynare.edo.mod>>=
 
+<<edo var>>
+
+
+<<edo varexo>>
+
+
+<<edo parameters>>
+
+
+//estimated_params;
+<<edo estimated{\_}params>>
+//end_estimated_params;
+
+//calibrated_params;
+<<edo calibrated{\_}params>>
+//end_calibrated_params;
+
+//free_params;
+<<edo free{\_}params>>
+//end_free_params;
+
+//calibrated ME
+
+
+<<edo model>>
+
+
+options_.order = 1;
+options_.jacobian_flag = 1;
+options_.nonlin = 1;
+
+stoch_simul(order=1,irf=40,nograph);
+
+@ %def stoch_simul options_ order jacobian_flag nonlin
+
+\subsection[var]{Dynare EDO Var}
+
+<<edo var>>=
 var RC RK WC WK YC YK MCC MCK KC  KK PKB R L QK HC  HSC  HK HSK  UHC UHSC UHK UHSK empC  HrC  empK  HrK  empSC  HrSC  empSK  HrSK  unemp  EIK EC INFWC INFWK INFC INFK DIFFNORMGDP NORMINFGDP DIFFREALGDP DIFFREALEC DIFFREALEIK DIFFREALW AH INFGDP INFCNA INFCOR GAP PFGAP INFC10 ECD KD RCD QCD KCH RCH ECH QCH LAGKD LAGKCH UK UC DIFFREALECH DIFFREALECD betas XiL Lpref EFFK MUZK MUZM HG MUC MUK EFFECD EFFECH STAR RL1 RL2 RL3 RL4 RL5 RL6 RL7 RT2
  DIFFREALGDP_obs DIFFREALEC_obs DIFFREALEIK_obs DIFFREALECD_obs DIFFREALECH_obs DIFFREALW_obs AH_obs INFCNA_obs INFCOR_obs INFK_obs R_obs RT2_obs unemp_obs ;
+@ %def RC RK WC WK YC YK MCC MCK KC  KK PKB R L QK HC  HSC  HK HSK  UHC UHSC
+@ %def UHK UHSK empC  HrC  empK  HrK  empSC  HrSC  empSK  HrSK  unemp  EIK EC
+@ %def INFWC INFWK INFC INFK DIFFNORMGDP NORMINFGDP DIFFREALGDP DIFFREALEC
+@ %def DIFFREALEIK DIFFREALW AH INFGDP INFCNA INFCOR GAP PFGAP INFC10 ECD
+@ %def KD RCD QCD KCH RCH ECH QCH LAGKD LAGKCH UK UC DIFFREALECH DIFFREALECD
+@ %def betas XiL Lpref EFFK MUZK MUZM HG MUC MUK EFFECD EFFECH STAR
+@ %def RL1 RL2 RL3 RL4 RL5 RL6 RL7 RT2
+@ %def DIFFREALGDP_obs DIFFREALEC_obs DIFFREALEIK_obs DIFFREALECD_obs
+@ %def DIFFREALECH_obs DIFFREALW_obs AH_obs INFCNA_obs INFCOR_obs
+@ %def INFK_obs R_obs RT2_obs unemp_obs
 
+\subsection[varexo]{Dynare EDO VarExo}
 
+<<edo varexo>>=
 varexo eHG eXiL eLpref eR eMUZK eMUZM ePMKC ePMKK eEFFECH eEFFECD eEFFK eB eSTAR;
+@ %def eHG eXiL eLpref eR eMUZK eMUZM ePMKC ePMKK eEFFECH eEFFECD eEFFK eB eSTAR
 
+\subsection[parameters]{Dynare EDO Parameters}
 
+<<edo parameters>>=
 parameters
 h r_inf r_y r_dy phi_pc phi_H phi_wc phi_ic phi_cd phi_ech gam_pc gam_wc gam_ic gam_icd rho_R rho_B rho_STAR  rho_EFFK
 rho_EFFECD rho_HG rho_EFFECH tp2 ONE MUZMSS MUZKSS  r_dinf rpr phi_u rho_MUZK rho_MUZM pbeta delta_ h_cd h_ch delta_cd delta_ch  alpha_ theta_c
@@ -110,9 +163,34 @@ DIFFREALECHSS DIFFREALEIKSS DIFFREALWSS  RL1SS RL2SS RL3SS RL4SS RL5SS
 RL6SS RL7SS DIFFREALGDPSS_obs DIFFREALECSS_obs DIFFREALEIKSS_obs DIFFREALECDSS_obs
 DIFFREALECHSS_obs DIFFREALWSS_obs INFCNASS_obs INFCORSS_obs INFKSS_obs
 RSS_obs RT2SS_obs unempSS_obs;
+@ %def h r_inf r_y r_dy phi_pc phi_H phi_wc phi_ic phi_cd phi_ech
+@ %def gam_pc gam_wc gam_ic gam_icd rho_R rho_B rho_STAR rho_EFFK
+@ %def rho_EFFECD rho_HG rho_EFFECH tp2 ONE MUZMSS MUZKSS r_dinf
+@ %def rpr phi_u rho_MUZK rho_MUZM pbeta delta_ h_cd h_ch delta_cd
+@ %def delta_ch alpha_ theta_c theta_k theta_wc theta_wk g_y a_ks s_AS
+@ %def gam_h gam_ech s_k s_ecdc eta_cnn eta_cd eta_ch icoef mu_ betarl
+@ %def MUZCSS RCSS RKSS WCSS WKSS YCSS YKSS MCCSS MCKSS KCSS KKSS LSS
+@ %def HCSS HKSS QKSS PKBSS RSS ECSS EIKSS INFCSS INFKSS INFWCSS
+@ %def INFWKSS MUCSS MUKSS AHSS ECDSS KCDSS QCDSS RCDSS ECHSS KCHSS
+@ %def QCHSS RCHSS UKSS UCSS USS MUKSShabit MUCSShabit INFCNASS
+@ %def INFCORSS INFC10SS RT2SS beta_0 beta_2 beta_ PYSS AA DD RR
+@ %def eta_cd_eta_cnn eta_ch_eta_cnn Rnr ycbi_ykb hc_hk HSS
+@ %def ycbi ykb YYSS s_k_ecd s_c_ech s_k_eik s_yc IMPHSSS INFGDPSS
+@ %def sig_HG sig_XiL sig_lpref sig_R sig_MUZK sig_MUZM sig_PMKC
+@ %def sig_PMKK sig_EFFECH sig_EFFECD sig_EFFK sig_B sig_STAR
+@ %def HSKSS HSCSS HrCSS HrKSS A_HC sigman sigmah A_HK
+@ %def xsi_NC xsi_HrC xsi_NK xsi_HrK rho_XiL rho_lpref
+@ %def empCSS empKSS HrSKSS HrSCSS empSCSS empSKSS
+@ %def UHCSS UHKSS UHSCSS UHSKSS unempSS
+@ %def DIFFREALGDPSS DIFFREALECSS DIFFREALECDSS DIFFREALECHSS DIFFREALEIKSS
+@ %def DIFFREALWSS RL1SS RL2SS RL3SS RL4SS RL5SS RL6SS RL7SS
+@ %def DIFFREALGDPSS_obs DIFFREALECSS_obs DIFFREALEIKSS_obs DIFFREALECDSS_obs
+@ %def DIFFREALECHSS_obs DIFFREALWSS_obs INFCNASS_obs INFCORSS_obs INFKSS_obs
+@ %def RSS_obs RT2SS_obs unempSS_obs
 
+\subsection[estimated params]{Dynare EDO Estimated Params}
 
-//estimated_params;
+<<edo estimated{\_}params>>=
 h		= 0.715162417869797;
 r_inf		= 1.46344163969035;
 r_y		= 0.263123294207851;
@@ -149,9 +227,11 @@ sig_EFFECD	= 9.11199585973990;
 sig_EFFK	= 0.402779878811407;
 sig_B		= 0.295232712196573;
 sig_STAR	= 0.104877885500673;
-//end_estimated_params;
+@
 
-//calibrated_params;
+\subsection[calibrated params]{Dynare EDO Calibrated Params}
+
+<<edo calibrated{\_}params>>=
 r_dy = 0;
 ONE = 1;
 MUZKSS = 1.009250;
@@ -180,9 +260,11 @@ gam_h = 1;
 gam_ech = 1;
 icoef = 3;
 betarl = .958;
-//end_calibrated_params;
+@
 
-//free_params;
+\subsection[free params]{Dynare EDO Free Params}
+
+<<edo free{\_}params>>=
 //A_HC;
 //A_HK;
 //xsi_NC;
@@ -205,16 +287,64 @@ betarl = .958;
 //eta_cd;
 //eta_ch;
 //mu_;
-//end_free_params;
+@
 
-//calibrated ME
+\subsection[Model]{Dynare EDO Model}
 
-
+<<edo model>>=
 //****************************
 //MODEL BLOCK
 //****************************
 
 model;
+<<edo model prelim>>
+
+// XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+// labor block
+// TOTAL LABOR INPUT (called "L" in the paper, I kept the "H" notation of the original EDO prg)
+<<edo model labor>>
+
+// Identities
+<<edo model identities>>
+
+
+// XXXXXXXXXXXXXXXXXXXXX
+// Aggregate hours equals agg hours in each sector
+<<edo model hours>>
+
+// See Section 8: Data Identities
+
+// new equations
+// Durable Block
+
+<<edo model durables>>
+
+// Housing Block
+<<edo model housing>>
+
+//measurement_equations;
+<<edo model measurement>>
+//end_measurement_equations;
+end;
+
+<<edo model varobs>>
+
+shocks;
+<<edo model shocks>>
+end;
+
+steady;
+
+estimated_params;
+<<edo model estimated{\_}params>>
+
+<<edo model stderr>>
+end;
+@
+
+\subsection[model prelim]{Dynare EDO Prelim}
+
+<<edo model prelim>>=
 RC-MCC*YC/UC/KC(-1)*alpha_*MUK=0;
 RK-MCK*YK/UK/KK(-1)*alpha_*MUK=0;
 WC-MCC*YC/HC*(1-alpha_)=0;
@@ -229,10 +359,11 @@ L-betas*R/rpr/INFC(+1)/MUC(+1)*L(+1)=0;
 ln(R/RSS)-rho_R*ln(R(-1)/RSS)-(1-rho_R)*(r_inf*ln(INFCNA/INFCNASS)+r_dinf*(ln(INFCNA)-ln(INFCNA(-1)))+r_y*(ln(PFGAP)))-eR=0;
 L-eta_cnn/(EC-h*EC(-1)/MUC)+eta_cnn*beta_*h/(MUC(+1)*EC(+1)-h*EC)=0;
 KK-(1-delta_)*KK(-1)/MUK+KC-(1-delta_)*KC(-1)/MUK-1*EIK+mu_*((UK^(1+1/phi_u)-1)/(1+1/phi_u))*KKSS+mu_*((UC^(1+1/phi_u)-1)/(1+1/phi_u))*KCSS=0;
+@
 
-// XXXXXXXXXXXXXXXXXXXXXXXXXXXX
-// labor block
-// TOTAL LABOR INPUT (called "L" in the paper, I kept the "H" notation of the original EDO prg)
+\subsection[model labor]{Dynare EDO Labor}
+
+<<edo model labor>>=
 -100+UHC*theta_wc-(theta_wc-1)*WC-100*phi_wc*(INFWC-gam_wc*INFWC(-1)-(1-gam_wc)*INFWCSS)*INFWC*WC+beta_*100*phi_wc*(INFWC(+1)-(gam_wc*INFWC+(1-gam_wc)*INFWCSS))*L(+1)/L*INFWC(+1)*WC(+1)+theta_wc*phi_H/10*(HC/HK-gam_h*HC(-1)/HK(-1)-(1-gam_h)*HCSS/HKSS)+100*XiL=0;
 UHSC-WC+phi_H/10*(HSC/HSK-gam_h*HSC(-1)/HSK(-1)-(1-gam_h)*HSCSS/HSKSS);//+100*eXiL=0;
 -100+UHK*theta_wk-(theta_wk-1)*WK-100*phi_wc*(INFWK-gam_wc*INFWK(-1)-(1-gam_wc)*INFWKSS)*INFWK*WK+beta_*100*phi_wc*(INFWK(+1)-(gam_wc*INFWK+(1-gam_wc)*INFWKSS))*L(+1)/L*INFWK(+1)*WK(+1)-theta_wc*phi_H/10*(HC/HK-gam_h*HC(-1)/HK(-1)-(1-gam_h)*HCSS/HKSS)+100*XiL=0;
@@ -261,13 +392,17 @@ ln(NORMINFGDP)-s_k*(ln(PKB)-ln(PKB(-1)))=0;
 ln(DIFFREALGDP)-ln(DIFFNORMGDP)-(1-s_k)*ln(MUC)-s_k*ln(MUK)=0;
 ln(DIFFREALEC)-ln(EC)+ln(EC(-1))-ln(MUC)=0;
 ln(DIFFREALEIK)-ln(EIK)+ln(EIK(-1))-ln(MUK)=0;
+@
 
-// Identities
+\subsection[model identities]{Dynare EDO Identities}
+
+<<edo model identities>>=
 ln(DIFFREALW)-HCSS/AHSS*(ln(INFWC))-HKSS/AHSS*(ln(INFWK))+ln(INFC)=0;
+@
 
+\subsection[model hours]{Dynare EDO Hours}
 
-// XXXXXXXXXXXXXXXXXXXXX
-// Aggregate hours equals agg hours in each sector
+<<edo model hours>>=
 AH-HC-HK=0;
 ln(INFGDP)-ln(INFC)-ln(YC*MUC/YC(-1))+ln(DIFFREALGDP)-ln((1+PKB*YK/YC)/(1+PKB(-1)*YK(-1)/YC(-1)))=0;
 ln(INFCNA)-(1-s_ecdc)*ln(INFC)-s_ecdc*ln(INFK)=0;
@@ -275,18 +410,20 @@ ln(INFCOR)-(1-s_ecdc)*ln(INFC)-s_ecdc*ln(INFK)=0;
 ln(GAP)-(1-s_k)*ln(YC/YCSS)-s_k*ln(YK/YKSS)=0;
 ln(PFGAP)-(1-alpha_)*((1-s_k)*ln(HC/HCSS)+s_k*ln(HK/HKSS))-alpha_*((1-s_k)*ln(UC/USS)+s_k*ln(UK/USS))=0;
 ln(INFC10)-betarl*ln(INFC10(+1))-(1-betarl)*ln(INFCOR)=0;
+@
 
-// See Section 8: Data Identities
+\subsection[model durables]{Dynare EDO Durables}
 
-// new equations
-// Durable Block
-
+<<edo model durables>>=
 KD-(1-delta_cd)*KD(-1)/MUK-ECD=0;
 L*RCD-eta_cd/(KD(-1)/MUK-h_cd*LAGKD(-1)/(MUK(-1)*MUK))+beta_*eta_cd*h_cd/(KD-h_cd*KD(-1)/MUK)=0;
 QCD-beta_*(1/EFFECD)*L(+1)/L/MUK(+1)*(RCD(+1)+(1-delta_cd)*QCD(+1))=0;
 PKB-QCD*(1-100*phi_cd*(ECD-gam_icd*ECD(-1)-(1-gam_icd)*ECDSS)/KD(-1)*MUK) - beta_*(1/EFFECD)*100*gam_icd*phi_cd*(ECD(+1)-(gam_icd*ECD+(1-gam_icd)*ECDSS))/KD*QCD(+1)*L(+1)/L*MUK(+1)=0;
+@
 
-// Housing Block
+\subsection[model housing]{Dynare EDO Housing}
+
+<<edo model housing>>=
 L*RCH-eta_ch/(KCH(-1)/MUC-h_ch*LAGKCH(-1)/(MUC*MUC(-1)))+beta_*eta_ch*h_ch/(KCH-h_ch*KCH(-1)/MUC)=0;
 QCH-beta_*(1/EFFECH)*L(+1)/L/MUC(+1)*(RCH(+1)+(1-delta_ch)*QCH(+1))=0;
 1*ECH+(1-delta_ch)*KCH(-1)/MUC-KCH=0;
@@ -317,8 +454,11 @@ ln(RL5) - ln(RL4(+1))=0;
 ln(RL6) - ln(RL5(+1))=0;
 ln(RL7) - ln(RL6(+1))=0;
 ln(RT2) - tp2 - 0.125*(ln(R) + ln(RL1) + ln(RL2) + ln(RL3) + ln(RL4) + ln(RL5) + ln(RL6) + ln(RL7)) - ln(STAR)=0;
+@
 
-//measurement_equations;
+\subsection[model measurement]{Dynare EDO Model Measurement}
+
+<<edo model measurement>>=
 ln(DIFFREALGDP_obs/DIFFREALGDPSS_obs) = ln(DIFFREALGDP/DIFFREALGDPSS);
 ln(DIFFREALEC_obs/DIFFREALECSS_obs)   = ln(DIFFREALEC/DIFFREALECSS);
 ln(DIFFREALEIK_obs/DIFFREALEIKSS_obs) = ln(DIFFREALEIK/DIFFREALEIKSS);
@@ -332,12 +472,17 @@ ln(INFK_obs/INFKSS_obs)	              = ln(INFK/INFKSS);
 ln(R_obs/RSS_obs)		      = ln(R/RSS);
 ln(RT2_obs/RT2SS_obs)		      = ln(RT2/RT2SS);
 ln(unemp_obs/unempSS_obs)	      = ln(unemp/unempSS);
-//end_measurement_equations;
-end;
+@
 
+\subsection[model varobs]{Dynare EDO Model VarObs}
+
+<<edo model varobs>>=
 varobs DIFFREALGDP_obs DIFFREALEC_obs DIFFREALEIK_obs DIFFREALECD_obs DIFFREALECH_obs DIFFREALW_obs AH_obs INFCNA_obs INFCOR_obs INFK_obs R_obs RT2_obs unemp_obs;
+@
 
-shocks;
+\subsection[model shocks]{Dynare EDO Shocks}
+
+<<edo model shocks>>=
 var eHG;
 stderr sig_HG;
 var eXiL;
@@ -390,11 +535,11 @@ var RT2_obs;
 stderr 0.1;
 var unemp_obs;
 stderr 4;           
-end;
+@
 
-steady;
+\subsection[model estimated params]{Dynare EDO Model Estimated Params}
 
-estimated_params;
+<<edo model estimated{\_}params>>=
 h		, .673		, -1		, 1	, uniform_pdf   ,,,-1		,1;
 r_inf		, 1.461		, -999		, 999	, normal_pdf	, 1.5000        , 0.0625000;
 r_y		, 0.214		, -999		, 999	, normal_pdf	, 0.125         , 0.125000;
@@ -418,7 +563,11 @@ rho_EFFECD	, .230		, -1		, 1	, normal_pdf	, 0             , 0.5;
 rho_HG		, 0.596		, 0		, 1	, beta_pdf      , 0.5           , 0.015^.5;
 rho_EFFECH	, 0.844		, -1		, 1	, normal_pdf	, 0             , 0.5;
 tp2		, 0.001		, -999		, 999	, normal_pdf	, 0.0		, 0.0005;
+@
 
+\subsection[model stderr]{Dynare EDO Model Stderr}
+
+<<edo model stderr>>=
 stderr eHG      , .745		, 0.0001	, 999	, inv_gamma_pdf	, 1.772454	, Inf;
 stderr eXiL     , 3.621		, 0.0001	, 999	, inv_gamma_pdf	, 1.772454	, Inf;
 stderr eLpref   , 1.621		, 0.0001	, 999	, inv_gamma_pdf	, 1.772454	, Inf;
@@ -432,15 +581,6 @@ stderr eEFFECD  , 13.349	, 0.0001	, 999	, inv_gamma_pdf	, 1.772454	, Inf;
 stderr eEFFK    , .499		, 0.0001	, 999	, inv_gamma_pdf	, 1.772454	, Inf;
 stderr eB       , 0.5		, 0.0001	, 999	, inv_gamma_pdf	, 1.772454	, Inf;
 stderr eSTAR	, 0.05		, 0.0001	, 999	, inv_gamma_pdf	, 0.354491	, Inf;
-end;
-
-
-options_.order = 1;
-options_.jacobian_flag = 1;
-options_.nonlin = 1;
-
-stoch_simul(order=1,irf=40,nograph);
-
 @
 
 
@@ -460,6 +600,29 @@ end;
 
 %start_steady_state;
 
+<<edo steady state values>>
+
+%end_steady_state;
+
+%trends;
+
+<<edo steady state trends>>
+
+%end_trends;
+
+
+for i=1:NumberofParameters
+    paramname=deblank(M_.param_names(i,:));
+    eval(['M_.params(' int2str(i) ')=' paramname ';']);
+end; 
+
+
+<<edo steady state result return>>
+@ %def unlinearized_edo_steadystate
+
+\subsection[values]{EDO Steady State Values}
+
+<<edo steady state values>>=
 beta_0 = pbeta;
 beta_2 = pbeta*rpr; % s.s. funds rate premium
 beta_ = beta_2;
@@ -580,11 +743,11 @@ DIFFREALECDSS =exp( log(MUKSS));
 DIFFREALECHSS =exp( log(MUCSS));
 DIFFREALWSS =exp( log(MUCSS) );
 DIFFREALGDPSS =exp( (1-s_k)*log(MUCSS)+(s_k)*log(MUKSS));
+@
 
-%end_steady_state;
+\subsection[trends]{EDO Steady State Trends}
 
-%trends;
-
+<<edo steady state trends>>=
 DIFFREALGDPSS_obs=(1-s_k)*log(MUCSS)*100+(s_k)*log(MUKSS)*100;
 DIFFREALECSS_obs=log(MUCSS)*100;
 DIFFREALEIKSS_obs=log(MUKSS)*100;
@@ -597,16 +760,11 @@ INFKSS_obs=log(INFCSS)*100-log(MUKSS)*100+log(MUCSS)*100;
 RSS_obs=log(RSS)*100;
 RT2SS_obs=log(RT2SS)*100;
 unempSS_obs=100*log(unempSS);
+@
 
-%end_trends;
+\subsection[result return]{EDO Steady State Result Return}
 
-
-for i=1:NumberofParameters
-    paramname=deblank(M_.param_names(i,:));
-    eval(['M_.params(' int2str(i) ')=' paramname ';']);
-end; 
-
-
+<<edo steady state result return>>=
 ys = [
 RCSS                  
 RKSS                  
@@ -708,7 +866,10 @@ unempSS_obs
 ];
 @
 
+
 \section{linearized.mod}
+XXX
+YYY
 
 <<srcedo/linearized.mod>>=
 
