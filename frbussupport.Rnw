@@ -40,7 +40,7 @@ str(varinfo)
 @
 
 <<>>=
-write.csv(varinfo,"varinfo.csv")
+write.csv(varinfo,"support/varinfo.csv")
 @
 
 \section{Chunks}

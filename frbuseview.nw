@@ -6803,62 +6803,6 @@ endsub
 
 \chapter{File Contents}
 
-Notice that I've had to change underscores in file and directory names
-when I create them with noweb.  I use the "setup.sh" bash script to create
-the directory structure, and the "check.sh" bash script to compare the
-renamed Eview files to the originals.  I have to ignore white space in the
-comparison because the original source files are not consistent with
-using either Microsoft or Linux line ending characters.
-
-\section{scripts}
-
-\subsection[setup.sh]{setup script}
-
-<<setup.sh>>=
-mkdir -p srcEview/data.only.package
-mkdir -p srcEview/{frbus.package,mce.solve.package,state.space.package}
-mkdir -p srcEview/frbus.package/{addins,mods,programs,subs}
-mkdir -p srcEview/frbus.package/addins/{ld.frbus.cfs,ld.frbus.eqs,ld.mce.cfs,ld.mce.eqs,ld.some.eqs,ld.varinfo}
-@
-
-\subsection[check.sh]{check script}
-
-<<check.sh>>=
-cfile=data_only_package/variables.txt; ofile=srcEview/data.only.package/variables.txt; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=frbus_package/mods/stdver_coeffs.txt; ofile=srcEview/frbus.package/mods/stdver.coeffs.txt; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=frbus_package/mods/stdver_eqs.txt; ofile=srcEview/frbus.package/mods/stdver.eqs.txt; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=frbus_package/mods/stdver_varinfo; ofile=srcEview/frbus.package/mods/stdver.varinfo; echo "XX $cfile XX"; diff -w $cfile $ofile
-
-cfile=frbus_package/addins/ld_frbus_cfs/ld_frbus_cfs.prg; ofile=srcEview/frbus.package/addins/ld.frbus.cfs/ld.frbus.cfs.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=frbus_package/addins/ld_frbus_eqs/ld_frbus_eqs.prg; ofile=srcEview/frbus.package/addins/ld.frbus.eqs/ld.frbus.eqs.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=frbus_package/addins/ld_mce_cfs/ld_mce_cfs.prg; ofile=srcEview/frbus.package/addins/ld.mce.cfs/ld.mce.cfs.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=frbus_package/addins/ld_mce_eqs/ld_mce_eqs.prg; ofile=srcEview/frbus.package/addins/ld.mce.eqs/ld.mce.eqs.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=frbus_package/addins/ld_some_eqs/ld_some_eqs.prg; ofile=srcEview/frbus.package/addins/ld.some.eqs/ld.some.eqs.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=frbus_package/addins/ld_varinfo/ld_varinfo.prg; ofile=srcEview/frbus.package/addins/ld.varinfo/ld.varinfo.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=frbus_package/addins/regadd.prg; ofile=srcEview/frbus.package/addins/regadd.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=frbus_package/programs/example1.prg; ofile=srcEview/frbus.package/programs/example1.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=frbus_package/programs/example2.prg; ofile=srcEview/frbus.package/programs/example2.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=frbus_package/programs/example3.prg; ofile=srcEview/frbus.package/programs/example3.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=frbus_package/programs/example4.prg; ofile=srcEview/frbus.package/programs/example4.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=frbus_package/programs/ocpolicy.prg; ofile=srcEview/frbus.package/programs/ocpolicy.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=frbus_package/programs/pings.prg; ofile=srcEview/frbus.package/programs/pings.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=frbus_package/programs/plot_resids.prg; ofile=srcEview/frbus.package/programs/plot.resids.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=frbus_package/programs/stochsim.prg; ofile=srcEview/frbus.package/programs/stochsim.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=frbus_package/subs/master_library.prg; ofile=srcEview/frbus.package/subs/master.library.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=frbus_package/subs/mce_solve_library.prg; ofile=srcEview/frbus.package/subs/mce.solve.library.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=mce_solve_package/example1.prg; ofile=srcEview/mce.solve.package/example1.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=mce_solve_package/example2.prg; ofile=srcEview/mce.solve.package/example2.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=mce_solve_package/example3.prg; ofile=srcEview/mce.solve.package/example3.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=mce_solve_package/example4.prg; ofile=srcEview/mce.solve.package/example4.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=mce_solve_package/example5.prg; ofile=srcEview/mce.solve.package/example5.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=mce_solve_package/mce_solve_library.prg; ofile=srcEview/mce.solve.package/mce.solve.library.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=state_space_package/data_transformations.prg; ofile=srcEview/state.space.package/data.transformations.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=state_space_package/estimation_code.prg; ofile=srcEview/state.space.package/estimation.code.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=state_space_package/frbus_supply_estimation.prg; ofile=srcEview/state.space.package/frbus.supply.estimation.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=state_space_package/frbus_supply_filter.prg; ofile=srcEview/state.space.package/frbus.supply.filter.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
-cfile=state_space_package/initial_values.prg; ofile=srcEview/state.space.package/initial.values.prg; echo "XX $cfile XX"; diff -w $cfile $ofile
-@
-
 \section{frbus package}
 
 \subsection[ld{\_}frbus{\_}cfs.prg]{srcEview/frbus.package/addins/ld.frbus.cfs/ld.frbus.cfs.prg}
