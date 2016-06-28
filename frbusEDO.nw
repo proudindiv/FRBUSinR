@@ -127,7 +127,7 @@ and "\href{https://github.com/DynareTeam/dynare/issues/1113}
 end;
 @
 
-\subsection[prelim]{Dynare EDO Prelim}
+\subsection[prelim]{Dynare EDO Model Prelim}
 
 <<edo model prelim>>=
 RC-MCC*YC/UC/KC(-1)*alpha_*MUK=0;
@@ -146,7 +146,7 @@ L-eta_cnn/(EC-h*EC(-1)/MUC)+eta_cnn*beta_*h/(MUC(+1)*EC(+1)-h*EC)=0;
 KK-(1-delta_)*KK(-1)/MUK+KC-(1-delta_)*KC(-1)/MUK-1*EIK+mu_*((UK^(1+1/phi_u)-1)/(1+1/phi_u))*KKSS+mu_*((UC^(1+1/phi_u)-1)/(1+1/phi_u))*KCSS=0;
 @
 
-\subsection[labor]{Dynare EDO Labor}
+\subsection[labor]{Dynare EDO Model Labor}
 
 <<edo model labor>>=
 -100+UHC*theta_wc-(theta_wc-1)*WC-100*phi_wc*(INFWC-gam_wc*INFWC(-1)-(1-gam_wc)*INFWCSS)*INFWC*WC+beta_*100*phi_wc*(INFWC(+1)-(gam_wc*INFWC+(1-gam_wc)*INFWCSS))*L(+1)/L*INFWC(+1)*WC(+1)+theta_wc*phi_H/10*(HC/HK-gam_h*HC(-1)/HK(-1)-(1-gam_h)*HCSS/HKSS)+100*XiL=0;
@@ -179,13 +179,13 @@ ln(DIFFREALEC)-ln(EC)+ln(EC(-1))-ln(MUC)=0;
 ln(DIFFREALEIK)-ln(EIK)+ln(EIK(-1))-ln(MUK)=0;
 @
 
-\subsection[identities]{Dynare EDO Identities}
+\subsection[identities]{Dynare EDO Model Identities}
 
 <<edo model identities>>=
 ln(DIFFREALW)-HCSS/AHSS*(ln(INFWC))-HKSS/AHSS*(ln(INFWK))+ln(INFC)=0;
 @
 
-\subsection[hours]{Dynare EDO Hours}
+\subsection[hours]{Dynare EDO Model Hours}
 
 <<edo model hours>>=
 AH-HC-HK=0;
@@ -197,7 +197,7 @@ ln(PFGAP)-(1-alpha_)*((1-s_k)*ln(HC/HCSS)+s_k*ln(HK/HKSS))-alpha_*((1-s_k)*ln(UC
 ln(INFC10)-betarl*ln(INFC10(+1))-(1-betarl)*ln(INFCOR)=0;
 @
 
-\subsection[durables]{Dynare EDO Durables}
+\subsection[durables]{Dynare EDO Model Durables}
 
 <<edo model durables>>=
 KD-(1-delta_cd)*KD(-1)/MUK-ECD=0;
@@ -206,7 +206,7 @@ QCD-beta_*(1/EFFECD)*L(+1)/L/MUK(+1)*(RCD(+1)+(1-delta_cd)*QCD(+1))=0;
 PKB-QCD*(1-100*phi_cd*(ECD-gam_icd*ECD(-1)-(1-gam_icd)*ECDSS)/KD(-1)*MUK) - beta_*(1/EFFECD)*100*gam_icd*phi_cd*(ECD(+1)-(gam_icd*ECD+(1-gam_icd)*ECDSS))/KD*QCD(+1)*L(+1)/L*MUK(+1)=0;
 @
 
-\subsection[housing]{Dynare EDO Housing}
+\subsection[housing]{Dynare EDO Model Housing}
 
 <<edo model housing>>=
 L*RCH-eta_ch/(KCH(-1)/MUC-h_ch*LAGKCH(-1)/(MUC*MUC(-1)))+beta_*eta_ch*h_ch/(KCH-h_ch*KCH(-1)/MUC)=0;
@@ -409,7 +409,7 @@ unempSS_obs
 <<common stoch sim>>
 @
 
-\subsection[model]{Linearized Calibrated Measured Equations}
+\subsection[model]{Linearized Model}
 
 <<linearized model>>=
 <<linearized model prelim>>
@@ -445,7 +445,7 @@ unempSS_obs
 end;
 @
 
-\subsection[prelim]{Linearized Prelim}
+\subsection[prelim]{Linearized Model Prelim}
 
 <<linearized model prelim>>=
 (RCSS*exp(RC))-(MCCSS*exp(MCC))*(YCSS*exp(YC))/(USS*exp(UC))/(KCSS*exp(KC(-1)))*alpha_*(MUKSS*exp(MUK))=0;
@@ -464,7 +464,7 @@ ln((RSS*exp(R))/RSS)-rho_R*ln((RSS*exp(R(-1)))/RSS)-(1-rho_R)*(r_inf*ln((INFCNAS
 (KKSS*exp(KK))-(1-delta_)*(KKSS*exp(KK(-1)))/(MUKSS*exp(MUK))+(KCSS*exp(KC))-(1-delta_)*(KCSS*exp(KC(-1)))/(MUKSS*exp(MUK))-1*(EIKSS*exp(EIK))+mu_*(((USS*exp(UK))^(1+1/phi_u)-1)/(1+1/phi_u))*KKSS+mu_*(((USS*exp(UC))^(1+1/phi_u)-1)/(1+1/phi_u))*KCSS=0;
 @
 
-\subsection[labor]{Linearized Calibrated ME Labor BLock}
+\subsection[labor]{Linearized Model Labor}
 
 <<linearized model labor>>=
 -100+(UHCSS*exp(UHC))*theta_wc-(theta_wc-1)*(WCSS*exp(WC))-100*phi_wc*((INFWCSS*exp(INFWC))-gam_wc*(INFWCSS*exp(INFWC(-1)))-(1-gam_wc)*INFWCSS)*(INFWCSS*exp(INFWC))*(WCSS*exp(WC))+beta_*100*phi_wc*((INFWCSS*exp(INFWC(+1)))-(gam_wc*(INFWCSS*exp(INFWC))+(1-gam_wc)*INFWCSS))*(LSS*exp(L(+1)))/(LSS*exp(L))*(INFWCSS*exp(INFWC(+1)))*(WCSS*exp(WC(+1)))+theta_wc*phi_H/10*((HCSS*exp(HC))/(HKSS*exp(HK))-gam_h*(HCSS*exp(HC(-1)))/(HKSS*exp(HK(-1)))-(1-gam_h)*HCSS/HKSS)+100*(ONE*exp(XiL))=0;
@@ -497,7 +497,7 @@ ln((DIFFREALECSS*exp(DIFFREALEC)))-ln((ECSS*exp(EC)))+ln((ECSS*exp(EC(-1))))-ln(
 ln((DIFFREALEIKSS*exp(DIFFREALEIK)))-ln((EIKSS*exp(EIK)))+ln((EIKSS*exp(EIK(-1))))-ln((MUKSS*exp(MUK)))=0;
 @
 
-\subsection[identities]{Linearized Calibrated ME Identities}
+\subsection[identities]{Linearized Model Identities}
 
 <<linearized model identities>>=
 ln((DIFFREALWSS*exp(DIFFREALW)))-HCSS/AHSS*(ln((INFWCSS*exp(INFWC))))-HKSS/AHSS*(ln((INFWKSS*exp(INFWK))))+ln((INFCSS*exp(INFC)))=0;
@@ -515,7 +515,7 @@ ln((ONE*exp(PFGAP)))-(1-alpha_)*((1-s_k)*ln((HCSS*exp(HC))/HCSS)+s_k*ln((HKSS*ex
 ln((INFC10SS*exp(INFC10)))-betarl*ln((INFC10SS*exp(INFC10(+1))))-(1-betarl)*ln((INFCORSS*exp(INFCOR)))=0;
 @
 
-\subsection[durables]{Linearized durables}
+\subsection[durables]{Linearized Model Durables}
 
 <<linearized model durables>>=
 (KCDSS*exp(KD))-(1-delta_cd)*(KCDSS*exp(KD(-1)))/(MUKSS*exp(MUK))-(ECDSS*exp(ECD))=0;
@@ -524,7 +524,7 @@ ln((INFC10SS*exp(INFC10)))-betarl*ln((INFC10SS*exp(INFC10(+1))))-(1-betarl)*ln((
 (PKBSS*exp(PKB))-(QCDSS*exp(QCD))*(1-100*phi_cd*((ECDSS*exp(ECD))-gam_icd*(ECDSS*exp(ECD(-1)))-(1-gam_icd)*ECDSS)/(KCDSS*exp(KD(-1)))*(MUKSS*exp(MUK))) - beta_*(1/(ONE*exp(EFFECD)))*100*gam_icd*phi_cd*((ECDSS*exp(ECD(+1)))-(gam_icd*(ECDSS*exp(ECD))+(1-gam_icd)*ECDSS))/(KCDSS*exp(KD))*(QCDSS*exp(QCD(+1)))*(LSS*exp(L(+1)))/(LSS*exp(L))*(MUKSS*exp(MUK(+1)))=0;
 @
 
-\subsection[housing]{Linearized Calibrated ME Housing}
+\subsection[housing]{Linearized Model Housing}
 
 <<linearized model housing>>=
 (LSS*exp(L))*(RCHSS*exp(RCH))-eta_ch/((KCHSS*exp(KCH(-1)))/(MUCSS*exp(MUC))-h_ch*(KCHSS*exp(LAGKCH(-1)))/((MUCSS*exp(MUC))*(MUCSS*exp(MUC(-1)))))+beta_*eta_ch*h_ch/((KCHSS*exp(KCH))-h_ch*(KCHSS*exp(KCH(-1)))/(MUCSS*exp(MUC)))=0;
@@ -559,7 +559,7 @@ ln((RL7SS*exp(RL7))) - ln((RL6SS*exp(RL6(+1))))=0;
 ln((RT2SS*exp(RT2))) - tp2 - 0.125*(ln((RSS*exp(R))) + ln((RL1SS*exp(RL1))) + ln((RL2SS*exp(RL2))) + ln((RL3SS*exp(RL3))) + ln((RL4SS*exp(RL4))) + ln((RL5SS*exp(RL5))) + ln((RL6SS*exp(RL6))) + ln((RL7SS*exp(RL7)))) - ln((ONE*exp(STAR)))=0;
 @
 
-\subsection[measure]{Linearized Calibrated ME Measurement}
+\subsection[measure]{Linearized Model Measurement}
 
 <<linearized model measurement>>=
 DIFFREALGDP_obs = DIFFREALGDP + DIFFREALGDPSS_obs;
