@@ -10,6 +10,7 @@
 \let\endoldquote=\endquote
 \colorlet{shadecolor}{green!8}
 \renewenvironment{quote}{\begin{shaded*}\begin{oldquote}}{\end{oldquote}\end{shaded*}}
+\usepackage{graphicx}
 
 \title{Estimated Dynamic Optimization (EDO) Model}
 \author{Gary Young (editor)}
@@ -79,6 +80,11 @@ at "\href{http://www.dynare.org/phpBB3/viewtopic.php?f=1\&t=7856}
          {Trans\_A Matrix error}"
 and "\href{https://github.com/DynareTeam/dynare/issues/1113}
           {Make Dynare compatible with Octave 4.0 \#1113}".
+
+
+\chapter{Documentation}
+
+\includegraphics[scale=0.5]{support/img/fig1.png}
 
 
 \begin{appendices}

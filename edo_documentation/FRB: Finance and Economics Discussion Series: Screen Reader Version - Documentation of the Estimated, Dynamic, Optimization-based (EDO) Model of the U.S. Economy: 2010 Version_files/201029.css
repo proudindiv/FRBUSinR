@@ -1,0 +1,162 @@
+/* R&S Finance and Economics Discussion Series Style Sheet */
+
+BODY {
+	COLOR: #000000;
+	FONT-FAMILY: gregory, 'Times New Roman', Times, serif;
+	BACKGROUND-COLOR: #ffffff
+}
+P {
+	MARGIN-TOP: 0.5em;
+	FONT-WEIGHT: normal;
+	FONT-SIZE: 1em;
+	MARGIN-BOTTOM: 0.5em;
+	LINE-HEIGHT: 1.5em;
+}
+A:link {
+	COLOR: #006666
+}
+A:visited {
+	COLOR: #800080
+}
+.sponsor {
+	MARGIN-TOP: 0em; FONT-SIZE: 0.8em; MARGIN-BOTTOM: 0em;
+}
+.type {
+	MARGIN-TOP: 0.5em; MARGIN-BOTTOM: 1em; FONT-WEIGHT: bold; FONT-SIZE: 0.9em;
+}
+.number {
+	MARGIN-TOP: 2em; FONT-SIZE: 0.8em; MARGIN-BOTTOM: 0em;
+}
+H1 {
+	MARGIN-TOP: 0em; FONT-WEIGHT: bold; FONT-SIZE: 1.3em; MARGIN-BOTTOM: 0.25em;
+}
+H2 {
+	MARGIN-TOP: 1.5em; FONT-WEIGHT: bold; FONT-SIZE: 1.2em; MARGIN-BOTTOM: 0.5em
+}
+H3 {
+	MARGIN-TOP: 1.5em; FONT-WEIGHT: bold; FONT-SIZE: 1.1em; MARGIN-BOTTOM: 0.5em
+}
+H4 {
+	MARGIN-TOP: 1.25em; FONT-WEIGHT: bold; FONT-SIZE: 1em; MARGIN-BOTTOM: 0.5em
+}
+caption { 
+  font-weight: bold;
+  width: 600px;
+}
+table { 
+  margin-left: auto;
+  margin-right: auto;
+}
+.runinhead {
+	FONT-WEIGHT: bold;
+}
+.author {
+	MARGIN-TOP: 1em;
+	FONT-SIZE: 1em;
+	text-align: center;
+}
+.author_name {
+	font-weight: bold;
+}
+.author_institute {
+	font-size: small;
+}
+.author_affil {
+	font-style: italic;
+}
+.author_date {
+	font-weight: bold;
+	text-align: center;
+}
+.author_address {
+	font-size: small;
+}
+.author_email {
+	font-size: small;
+}
+.note {
+	MARGIN-TOP: 1em; FONT-SIZE: 0.8em; MARGIN-LEFT: 30px; WIDTH: 570px;
+}
+.papertitle {
+	text-align: center;
+}
+.abstracttitle {
+	FONT-WEIGHT: bold; FONT-SIZE: 1em; MARGIN-LEFT: 30px; WIDTH: 570px;
+}
+.abstracttext {
+	FONT-SIZE: 0.9em;
+	MARGIN-LEFT: 30px;
+	WIDTH: 570px;
+	LINE-HEIGHT: 1.5em;
+}
+.sectiontext {
+	LINE-HEIGHT: 1.5em;
+}
+.footnote {
+	MARGIN-Top: 1em;
+	FONT-SIZE: 0.9em;
+	WIDTH: 600px;
+}
+.tblfootnote {
+	FONT-SIZE: 0.8em;
+}
+.excerpt {
+	MARGIN-TOP: 0em; FONT-SIZE: 0.95em; MARGIN-BOTTOM: 0em; MARGIN-LEFT: 3em; TEXT-INDENT: 1em;
+}
+.excerptauthor {
+	FONT-SIZE: 0.9em; TEXT-ALIGN: right;
+}
+.equation {
+	MARGIN-TOP: 0.5em; FONT-SIZE: 1em; MARGIN-BOTTOM: 0.5em; VERTICAL-ALIGN: middle; FONT-FAMILY: 'Times New Roman', Times, serif; TEXT-ALIGN: center;
+}
+td {  vertical-align: top; }
+TD.equationnumber {
+	FONT-SIZE: 1em; VERTICAL-ALIGN: middle; FONT-FAMILY: 'Times New Roman', Times, serif; TEXT-ALIGN: right;
+}
+.tabletitle {
+	MARGIN-TOP: 2em; FONT-WEIGHT: bold; FONT-SIZE: 1em; MARGIN-BOTTOM: 1em
+}
+.figuretitle {
+	MARGIN-TOP: 1em; FONT-WEIGHT: bold; FONT-SIZE: 1em; MARGIN-BOTTOM: 0.5em; WIDTH: 600px; TEXT-ALIGN: left;
+}
+.reference {
+	FONT-SIZE: 0.9em; MARGIN-BOTTOM: 0.25em; MARGIN-LEFT: 2em; TEXT-INDENT: -2em
+}
+.footer {
+	FONT-SIZE: 0.8em; LINE-HEIGHT: 1em;
+}
+.pagedate {
+	FONT-WEIGHT: bold;
+}
+.page_wrapper, #screen_reader_explanation, #author_group {
+	width: 600px;
+}
+#author {
+	float: left;
+        text-align: center;
+}
+.bib_author {
+	font-weight: bold;
+	margin-top: 1em;
+}
+.bib_info {
+	margin-left: 1em;
+}
+.pretty_hr { 
+	background-color: #cccccc;
+        color: #cccccc;
+	width: 100%;
+	height: 1px;
+}
+#top_nav { 
+  text-align: center;
+}
+#bottom_nav { 
+  text-align: center;
+}
+#glossary div {
+  margin: 1.5em;
+}
+.corollary { 
+  font-style: italic;
+}
