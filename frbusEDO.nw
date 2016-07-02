@@ -86,6 +86,13 @@ and "\href{https://github.com/DynareTeam/dynare/issues/1113}
 
 \includegraphics[scale=0.5]{support/img/fig1.png}
 
+\begin{equation}
+\min_{\left\{ X_{t}^{s}(j)\right\} _{j=0}^{1}}
+\int_{0}^{1}P_{t}^{s}(j)X_{t}^{s}(j)dj\mathrm{\ subject \ to \ } \left(
+\int_{0}^{1}\left(X_{t}^{s}(j)\right)^{\frac{\Theta^{s}_{t}-1} {%
+\Theta^{s}_{t}}}dj\right)^{\frac{\Theta^{s}_{t} } {\Theta^{s}_{t}-1}}
+\geq X^{s}_{t},\ \mathrm{for} \ s=cbi,kb.
+\end{equation}
 
 \begin{appendices}
 

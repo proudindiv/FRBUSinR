@@ -1,509 +1,509 @@
 "","seq","vname","vdesc","vtype","vrule","sector","var7","stoch","var8","var9","decomp"
-"CENG",1,"CENG","Consumption of crude energy (oil, coal, natural gas),  2009 $","B.4","A","sector_c.5","4","OT",1,0,16
-"D01Q4",2,"D01Q4","Dummy, destruction of World Trade Center","X.7","","","1","NO",0,0,27
-"D2002",3,"D2002","Dummy,","X.7","","","1","NO",0,0,27
-"D2003",4,"D2003","Dummy,","X.7","","","1","NO",0,0,27
-"D69",5,"D69","Dummy, post-1968 indicator","X.2","","","1","NO",0,0,14
-"D79A",6,"D79A","Dummy, post-1979 indicator","X.2","","","1","NO",0,0,27
-"D8095",7,"D8095","Dummy, 1980-1995 indicator","X.2","","","1","NO",0,0,14
-"D81",8,"D81","Dummy, post-1980 indicator","X.2","","","1","NO",0,0,14
-"D83",9,"D83","Dummy, post-1983 indicator","X.2","","","1","NO",0,0,27
-"D86",10,"D86","Dummy, post-1985 indicator","X.2","","","1","NO",0,0,27
-"D87",11,"D87","Dummy, post-1986 indicator","X.2","","","1","NO",0,0,14
-"DCON",12,"DCON","Dummy, 0 prior to 1986, 1 after 1988, with a linear trend in between","X.2","","","1","NO",0,0,27
-"DDOCKM",13,"DDOCKM","Dock strike dummy, import equation","X.2","","","4","NO",0,0,27
-"DDOCKX",14,"DDOCKX","Dock strike dummy, export equation","X.7","","","4","NO",0,0,27
-"DELRFF",15,"DELRFF","Federal funds rate, first diff","I","A","sector_i.14","1","NO",0,0,28
-"DEUC",16,"DEUC","EUC switch:  1 for including EUC, 0 for not including","X.2","","","1","NO",0,0,1
-"DFMPRR",17,"DFMPRR","Dummy, Foreign monetary policy switch:  Exogenous real interest rate","X.2","","","1","NO",0,0,27
-"DFPDBT",18,"DFPDBT","Fiscal policy switch:  1 for debt ratio stabilization","X.2","","","1","NO",0,0,14
-"DFPEX",19,"DFPEX","Fiscal policy switch:  1 for exogenous personal income trend tax rates","X.2","","","1","NO",0,0,14
-"DFPSRP",20,"DFPSRP","Fiscal policy switch:  1 for surplus ratio stabilization","X.2","","","1","NO",0,0,14
-"DGLPRD",21,"DGLPRD","Switch to control for long-run productivity growth in the government sector","X.2","","","1","NO",0,0,27
-"DMPALT",22,"DMPALT","Monetary policy switch: MA rule","X.2","","","1","NO",0,0,1
-"DMPEX",23,"DMPEX","Monetary policy switch:  exogenous federal funds rate","X.2","","","1","NO",0,0,1
-"DMPGEN",24,"DMPGEN","Monetary policy switch:  Generalized reaction function","X.2","","","1","NO",0,0,1
-"DMPINTAY",25,"DMPINTAY","Monetary policy switch:  inertial taylor rule","X.2","","","1","NO",0,0,1
-"DMPRR",26,"DMPRR","Monetary policy switch:  exogenous real federal funds rate","X.2","","","1","NO",0,0,1
-"DMPSTB",27,"DMPSTB","Stabilization  switch:  0 for standard applications, 1 for stochastic simulations","X.2","","","1","NO",0,0,1
-"DMPTAY",28,"DMPTAY","Monetary policy switch:  Taylor's reaction function","X.2","","","1","NO",0,0,1
-"DMPTLR",29,"DMPTLR","Monetary policy switch:  Taylor's reaction function with unemployment gap","X.2","","","1","NO",0,0,1
-"DMPTLUR",30,"DMPTLUR","Monetary policy indicator for unemployment threshold","B","A","sector_i.8","1","NO",0,0,1
-"DMPTMAX",31,"DMPTMAX","Monetary policy indicator for both thresholds","B","A","sector_i.10","1","NO",0,0,1
-"DMPTPI",32,"DMPTPI","Monetary policy indicator for inflation threshold","B","A","sector_i.9","1","NO",0,0,1
-"DMPTR",33,"DMPTR","Monetary policy indicator for policy rule thresholds","B","A","sector_i.11","1","NO",0,0,1
-"DMPTRSH",34,"DMPTRSH","Monetary policy threshold switch:  0 for no threshold,  1 for threshold","X.2","","","1","NO",0,0,1
-"DPADJ",35,"DPADJ","Price inflation aggregation adjustment","B","A","sector_g.27","1","NO",0,0,28
-"DPGAP",36,"DPGAP","Price inflation aggregation discrepancy","I","A","sector_g.26","1","NO",0,0,28
-"DRSTAR",37,"DRSTAR","RSTAR updating switch: 1 is on, 0 is off","X.2","","","1","NO",0,0,27
-"EC",38,"EC","Consumption, cw 2009$ (FRB/US definition)","I","A","sector_a.17","4","NO",1,0,11
-"ECD",39,"ECD","Consumer expenditures on durable goods, cw 2009$","B.4","A","sector_a.2","4","IS",1,0,6
-"ECH",40,"ECH","Consumer expenditures on housing services, cw 2009$","B.4","A","sector_a.4","4","IS",1,0,6
-"ECNIA",41,"ECNIA","Personal consumption expenditures, cw 2009$ (NIPA definition)","I","A","sector_a.9","4","NO",1,0,11
-"ECNIAN",42,"ECNIAN","Personal consumption expenditures, current $ (NIPA definition)","I","A","sector_a.10","4","NO",0,2,24
-"ECO",43,"ECO","Consumer expenditures on non-durable goods and non-housing services, cw 2009$","B.4","A","sector_a.1","4","IS",1,0,6
-"EGF",44,"EGF","Federal government consumption and gross investment, cw 2009$","I","A","sector_h.1","4","NO",1,0,9
-"EGFI",45,"EGFI","Federal government gross investment, cw 2009$","B.4","A","sector_h.3","4","GV",1,0,9
-"EGFIN",46,"EGFIN","Federal government gross investment, current $","I","A","sector_h.4","4","NO",0,2,24
-"EGFIT",47,"EGFIT","Federal government gross investment, cw 2009$, trend","B.4","A","sector_h.5","4","NO",1,0,9
-"EGFL",48,"EGFL","Federal government employee compensation, cw 2009$","B.4","A","sector_h.6","4","GV",1,0,9
-"EGFLN",49,"EGFLN","Federal government employee compensation, current $","I","A","sector_h.7","4","NO",0,2,24
-"EGFLT",50,"EGFLT","Federal government employee compensation, cw 2009$, trend","B.4","A","sector_h.8","4","NO",1,0,9
-"EGFN",51,"EGFN","Federal government consumption and gross investment, current $","I","A","sector_h.2","4","NO",0,2,24
-"EGFO",52,"EGFO","Federal government consumption ex. employee comp., cw 2009$","B.4","A","sector_h.9","4","GV",1,0,9
-"EGFON",53,"EGFON","Federal government consumption ex. employee comp., current $","I","A","sector_h.10","4","NO",0,2,24
-"EGFOT",54,"EGFOT","Federal government consumption ex. employee comp., cw 2009$, trend","B.4","A","sector_h.11","4","NO",1,0,9
-"EGPDIN",55,"EGPDIN","Gross private domestic investment","I","A","sector_b.31","4","NO",0,2,24
-"EGS",56,"EGS","S&L government consumption and gross investment, cw 2009$","I","A","sector_h.12","4","NO",1,0,10
-"EGSI",57,"EGSI","S&L government gross investment, cw 2009$","B.4","A","sector_h.14","4","GV",1,0,10
-"EGSIN",58,"EGSIN","S&L government gross investment, current $","I","A","sector_h.15","4","NO",0,2,24
-"EGSIT",59,"EGSIT","S&L government gross investment, cw 2009$, trend","B.4","A","sector_h.16","4","NO",1,0,10
-"EGSL",60,"EGSL","S&L government employee compensation, cw 2009$","B.4","A","sector_h.17","4","GV",1,0,10
-"EGSLN",61,"EGSLN","S&L government employee compensation, current $","I","A","sector_h.18","4","NO",0,2,24
-"EGSLT",62,"EGSLT","S&L government employee compensation, cw 2009$, trend","B.4","A","sector_h.19","4","NO",1,0,10
-"EGSN",63,"EGSN","S&L government consumption and gross investment, current $","I","A","sector_h.13","4","NO",0,2,24
-"EGSO",64,"EGSO","S&L government consumption ex. employee comp., cw 2009$","B.4","A","sector_h.20","4","GV",1,0,10
-"EGSON",65,"EGSON","S&L government consumption ex. employee comp., current $","I","A","sector_h.21","4","NO",0,2,24
-"EGSOT",66,"EGSOT","S&L government consumption ex. employee comp., cw 2009$, trend","B.4","A","sector_h.22","4","NO",1,0,10
-"EH",67,"EH","Residential investment expenditures, cw 2009$","B.4","A","sector_a.3","4","IS",1,0,6
-"EHN",68,"EHN","Residential investment expenditures","I","A","sector_a.11","4","NO",0,2,24
-"EI",69,"EI","Change in private inventories, cw 2009$","I","A","sector_b.5","3","NO",0,3,7
-"EIN",70,"EIN","Change in business inventories, current $","B","A","sector_b.28","2","NO",0,2,24
-"EM",71,"EM","Imports of goods and services, cw 2009$","I","A","sector_c.9","4","NO",1,0,8
-"EMN",72,"EMN","Imports of goods and services, current $","I","A","sector_c.8","4","NO",0,2,24
-"EMO",73,"EMO","Imports of goods and services ex. petroleum, cw 2009$","B.4","A","sector_c.3","4","IS",1,0,8
-"EMON",74,"EMON","Imports of goods and services ex. petroleum","I","A","sector_c.4","4","NO",0,2,24
-"EMP",75,"EMP","Petroleum imports, cw 2009$","I","A","sector_c.6","4","NO",0,3,8
-"EMPN",76,"EMPN","Petroleum imports, current $","I","A","sector_c.7","4","NO",0,2,24
-"EMPT",77,"EMPT","Petroleum imports trend, cw 2009$","B","A","sector_d.15","4","NO",1,0,28
-"EPD",78,"EPD","Investment in equipment, cw 2009$","B.4","A","sector_b.1","4","IS",1,0,7
-"EPDN",79,"EPDN","Investment in equipment, current $","I","A","sector_b.25","4","NO",0,2,24
-"EPI",80,"EPI","Investment in intellectual property, cw 2009$","B.4","A","sector_b.2","4","IS",1,0,7
-"EPIN",81,"EPIN","Investment in intellectual property, current $","I","","sector_b.26","","NO",NA,NA,24
-"EPS",82,"EPS","Investment in nonresidential structures, cw 2009$","B.4","A","sector_b.3","4","IS",1,0,7
-"EPSN",83,"EPSN","Investment in nonresidential structures, current $","I","A","sector_b.27","4","NO",0,2,24
-"EX",84,"EX","Exports of goods and services, cw 2009 $","B.4","A","sector_c.1","4","IS",1,0,8
-"EXN",85,"EXN","Exports of goods and services, current $","I","A","sector_c.2","4","NO",0,2,24
-"FCBN",86,"FCBN","US current account balance, current $","I","A","sector_c.10","2","NO",0,2,13
-"FCBRN",87,"FCBRN","US current account balance residual, current $","I","A","sector_c.11","2","NO",0,2,13
-"FGDP",88,"FGDP","Foreign aggregate GDP (world, bilateral export weights)","I","A","sector_j.2","4","NO",0,1,12
-"FGDPT",89,"FGDPT","Foreign aggregate GDP (world, bilateral export weights), trend","B.4","A","sector_j.3","4","NO",0,1,12
-"FNICN",90,"FNICN","Gross stock of claims of US residents on the rest of the world, current $","I","A","sector_c.16","2","NO",2,0,13
-"FNILN",91,"FNILN","Gross stock of liabilities of US residents to the rest of the world, current $","I","A","sector_c.17","2","NO",0,2,13
-"FNIN",92,"FNIN","Net stock of claims of US residents on the rest of the world, current $","I","A","sector_c.12","2","NO",0,2,13
-"FNIRN",93,"FNIRN","Net stock of claims of US residents on the rest of the world, residual","I","A","sector_c.22","2","NO",0,2,13
-"FPC",94,"FPC","Foreign aggregate consumer price (G39, import/export trade weights)","I","A","sector_j.7","4","NO",0,1,13
-"FPCM",95,"FPCM","Foreign aggregate consumer price (G39, bilateral non-oil import trade weights)","I","A","sector_j.8","4","NO",0,1,13
-"FPI10",96,"FPI10","Foreign consumer price inflation (G10)","B.4","A","sector_j.4","1","NO",0,0,13
-"FPI10T",97,"FPI10T","Foreign consumer price inflation, trend (G10)","B.1","A","sector_j.5","1","NO",0,0,13
-"FPIC",98,"FPIC","Foreign consumer price inflation (G39, bilateral export trade weights)","B.1","A","sector_j.6","1","NO",0,0,13
-"FPITRG",99,"FPITRG","Foreign target consumer price inflation (G10)","X.2","","","1","NO",0,0,13
-"FPX",100,"FPX","Nominal exchange rate (G39, import/export trade weights)","I","A","sector_j.14","4","NO",0,1,4
-"FPXM",101,"FPXM","Nominal exchange rate (G39, bilateral import trade weights)","I","A","sector_j.15","4","NO",0,1,4
-"FPXR",102,"FPXR","Real exchange rate (G39, import/export trade weights)","B","A","sector_j.12","4","NO",1,0,4
-"FPXRR",103,"FPXRR","Real exchange rate residual","B.4","A","sector_j.13","4","RW",1,0,4
-"FPXRRT",104,"FPXRRT","Real exchange rate residual, trend","X.2","","","4","NO",0,0,4
-"FRL10",105,"FRL10","Foreign long-term interest rate (G10)","B.4","A","sector_j.11","1","NO",0,0,13
-"FRS10",106,"FRS10","Foreign short-term interest rate (G10)","B.4","A","sector_j.9","1","NO",0,0,13
-"FRSTAR",107,"FRSTAR","Equilibrium real short-term interest rate used in foreign Taylor rule","B","A","sector_j.10","1","NO",0,0,13
-"FTCIN",108,"FTCIN","Corporate taxes paid to rest of world, current $","I","A","sector_c.13","4","NO",0,2,13
-"FXGAP",109,"FXGAP","Foreign output gap (world, bilateral export weights)","B.4","A","sector_j.1","1","RW",0,0,12
-"FYNICN",110,"FYNICN","Gross investment income received from the rest of the world, current $","I","A","sector_c.18","2","NO",0,2,13
-"FYNILN",111,"FYNILN","Gross investment income paid to the rest of the world, current $","I","A","sector_c.19","2","NO",0,2,13
-"FYNIN",112,"FYNIN","Net investment income received from the rest of the world, current $","I","A","sector_c.14","2","NO",0,2,13
-"GFDBTN",113,"GFDBTN","Federal government debt stock, current $","I","A","sector_h.23","2","NO",0,2,14
-"GFDRT",114,"GFDRT","Federal government target debt-to-GDP ratio","X.2","","","1","NO",0,0,14
-"GFINTN",115,"GFINTN","Federal government net interest payments, current $","I","A","sector_h.24","2","NO",0,2,14
-"GFS",116,"GFS","Federal government grants-in-aid to S&L government, deflated by PGDP","B.4","A","sector_h.25","4","NO",0,0,14
-"GFSN",117,"GFSN","Federal government grants-in-aid to S&L government, current $","I","A","sector_h.26","4","NO",0,2,14
-"GFSRPN",118,"GFSRPN","Federal government budget surplus, current $","I","A","sector_h.27","2","NO",0,2,14
-"GFSRT",119,"GFSRT","Federal government target surplus-to-GDP ratio","X.2","","","1","NO",0,0,14
-"GFSUB",120,"GFSUB","Federal government subsidies less surplus, deflated by PGDP","B.4","A","sector_h.28","3","NO",0,0,14
-"GFSUBN",121,"GFSUBN","Federal government subsidies less surplus, current $","I","A","sector_h.29","2","NO",0,2,14
-"GFT",122,"GFT","Federal government net transfer payments, deflated by PGDP","I","A","sector_h.30","4","NO",0,0,14
-"GFTN",123,"GFTN","Federal government net transfer payments, current $","I","A","sector_h.31","4","NO",0,2,14
-"GFTRD",124,"GFTRD","Deviation of ratio of federal transfers to GDP from trend ratio","B.1","A","sector_h.32","1","GV",0,0,14
-"GFTRT",125,"GFTRT","Federal government, trend ratio of transfer payments to GDP","X.2","","","1","NO",0,0,14
-"GSDBTN",126,"GSDBTN","S&L government debt stock, current $","I","A","sector_h.33","2","NO",0,2,15
-"GSDRT",127,"GSDRT","S&L government target debt-to-GDP ratio","X.2","","","4","NO",0,0,15
-"GSINTN",128,"GSINTN","S&L government net interest payments, current $","I","A","sector_h.34","2","NO",0,2,15
-"GSSRPN",129,"GSSRPN","S&L government budget surplus, current $","I","A","sector_h.35","2","NO",0,2,15
-"GSSRT",130,"GSSRT","State and local government, target surplus-to-GDP ratio","X.2","","","1","NO",0,0,15
-"GSSUB",131,"GSSUB","S&L government subsidies less surplus, deflated by PGDP","I","A","sector_h.40","3","NO",0,0,15
-"GSSUBN",132,"GSSUBN","S&L government subsidies less surplus, current $","I","A","sector_h.36","2","NO",0,2,15
-"GST",133,"GST","S&L government net transfer payments, deflated by PGDP","I","A","sector_h.38","4","NO",0,3,15
-"GSTN",134,"GSTN","S&L government net transfer payments, current $","I","A","sector_h.37","4","NO",0,2,15
-"GSTRD",135,"GSTRD","Deviation of ratio of S&L transfers to GDP from trend ratio","B.1","A","sector_h.39","1","GV",0,0,15
-"GSTRT",136,"GSTRT","S&L government, trend ratio of transfer payments to GDP","X.2","","","1","NO",0,0,15
-"HGEMP",137,"HGEMP","Petroleum imports, cw 2009$, trend growth rate","B","A","sector_c.15","1","NO",0,0,28
-"HGGDP",138,"HGGDP","Growth rate of GDP, cw 2009$ (annual rate)","I","A","sector_d.3","1","NO",0,0,29
-"HGGDPT",139,"HGGDPT","Trend growth rate of XGDP, cw 2009$ (annual rate)","I","A","sector_d.24","1","NO",0,0,18
-"HGPCDR",140,"HGPCDR","Trend growth rate of price of consumer durable goods (relative to PCNIA)","X.2","","","1","NO",0,0,22
-"HGPDR",141,"HGPDR","Trend Price Growth of PPDR","B","A","sector_g.50","1","NO",0,0,22
-"HGPIR",142,"HGPIR","Trend Price Growth of PPIR","B","A","sector_g.51","1","NO",0,0,22
-"HGPKIR",143,"HGPKIR","Trend growth rate of PKIR","B","A","sector_g.52","1","NO",0,0,22
-"HGPPSR",144,"HGPPSR","Trend growth rate of PPSR","B","A","sector_g.53","1","NO",0,0,22
-"HGVPD",145,"HGVPD","Trend Growth of VPD","B","A","sector_b.23","1","NO",0,0,7
-"HGVPI",146,"HGVPI","Trend growth rate of VPI","B","A","sector_b.32","1","NO",0,0,7
-"HGVPS",147,"HGVPS","Trend growth rate of VPS","B","A","sector_b.24","1","NO",0,0,7
-"HGX",148,"HGX","Trend growth rate of XG, cw 2009$ (annual rate)","I","A","sector_d.22","1","NO",0,0,18
-"HGYNID",149,"HGYNID","Growth rate of real after-tax corporate profits","I","A","sector_z.37","1","NO",0,0,28
-"HKS",150,"HKS","Growth rate of KS, cw 2009$ (compound annual rate)","I","A","sector_b.13","1","NO",0,0,18
-"HKSR",151,"HKSR","Residual growth of capital services","X.7","","","1","NO",0,0,18
-"HLEPT",152,"HLEPT","Trend growth rate of LEP (annual rate)","B","A","sector_e.22","1","NO",0,0,18
-"HLPRDT",153,"HLPRDT","Trend growth rate of output per hour","I","A","sector_e.24","1","NO",0,0,18
-"HMFPT",154,"HMFPT","Trend growth rate of multifactor productivity","B","A","sector_d.11","1","ST",0,0,18
-"HQLFPR",155,"HQLFPR","Drift component of change in QLFPR","B","A","sector_e.13","1","LB",0,0,18
-"HQLWW",156,"HQLWW","Trend growth rate of workweek","B","A","sector_e.5","1","LB",0,0,18
-"HUQPCT",157,"HUQPCT","Drift term in stochastic component of trend ratio of PCNIA to PXP","B","A","sector_g.31","4","NO",0,0,22
-"HUXB",158,"HUXB","Drift term in UXBT","B.4","A","sector_d.19","1","NO",0,0,18
-"HXBT",159,"HXBT","Trend rate of growth of XB  , cw 2009$ (annual rate)","I","A","sector_d.23","1","NO",0,0,18
-"JCCACN",160,"JCCACN","Consumption of fixed capital, corporate, current $","I","A","sector_f.7","4","NO",0,2,21
-"JCCAN",161,"JCCAN","Consumption of fixed capital, current $","I","A","sector_f.8","4","NO",0,2,21
-"JKCD",162,"JKCD","Consumption of fixed capital, consumer durables","I","A","sector_a.16","4","NO",1,0,21
-"JRCD",163,"JRCD","Depreciation rate, consumer durables","X.3","","","1","NO",0,0,21
-"JRH",164,"JRH","Depreciation rate, housing","X.3","","","1","NO",0,0,21
-"JRPD",165,"JRPD","Depreciation rate, equipment","X.3","","","1","NO",0,0,21
-"JRPI",166,"JRPI","Depreciation rate, intellectual property","X.3","","","1","NO",0,0,21
-"JRPS",167,"JRPS","Depreciation rate, nonresidential structures","X.3","","","1","NO",0,0,21
-"JYGFEN",168,"JYGFEN","CFC, federal government enterprises, current $","I","A","sector_f.9","4","NO",0,2,14
-"JYGFGN",169,"JYGFGN","CFC, federal government, general, current $","I","A","sector_f.10","4","NO",0,2,14
-"JYGSEN",170,"JYGSEN","CFC, state and local government enterprises, current $","I","A","sector_f.11","4","NO",0,2,15
-"JYGSGN",171,"JYGSGN","CFC, state and local government, general, current $","I","A","sector_f.12","4","NO",0,2,15
-"JYNCN",172,"JYNCN","Noncorporate business CFC, current $","I","A","sector_f.13","4","NO",0,2,21
-"KCD",173,"KCD","Stock of consumer durables, cw 2009$","I","A","sector_a.12","4","NO",0,3,21
-"KH",174,"KH","Stock of residential structures, cw 2009$","I","A","sector_a.13","4","NO",0,3,21
-"KI",175,"KI","Stock of private inventories, cw 2009$","B.4","A","sector_b.4","4","IS",1,0,7
-"KPD",176,"KPD","Capital stock - Equipment, 2009$","I","A","sector_b.10","4","NO",0,3,21
-"KPI",177,"KPI","Capital Stock - Intellectual Property, 2009$","I","","sector_b.11","","NO",NA,NA,21
-"KPS",178,"KPS","Capital stock - nonresidential structures, 2009$","I","A","sector_b.12","4","NO",0,3,21
-"KS",179,"KS","Capital services, 2009 $","I","A","sector_b.14","4","NO",1,0,18
-"LEF",180,"LEF","Federal civilian employment ex. gov. enterprise","I","A","sector_e.8","4","NO",0,4,20
-"LEFT",181,"LEFT","Federal civilian employment ex. gov. enterprise, trend","B.6","A","sector_e.19","4","NO",0,4,18
-"LEH",182,"LEH","Civilian employment (break adjusted)","I","A","sector_e.10","4","NO",0,4,20
-"LEO",183,"LEO","Difference between household and business sector payroll employment, less gov't emp.","B","A","sector_e.7","5","NO",1,0,20
-"LEP",184,"LEP","Employment in  business sector (employee and  self-employed)","I","A","sector_e.6","4","NO",0,4,20
-"LEPPOT",185,"LEPPOT","Potential employment in  business sector","I","A","sector_e.21","4","NO",0,4,18
-"LES",186,"LES","S&L government employment ex. gov. enterprise","I","A","sector_e.9","4","NO",0,4,20
-"LEST",187,"LEST","S&L government employment ex. gov. enterprise, trend","B.4","A","sector_e.20","4","NO",0,4,18
-"LEUC",188,"LEUC","Emergency unemployment compensation (EUC)","X.2","","","1","NO",0,0,18
-"LF",189,"LF","Civilian labor force (break adjusted)","I","A","sector_e.14","4","NO",0,4,20
-"LFPR",190,"LFPR","Labor force participation rate","B","A","sector_e.11","1","LB",0,0,20
-"LHP",191,"LHP","Aggregate labor hours,  business sector (employee and  self-employed)","B","A","sector_e.1","4","LB",1,0,20
-"LPRDT",192,"LPRDT","Trend labor productivity","I","A","sector_e.23","4","NO",1,0,18
-"LQUALT",193,"LQUALT","Labor quality, trend level","X.1","","","4","NO",0,0,18
-"LUR",194,"LUR","Civilian unemployment rate (break adjusted)","B","A","sector_e.15","1","LB",0,0,20
-"LURBLS",195,"LURBLS","Civilian unemployment rate (published)","B.3","A","sector_e.16","1","NO",0,0,20
-"LURNAT",196,"LURNAT","Natural rate of unemployment","B","A","sector_e.25","1","LB",0,0,18
-"LURTRSH",197,"LURTRSH","Unemployment threshold","X.2","","","1","NO",0,0,1
-"LWW",198,"LWW","Workweek,  business sector (employee and self-employed)","B.7","A","sector_e.3","4","LB",1,0,20
-"MEI",199,"MEI","Multiplicative discrepancy for the difference between XGDI and XGDO","B","A","sector_i.39","1","NO",0,0,28
-"MEP",200,"MEP","Multiplicative discrepancy for the difference between XGDP and XGDO","B","A","sector_i.41","1","NO",0,0,28
-"MFPT",201,"MFPT","Multifactor productivity, trend level","B","A","sector_d.12","4","ST",1,0,18
-"N16",202,"N16","Noninstitutional population, aged 16 and over (break adjusted)","X.1","","","4","NO",0,0,18
-"PCDR",203,"PCDR","Price index for consumer durables, cw (relative to to PCNIA)","B.4","A","sector_g.59","4","NO",0,0,22
-"PCENG",204,"PCENG","Price index for aggregate energy consumption","I","A","sector_g.37","4","NO",0,1,17
-"PCENGR",205,"PCENGR","Price index for aggregate energy consumption (relative to PXB  )","B.4","A","sector_g.36","4","PR",1,0,17
-"PCER",206,"PCER","Price index for personal consumption expenditures on energy (relative to PCXFE)","B.4","A","sector_g.38","4","PR",1,0,17
-"PCFR",207,"PCFR","Price index for personal consumption expenditures on food (relative to PCXFE)","B.4","A","sector_g.39","4","PR",1,0,22
-"PCFRT",208,"PCFRT","Real PCE price of food, trend","X.2","","","4","NO",0,0,22
-"PCHR",209,"PCHR","Price index for housing services, cw (relative to to PCNIA)","B.4","A","sector_g.57","4","NO",0,0,22
-"PCNIA",210,"PCNIA","Price index for personal consumption expenditures, cw (NIPA definition)","I","","sector_g.5","","NO",NA,NA,22
-"PCOR",211,"PCOR","Price index for non-durable goods and non-housing services, cw (relative to to PCNIA)","I","A","sector_g.56","4","NO",0,0,22
-"PCPI",212,"PCPI","Consumer price index,total","I","A","sector_g.6","4","NO",0,1,22
-"PCPIX",213,"PCPIX","Consumer price index,excluding food and energy","I","A","sector_g.7","4","NO",0,1,22
-"PCSTAR",214,"PCSTAR","Target consumption price level (used in RFFGEN policy rule)","X.1","","","4","NO",0,0,22
-"PCXFE",215,"PCXFE","Price index for personal consumption expendits ex. food and energy, cw (NIPA definition)","B.4","A","sector_g.33","4","NO",1,0,22
-"PGDP",216,"PGDP","Price index for GDP, cw","I","A","sector_g.44","4","NO",0,1,22
-"PGFIR",217,"PGFIR","Price index for federal gov. investment, cw (relative to PXP)","B.4","A","sector_g.17","4","OT",1,0,22
-"PGFL",218,"PGFL","Price index for federal government employee compensation, cw","I","A","sector_g.45","4","NO",0,1,22
-"PGFOR",219,"PGFOR","Price index for federal governemnt consumption ex. emp. comp., cw (relative to PXP)","B.4","A","sector_g.18","4","OT",1,0,22
-"PGSIR",220,"PGSIR","Price index for S&L government investment (relative to PXP)","B.4","A","sector_g.19","4","OT",1,0,22
-"PGSL",221,"PGSL","Price index for S&L government employee compensation, cw","I","A","sector_g.46","4","NO",0,1,22
-"PGSOR",222,"PGSOR","Price index for S&L government consumption ex. emp. comp., cw (relative to PXP)","B.4","A","sector_g.20","4","OT",1,0,22
-"PHOUSE",223,"PHOUSE","Loan Performance House Price Index","B.4","A","sector_i.37","1","FN",0,0,3
-"PHR",224,"PHR","Price index for residential investment, cw (relative to PXP)","B.4","A","sector_g.21","4","OT",1,0,22
-"PIC4",225,"PIC4","Four-quarter percent change in PCE prices","I","A","sector_g.60","4","NO",1,0,22
-"PICNGR",226,"PICNGR","Weighted growth rate of relative energy price","I","A","sector_g.54","1","NO",0,0,17
-"PICNIA",227,"PICNIA","Inflation rate, personal consumption expenditures, cw","B","A","sector_g.4","1","NO",0,0,22
-"PICX4",228,"PICX4","Four-quarter percent change core in PCE prices","I","A","sector_g.58","4","NO",1,0,22
-"PICXFE",229,"PICXFE","Inflation rate, personal consumption expenditures, ex. food and energy, cw","B.4","A","sector_g.1","1","PR",0,0,22
-"PIECI",230,"PIECI","Annualized rate of growth of EI hourly compensation","B.4","A","sector_g.2","1","PR",0,0,22
-"PIGDP",231,"PIGDP","Inflation rate, GDP, cw","I","A","sector_g.55","1","NO",0,0,22
-"PIPL",232,"PIPL","Rate of growth of PL","B","A","sector_g.8","1","NO",0,0,22
-"PIPXNC",233,"PIPXNC","Inflation rate, price of adjusted final sales excluding consumption (annual rate)","B","A","sector_g.3","1","NO",0,0,22
-"PITARG",234,"PITARG","Target rate of consumption price inflation (used in policy reaction functions)","X.2","","","1","NO",0,0,1
-"PITRSH",235,"PITRSH","Inflation threshold","X.2","","","1","NO",0,0,1
-"PKIR",236,"PKIR","Price index for stock of inventories, cw (relative to PXP)","X.2","","","4","NO",0,0,22
-"PKPDR",237,"PKPDR","Ratio of price of equipment stock (KPD) to PXP","I","A","sector_g.47","4","NO",0,1,22
-"PL",238,"PL","Compensation per hour,  business","I","A","sector_g.9","4","NO",1,0,22
-"PLMIN",239,"PLMIN","Minimum wage","I","A","sector_g.28","4","NO",0,1,22
-"PLMINR",240,"PLMINR","Ratio of hourly minimum wage to compensation per hour (times 100)","X.2","","","4","NO",0,0,22
-"PMO",241,"PMO","Price index for imports ex. petroleum, cw","B.4","A","sector_g.42","4","PR",1,0,22
-"PMP",242,"PMP","Price index for petroleum imports","I","A","sector_g.35","4","NO",0,1,22
-"POIL",243,"POIL","Price of imported oil ($ per barrel)","I","A","sector_g.34","4","NO",0,1,17
-"POILR",244,"POILR","Price of imported oil, relative to price index for bus. sector output","B.4","A","sector_g.32","4","PR",1,0,17
-"POILRT",245,"POILRT","Price of imported oil, relative to price index for bus. sector output, trend","X.2","","","4","NO",0,0,17
-"PPDR",246,"PPDR","Price level of EPD compared to PXP","B.4","A","sector_g.22","4","OT",1,0,22
-"PPIR",247,"PPIR","Price level of EPI compared to PXP","B.4","A","sector_g.23","4","OT",1,0,22
-"PPSR",248,"PPSR","Price index for nonresidential structures, cw (relative to PXP)","B.4","A","sector_g.24","4","OT",1,0,22
-"PTR",249,"PTR","10-year expected PCE price inflation (Survey of Professional Forecasters)","B","A","sector_z.1","1","NO",0,0,22
-"PWSTAR",250,"PWSTAR","Equilibrium NFB price markup","B","A","sector_g.11","1","NO",0,0,22
-"PXB",251,"PXB","Price index for NFB output","I","A","sector_g.49","4","NO",0,1,22
-"PXG",252,"PXG","Price index for  business output plus oil imports","I","A","sector_g.48","4","NO",0,1,22
-"PXNC",253,"PXNC","Price of adjusted final sales excluding consumption","B.4","A","sector_g.10","4","NO",1,0,22
-"PXP",254,"PXP","Price index for final sales plus imports less gov. labor","I","A","sector_g.16","4","NO",1,0,22
-"PXR",255,"PXR","Price index for exports, cw (relative to PXP)","B.4","A","sector_g.25","4","OT",1,0,22
-"QEC",256,"QEC","Desired level of consumption (FRBUS definition)","I","A","sector_a.5","4","NO",0,3,25
-"QECD",257,"QECD","Target level of consumption of durable goods, trending component","I","A","sector_a.7","4","NO",0,1,25
-"QECO",258,"QECO","Desired level of consumption of nondurable goods and nonhousing services","I","A","sector_a.6","4","NO",0,1,25
-"QEH",259,"QEH","Target level of residential investment","I","A","sector_a.8","4","NO",0,1,25
-"QEPD",260,"QEPD","Desired level of investment in equipment","I","A","sector_b.6","4","NO",1,0,25
-"QEPI",261,"QEPI","Desired level of investment in intellectual property","I","A","sector_b.8","4","NO",1,0,25
-"QEPS",262,"QEPS","Desired level of investment in structures","I","A","sector_b.7","4","NO",1,0,25
-"QKIR",263,"QKIR","Desired Inventory Sales Ratio","B","A","sector_b.9","4","NO",1,0,7
-"QLEOR",264,"QLEOR","Desired ratio of employment discrepancy to the labor force","X.2","","","4","NO",0,0,18
-"QLEP",265,"QLEP","Desired level of  business employment","I","A","sector_e.17","4","NO",0,4,25
-"QLF",266,"QLF","Desired level of civilian labor force","I","A","sector_e.18","4","NO",0,4,25
-"QLFPR",267,"QLFPR","Trend labor force participation rate","I","A","sector_e.12","1","NO",0,0,18
-"QLHP",268,"QLHP","Desired level of  business labor hours","I","A","sector_e.2","4","NO",0,1,25
-"QLWW",269,"QLWW","Trend workweek,  business sector (employee and  self-employed)","I","A","sector_e.4","4","NO",1,0,18
-"QPCNIA",270,"QPCNIA","Desired level of consumption price","I","A","sector_g.15","4","NO",1,0,25
-"QPL",271,"QPL","Desired level of compensation per hour, trending component","I","A","sector_g.13","4","NO",1,0,25
-"QPMO",272,"QPMO","Random walk component of non-oil import prices","B","A","sector_g.43","4","NO",1,0,25
-"QPXG",273,"QPXG","Desired price level of private output ex. energy, housing, and farm","I","A","sector_g.12","4","NO",1,0,25
-"QPXNC",274,"QPXNC","Desired level of nonconsumption price","I","A","sector_g.29","4","NO",1,0,25
-"QPXP",275,"QPXP","Desired price level of adjusted final sales","I","A","sector_g.14","4","NO",0,1,25
-"QYNIDN",276,"QYNIDN","Desired level of dividends","I","A","sector_f.18","4","NO",1,0,25
-"RBBB",277,"RBBB","S&P BBB corporate bond rate","I","A","sector_i.29","1","NO",0,0,3
-"RBBBE",278,"RBBBE","S&P BBB corporate bond rate (effective ann. yield)","I","A","sector_i.28","1","NO",0,0,3
-"RBBBP",279,"RBBBP","S&P BBB corporate bond rate, risk/term premium","B.4","A","sector_i.27","1","FN",0,0,3
-"RCAR",280,"RCAR","New car loan rate at finance companies","B.1","A","sector_i.30","1","FN",0,0,3
-"RCCD",281,"RCCD","Cost of capital for consumer durables","I","A","sector_a.14","1","NO",0,0,3
-"RCCH",282,"RCCH","Cost of capital for residential investment","I","A","sector_a.15","1","NO",0,0,3
-"RCGAIN",283,"RCGAIN","Rate of capital gain on the non-equity portion of household wealth","B.4","A","sector_i.36","1","FN",0,0,3
-"REQ",284,"REQ","Real expected rate of return on equity","I","A","sector_i.33","1","NO",0,0,3
-"REQP",285,"REQP","Real expected rate of return on equity, premium component","B.4","A","sector_i.32","1","FN",0,0,2
-"RFF",286,"RFF","Federal funds rate","I","A","sector_i.13","1","NO",0,0,1
-"RFFALT",287,"RFFALT","Value of eff. federal funds rate given by estimated policy rule","B","A","sector_i.4","1","NO",0,0,1
-"RFFE",288,"RFFE","Federal funds rate (effective ann. yield)","B","A","sector_i.12","1","NO",0,0,1
-"RFFFIX",289,"RFFFIX","Federal funds rate given by fixed, pre-determined funds rate path","X.2","","","1","NO",0,0,1
-"RFFGEN",290,"RFFGEN","Value of eff. federal funds rate given by the generalized reaction function","B","","sector_i.5","","NO",0,0,1
-"RFFINTAY",291,"RFFINTAY","Value of eff. federal funds rate given by the inertial Taylor rule","B.4","A","sector_i.3","1","NO",0,0,1
-"RFFMIN",292,"RFFMIN","Minimum nominal funds rate (set at 0 to impose zero lower bound)","X.2","","","1","NO",0,0,1
-"RFFRULE",293,"RFFRULE","Federal funds rate (effective ann. yield)","B","A","sector_i.7","1","NO",0,0,1
-"RFFTAY",294,"RFFTAY","Value of eff. federal funds rate given by the Taylor rule with output gap","B.4","A","sector_i.1","1","NO",0,0,1
-"RFFTLR",295,"RFFTLR","Value of eff. federal funds rate given by the Taylor rule with unemployment gap","B.4","A","sector_i.2","1","NO",0,0,1
-"RFNICT",296,"RFNICT","Residual in FNICN equation","X.2","","","2","NO",0,2,18
-"RFRS10",297,"RFRS10","Real foreign short-term interest rate","X.2","","","1","NO",0,0,27
-"RFYNIC",298,"RFYNIC","Average yield earned on gross claims of US residents on the rest of the world","B.4","A","sector_c.20","2","FN",0,0,3
-"RFYNIL",299,"RFYNIL","Average yield earned on liabilities of US residents on the rest of the world","B.4","A","sector_c.21","2","FN",0,0,3
-"RG10",300,"RG10","10-year Treasury bond rate","I","A","sector_i.23","1","NO",0,0,3
-"RG10E",301,"RG10E","10-year Treasury bond rate (effective ann. yield)","I","A","sector_i.22","1","NO",0,0,3
-"RG10P",302,"RG10P","10-year Treasury bond rate, term premium","B.4","A","sector_i.21","1","FN",0,0,3
-"RG30",303,"RG30","30-year Treasury bond rate","I","A","sector_i.26","1","NO",0,0,3
-"RG30E",304,"RG30E","30-year Treasury bond rate (effective ann. yield)","I","A","sector_i.25","1","NO",0,0,3
-"RG30P",305,"RG30P","30-year Treasury bond rate, term premium","B.4","A","sector_i.24","1","FN",0,0,3
-"RG5",306,"RG5","5-year Treasury note rate","I","A","sector_i.20","1","NO",0,0,3
-"RG5E",307,"RG5E","5-year Treasury note rate (effective ann. yield)","I","A","sector_i.19","1","NO",0,0,3
-"RG5P",308,"RG5P","5-year Treasury note rate. term premium","B.4","A","sector_i.18","1","FN",0,0,3
-"RGFINT",309,"RGFINT","Average rate of interest on existing federal debt","B.1","A","sector_i.43","1","GV",0,0,3
-"RGW",310,"RGW","Approximate average rate of interest on new federal debt","I","A","sector_i.42","1","NO",0,0,3
-"RME",311,"RME","Interest rate on conventional mortgages (effective ann. yield)","B.1","A","sector_i.31","1","FN",0,0,3
-"RPD",312,"RPD","After-tax real financial cost of capital for business investment","I","A","sector_b.15","1","NO",0,0,3
-"RRFFE",313,"RRFFE","Real federal funds rate (effective ann. yield)","I","A","sector_i.15","1","NO",0,0,1
-"RRFIX",314,"RRFIX","Real federal funds rate given by fixed, pre-determined real funds rate path","X.2","","","1","NO",0,0,1
-"RRMET",315,"RRMET","Real mortgage rate, trend","B","A","sector_i.44","1","NO",0,0,3
-"RRTR",316,"RRTR","Expected long-run real federal funds rate","B","A","sector_z.2","1","NO",0,0,3
-"RSPNIA",317,"RSPNIA","Personal saving rate","I.3","A","sector_f.23","1","NO",0,0,28
-"RSTAR",318,"RSTAR","Equilibrium real federal funds rate (for monetary policy reaction functions)","B","A","sector_i.6","1","NO",0,0,1
-"RTB",319,"RTB","3-month Treasury bill rate","I","A","sector_i.17","1","NO",0,0,3
-"RTBE",320,"RTBE","3-month Treasury bill rate (effective ann. yield)","B.1","A","sector_i.16","1","FN",0,0,3
-"RTINV",321,"RTINV","User cost of capital for inventories","I","A","sector_b.19","4","NO",0,0,3
-"RTPD",322,"RTPD","User cost of capital for equipment","I","A","sector_b.16","4","NO",0,0,3
-"RTPI",323,"RTPI","User cost of capital for intellectual property","I","A","sector_b.17","4","NO",0,0,3
-"RTPS",324,"RTPS","User cost of capital for nonresidential structures","I","A","sector_b.18","4","NO",0,0,3
-"RTR",325,"RTR","Expected federal funds rate in the long run (Blue Chip)","I","A","sector_z.3","1","NO",0,0,3
-"T47",326,"T47","Time trend, begins in 1947q1 (0 before)","X.5","","","1","NO",0,0,27
-"TAPDAD",327,"TAPDAD","Proportion of investment in equipment using accelerated depreciation","X.2","","","1","NO",0,0,14
-"TAPDD",328,"TAPDD","Present value of depreciation allowances for equipment","I","A","sector_b.30","1","NO",0,0,14
-"TAPDDP",329,"TAPDDP","Proportion of investment tax credit deducted from depr. base","X.2","","","1","NO",0,0,14
-"TAPDS",330,"TAPDS","Tax service life of equipment","X.2","","","1","NO",0,0,14
-"TAPDT",331,"TAPDT","Investment tax credit rate for equipment","X.2","","","1","NO",0,0,14
-"TAPSAD",332,"TAPSAD","Proportion of investment in nonresidential structures using accelerated depreciation","X.2","","","1","NO",0,0,14
-"TAPSDA",333,"TAPSDA","Present value of depreciation allowances for nonresidential structures","I","A","sector_b.29","1","NO",0,0,14
-"TAPSSL",334,"TAPSSL","Tax service life of nonresidential structures","X.2","","","1","NO",0,0,14
-"TFCIN",335,"TFCIN","Federal corporate income tax accruals, current $","I","A","sector_h.41","4","NO",0,2,14
-"TFDIV",336,"TFDIV","Federal income receipts on assets, dividends, current $","X.2","","","4","NO",0,2,14
-"TFIBN",337,"TFIBN","Federal indirect business tax receipts, current $","I","A","sector_h.42","4","NO",0,2,14
-"TFPN",338,"TFPN","Federal personal income tax and nontax receipts, current $","I","A","sector_h.43","4","NO",0,2,14
-"TFSIN",339,"TFSIN","Federal social insurance tax receipts","I","A","sector_h.44","4","NO",0,2,14
-"TRFCI",340,"TRFCI","Average federal corporate income tax rate","B.1","A","sector_h.45","1","GV",0,0,14
-"TRFCIM",341,"TRFCIM","Marginal federal corporate income tax rate","X.2","","","1","NO",0,0,14
-"TRFIB",342,"TRFIB","Average federal indirect business tax rate","X.2","","","1","NO",0,0,14
-"TRFP",343,"TRFP","Average federal tax rate for personal income tax and nontax receipts","B.1","A","sector_h.46","1","GV",0,0,14
-"TRFPM",344,"TRFPM","Marginal federal personal income tax rate (at twice median family income)","X.2","","","1","NO",0,0,14
-"TRFPT",345,"TRFPT","Average federal tax rate for personal income tax, trend","B","A","sector_h.47","1","NO",0,0,14
-"TRFPTX",346,"TRFPTX","Average federal tax rate for personal income tax, trend, policy setting","X.2","","","1","NO",0,0,14
-"TRFSI",347,"TRFSI","Average federal social insurance tax rate","X.3","","","1","NO",0,0,14
-"TRSCI",348,"TRSCI","Average S&L corporate income tax rate","B.4","A","sector_h.48","1","GV",0,0,15
-"TRSCIT",349,"TRSCIT","Average S&L corporate income tax rate, trend","X.2","","","1","NO",0,0,15
-"TRSIB",350,"TRSIB","Average S&L indirect business tax rate","B.4","A","sector_h.49","1","GV",0,0,15
-"TRSIBT",351,"TRSIBT","Average S&L indirect business tax rate, trend","X.2","","","1","NO",0,0,15
-"TRSP",352,"TRSP","Average S&L tax rate for personal income tax and nontax receipts","B.4","A","sector_h.50","1","GV",0,0,15
-"TRSPP",353,"TRSPP","Marginal S&L tax rate on personal property","X.2","","","1","NO",0,0,15
-"TRSPT",354,"TRSPT","Trend S&L personal income tax rate","B.2","A","sector_h.51","1","NO",0,0,15
-"TRSPTX",355,"TRSPTX","Average state and local tax rate for personal income, trend","X.2","","","1","NO",0,0,15
-"TRSSI",356,"TRSSI","Average S&L social insurance tax rate","B.4","A","sector_h.52","1","GV",0,0,15
-"TRSSIT",357,"TRSSIT","Average S&L social insurance tax rate, trend","X.2","","","1","NO",0,0,15
-"TRYH",358,"TRYH","Average tax rate on household income","I","A","sector_h.59","1","NO",0,0,14
-"TSCIN",359,"TSCIN","S&L corporate income tax accruals, current $","I","A","sector_h.53","4","NO",0,2,15
-"TSIBN",360,"TSIBN","S&L indirect business tax receipts, current $","I","A","sector_h.54","4","NO",0,2,15
-"TSPN",361,"TSPN","S&L personal income tax and nontax receipts, current $","I","A","sector_h.55","4","NO",0,2,15
-"TSSIN",362,"TSSIN","S&L social insurance tax receipts, current $","I","A","sector_h.56","4","NO",0,2,15
-"UCES",363,"UCES","Energy share of nominal consumption expenditures","B.1","A","sector_g.40","4","PR",1,0,28
-"UCFS",364,"UCFS","Food share of nominal consumption expenditures","B.1","A","sector_g.41","4","PR",1,0,28
-"UEMOT",365,"UEMOT","Trend in ratio of EMON to XGDEN","X.3","","","4","NO",0,0,16
-"UEMP",366,"UEMP","Multiplicative factor in EMP identity","X.3","","","4","NO",0,0,16
-"UFCBR",367,"UFCBR","Multiplicative factor in FCBRN identity","X.3","","","4","NO",0,0,13
-"UFNIR",368,"UFNIR","Multiplicative factor in FNIRN identity","X.3","","","2","NO",0,0,13
-"UFPCM",369,"UFPCM","Multiplicative factor in FPCM identity","X.2","","","4","NO",0,0,13
-"UFPXM",370,"UFPXM","Multiplicative factor in FPXM identity","X.3","","","4","NO",0,0,13
-"UFTCIN",371,"UFTCIN","Multiplicative factor in FTCIN identity","X.3","","","4","NO",0,0,13
-"UGFDBT",372,"UGFDBT","Multiplicative factor in GFDBTN identity","X.3","","","4","NO",0,0,14
-"UGSDBT",373,"UGSDBT","Multiplicative factor in GSDBTN identity","X.3","","","4","NO",0,0,15
-"UGSINT",374,"UGSINT","Multiplicative factor in GSINTN identity","X.2","","","1","NO",0,0,15
-"UGSSUB",375,"UGSSUB","Multiplicative factor in GSSUB identity","X.3","","","4","NO",0,0,15
-"UJCCA",376,"UJCCA","Multiplicative factor in JCCAN identity","X.3","","","4","NO",0,0,21
-"UJCCAC",377,"UJCCAC","Multiplicative factor in JCCACN identity","X.3","","","4","NO",0,0,21
-"UJYGFE",378,"UJYGFE","Multiplicative factor in JYGFEN identity","X.3","","","4","NO",0,0,14
-"UJYGFG",379,"UJYGFG","Multiplicative factor in JYGFGN identity","X.2","","","4","NO",0,0,14
-"UJYGSE",380,"UJYGSE","Multiplicative factor in JYGSEN identity","X.3","","","4","NO",0,0,15
-"UJYGSG",381,"UJYGSG","Multiplicative factor in JYGSGN identity","X.3","","","4","NO",0,0,15
-"ULEF",382,"ULEF","Multiplicative factor in LEF identity","X.3","","","4","NO",0,0,14
-"ULES",383,"ULES","Multiplicative factor in LES identity","X.3","","","4","NO",0,0,15
-"UPCPI",384,"UPCPI","Multiplicative factor in PCPI identity","X.4","","","4","NO",0,0,22
-"UPCPIX",385,"UPCPIX","Multiplicative factor in PCPIX identity","X.4","","","4","NO",0,0,22
-"UPGFL",386,"UPGFL","Multiplicative factor in PGFL identity","X.4","","","4","NO",0,0,14
-"UPGSL",387,"UPGSL","Multiplicative factor in PGSL identity","X.3","","","4","NO",0,0,15
-"UPKPD",388,"UPKPD","Multiplicative factor in PKPDR identity","X.3","","","4","NO",0,0,22
-"UPMP",389,"UPMP","Multiplicative factor in PMP identity","X.3","","","4","NO",0,0,17
-"UPXB",390,"UPXB","Multiplicative factor in PXB   identity","X.4","","","4","NO",0,0,27
-"UQPCT",391,"UQPCT","Stochastic component of trend ratio of PCNIA to PXP","B","A","sector_g.30","4","NO",1,0,22
-"UVEOA",392,"UVEOA","Multiplicative factor in VEOA identity","X.4","","","4","NO",0,0,16
-"UVPD",393,"UVPD","Multiplicative factor in VPD identity","X.2","","","4","NO",0,0,27
-"UVPI",394,"UVPI","Multiplicative factor in VPI identity","X.2","","","4","NO",0,0,27
-"UVPS",395,"UVPS","Multiplicative factor in VPS identity","X.2","","","4","NO",0,0,27
-"UXBT",396,"UXBT","Stochastic component of trend ratio of XGDPT to XBT","B","A","sector_d.18","4","NO",0,0,18
-"UXENG",397,"UXENG","Multiplicative factor in XENG identity","X.3","","","4","NO",0,0,16
-"UYD",398,"UYD","Multiplicative factor in YDN identity","X.3","","","4","NO",0,0,23
-"UYHI",399,"UYHI","Multiplicative factor in YHIN identity","X.3","","","4","NO",0,0,23
-"UYHLN",400,"UYHLN","Multiplicative factor in YHLN identity","X.3","","","4","NO",0,0,23
-"UYHPTN",401,"UYHPTN","Multiplicative factor in YHPTN identity","X.3","","","4","NO",0,0,23
-"UYHSN",402,"UYHSN","Multiplicative factor in personal saving identity (accounts for transfers to foreigners)","X.2","","","4","NO",0,0,23
-"UYHTN",403,"UYHTN","Multiplicative factor in YHTN identity","X.3","","","4","NO",0,0,23
-"UYL",404,"UYL","Multiplicative factor in YLN identity","X.4","","","4","NO",0,0,23
-"UYNI",405,"UYNI","Multiplicative factor in YNIN identity","X.3","","","4","NO",0,0,23
-"UYNICP",406,"UYNICP","Multiplicative factor in YNICPN identity","X.2","","","4","NO",0,0,23
-"UYP",407,"UYP","Multiplicative factor in YPN identity","X.3","","","4","NO",0,0,23
-"UYSEN",408,"UYSEN","Multiplicative factor in YSEN identity","X.3","","","4","NO",0,0,23
-"VEO",409,"VEO","Desired energy-output ratio","I","A","sector_d.13","4","NO",1,0,16
-"VEOA",410,"VEOA","Average energy-output ratio of existing capital stock","B","A","sector_d.14","4","NO",0,0,16
-"VPD",411,"VPD","Desired equipment-output ratio","B","A","sector_b.20","4","NO",1,0,7
-"VPI",412,"VPI","Desired intellectual property-output ratio","B","A","sector_b.21","4","NO",1,0,7
-"VPS",413,"VPS","Desired structures-output ratio","B","A","sector_b.22","4","NO",1,0,7
-"WDNFCN",414,"WDNFCN","Net financial liabilities, nonfinancial nonfarm corporations","B.4","A","sector_f.45","4","IN",1,0,5
-"WPO",415,"WPO","Household property wealth ex. stock market, real","I","A","sector_i.40","4","NO",0,3,5
-"WPON",416,"WPON","Household property wealth ex. stock market, current $","I","A","sector_i.38","4","NO",0,2,5
-"WPS",417,"WPS","Household stock market wealth, real","I","A","sector_i.35","4","NO",0,3,5
-"WPSN",418,"WPSN","Household stock market wealth, current $","I","A","sector_i.34","4","NO",1,0,5
-"XB",419,"XB","Business output (BEA definition), cw 2009$","I","A","sector_d.8","4","NO",1,0,11
-"XBN",420,"XBN","Business output (BEA definition), current $","I","A","sector_f.5","4","NO",0,2,24
-"XBO",421,"XBO","Business output, adjusted for measurement error, cw  2009$","I","A","sector_d.6","4","NO",1,0,11
-"XBT",422,"XBT","Potential business output, cw 2009$","I","A","sector_d.16","4","NO",1,0,18
-"XENG",423,"XENG","Crude energy production, cw 2009$","I","A","sector_d.26","4","NO",0,3,16
-"XFS",424,"XFS","Final sales of gross domestic product, cw 2009$","I","A","sector_d.1","4","NO",1,0,11
-"XFSN",425,"XFSN","Final sales of gross domestic product, current $","I","A","sector_f.3","4","NO",0,2,24
-"XG",426,"XG","Output of  business sector plus oil imports, cw 2009$","I","A","sector_d.9","4","NO",1,0,11
-"XGAP",427,"XGAP","Output gap for  business plus oil imports  (100*log(actual/potential)","I","A","sector_d.20","1","NO",0,0,19
-"XGAP2",428,"XGAP2","Output gap for GDP (100*log(actual/potential)","I","A","sector_d.21","1","NO",0,0,19
-"XGDE",429,"XGDE","Domestic absorption, cw 2009$","I","A","sector_d.4","4","NO",0,0,28
-"XGDEN",430,"XGDEN","Nominal Absorption, current $","I","A","sector_f.4","1","NO",0,0,24
-"XGDI",431,"XGDI","Gross domestic income, cw 2009$","I","A","sector_d.27","4","NO",0,3,11
-"XGDIN",432,"XGDIN","Gross domestic income, current $","I","A","sector_f.46","4","NO",0,2,24
-"XGDO",433,"XGDO","Gross domestic product, adjusted for measurement error, cw 2009$","I","A","sector_d.28","4","NO",0,3,11
-"XGDP",434,"XGDP","GDP, cw 2009$","I","A","sector_d.2","4","NO",0,3,11
-"XGDPN",435,"XGDPN","GDP, current $","I","A","sector_f.2","4","NO",0,2,24
-"XGDPT",436,"XGDPT","Potential GDP, cw 2009$","I","A","sector_d.17","4","NO",1,0,18
-"XGDPTN",437,"XGDPTN","Potential GDP, current $","I","A","sector_d.25","4","NO",0,1,18
-"XGN",438,"XGN","Output of  business sector plus oil imports, current $","I","A","sector_f.6","4","NO",0,2,24
-"XGO",439,"XGO","Output of business sector plus oil imports, adjusted for measurement error, cw 2009$","I","A","sector_d.5","4","NO",1,0,11
-"XGPOT",440,"XGPOT","Potential output of  business sector plus oil imports,  cw 2009$","B","A","sector_d.10","4","NO",1,0,18
-"XP",441,"XP","Final sales plus imports less government labor, cw 2009$","I","A","sector_d.7","4","NO",1,0,11
-"XPN",442,"XPN","Final sales plus imports less government labor, current $","I","A","sector_f.1","4","NO",0,2,24
-"YCSN",443,"YCSN","Net corporate cash flow with IVA and CCA","B","A","sector_f.24","4","NO",0,2,23
-"YDN",444,"YDN","Disposable income","I","A","sector_f.22","4","NO",0,2,23
-"YGFSN",445,"YGFSN","Federal government saving","I","A","sector_h.57","2","NO",0,2,23
-"YGSSN",446,"YGSSN","State and Local government saving","I","A","sector_h.58","2","NO",0,2,23
-"YH",447,"YH","Income, household, total (real after-tax)","I","A","sector_f.28","4","NO",0,3,23
-"YHGAP",448,"YHGAP","Income, household, total, ratio to XGDP, cyclical component (real after-tax)","I","A","sector_f.29","1","NO",0,0,23
-"YHIBN",449,"YHIBN","Consumer interest payments to business","B.4","A","sector_f.30","4","IN",1,0,23
-"YHIN",450,"YHIN","Income, household, net interest and rent","I","A","sector_f.31","4","NO",0,2,23
-"YHL",451,"YHL","Income, household, labor compensation (real after-tax)","I","A","sector_f.32","4","NO",0,3,23
-"YHLN",452,"YHLN","Income, household, labor compensation","I","A","sector_f.33","4","NO",0,2,23
-"YHP",453,"YHP","Income, household, property (real after-tax)","I","A","sector_f.34","4","NO",0,3,23
-"YHPCD",454,"YHPCD","Imputed income of the stock of consumer durables, 2009$","B","A","sector_a.18","4","NO",1,0,23
-"YHPGAP",455,"YHPGAP","Income, household, property, ratio to YH, cyclical component (real after-tax)","I","A","sector_f.35","1","NO",0,0,23
-"YHPNTN",456,"YHPNTN","Income, household, property, non-taxable component","I","A","sector_f.36","2","NO",0,2,23
-"YHPSHR",457,"YHPSHR","Income, household, property, ratio to YH (real after-tax)","I","A","sector_f.37","4","NO",0,0,23
-"YHPTN",458,"YHPTN","Income, household, property, taxable component","I","A","sector_f.38","4","NO",0,2,23
-"YHSHR",459,"YHSHR","Income, household, total, ratio to XGDP (real after-tax)","I","A","sector_f.39","4","NO",0,0,23
-"YHSN",460,"YHSN","Personal saving","I","A","sector_f.40","4","NO",0,2,23
-"YHT",461,"YHT","Income, household, transfer (real after-tax), net basis","I","A","sector_f.41","4","NO",0,3,23
-"YHTGAP",462,"YHTGAP","Income, household, transfer, ratio to YH, cyclical component (real after-tax)","I","A","sector_f.42","1","NO",0,0,23
-"YHTN",463,"YHTN","Income, household, transfer payments. net basis","I","A","sector_f.43","4","NO",0,2,23
-"YHTSHR",464,"YHTSHR","Income, household, transfer, ratio to YH (real after-tax)","I","A","sector_f.44","4","NO",0,0,23
-"YKIN",465,"YKIN","Income from stock of inventories","I","A","sector_f.25","4","NO",0,2,23
-"YKPDN",466,"YKPDN","Income from stock of equipment","I","A","sector_f.26","4","NO",0,2,23
-"YKPSN",467,"YKPSN","Income from stock of nonresidential structures","I","A","sector_f.27","4","NO",0,2,23
-"YMSDN",468,"YMSDN","Microsoft one-time dividend payout in 2004Q4","X.7","","","1","NO",0,0,23
-"YNICPN",469,"YNICPN","Corporate profits (national income component)","I","A","sector_f.20","4","NO",0,2,23
-"YNIDN",470,"YNIDN","Dividends (national income component)","B.4","A","sector_f.19","4","IN",1,0,23
-"YNIIN",471,"YNIIN","Net interest and rental income (national income component)","B.4","A","sector_f.17","4","IN",7,0,23
-"YNILN",472,"YNILN","Labor income (national income component)","I","A","sector_f.15","4","NO",0,2,23
-"YNIN",473,"YNIN","National income","I","A","sector_f.14","4","NO",0,2,23
-"YNISEN",474,"YNISEN","Propprietors' income (national income component)","I","A","sector_f.16","4","NO",0,2,23
-"YPN",475,"YPN","Personal income","I","A","sector_f.21","4","NO",0,2,23
-"ZDIVGR",476,"ZDIVGR","Expected growth rate of real dividends, for WPSN eq. (VAR exp.)","I","A","sector_z.29","1","NO",0,0,2
-"ZECD",477,"ZECD","Expected growth rate of target durable consumption, for ECD eq. (VAR exp.)","I","A","sector_z.19","1","NO",0,0,26
-"ZECO",478,"ZECO","Expected growth rate of target nondurables and nonhousing services, for ECO eq (VAR exp.)","I","A","sector_z.18","1","NO",0,0,26
-"ZEH",479,"ZEH","Expected growth rate of target residential investment, for EH eq. (VAR exp.)","I","A","sector_z.21","1","NO",0,0,26
-"ZGAP05",480,"ZGAP05","Expected output gap, for RG5E eq. (VAR exp.)","I","A","sector_z.7","1","NO",0,0,26
-"ZGAP10",481,"ZGAP10","Expected output gap, for RG10E eq. (VAR exp.)","I","A","sector_z.8","1","NO",0,0,26
-"ZGAP30",482,"ZGAP30","Expected output gap, for RG30E eq. (VAR exp.)","I","A","sector_z.9","1","NO",0,0,26
-"ZGAPC2",483,"ZGAPC2","Expected output gap, for ECD eq. (VAR exp.)","I","A","sector_z.20","1","NO",0,0,26
-"ZLHP",484,"ZLHP","Expected growth rate of target aggregate hours (VAR exp.)","I","A","sector_z.22","1","NO",0,0,26
-"ZPI10",485,"ZPI10","Expected cons. price infl., for RCCH, RRMET, and YHPNTN eqs. (10-yr mat.) (VAR exp.)","I","A","sector_z.12","1","NO",0,0,26
-"ZPI10F",486,"ZPI10F","Expected cons. price infl., for FPXR eq. (10-yr mat.) (VAR exp.)","I","A","sector_z.13","1","NO",0,0,26
-"ZPI5",487,"ZPI5","Expected cons. price infl., for RCCD eq. (5-yr mat.) (VAR exp.)","I","A","sector_z.10","1","NO",0,0,26
-"ZPIB5",488,"ZPIB5","Expected output price infl., for RPD eq. (5-yr mat.) (VAR exp.)","I","A","sector_z.11","1","NO",0,0,26
-"ZPIC30",489,"ZPIC30","Expected cons. price infl., for REQ eq. (30-yr mat.) (VAR exp.)","I","A","sector_z.14","1","NO",0,0,26
-"ZPIC58",490,"ZPIC58","Expected 4-qtr consumer price inflation (8 qtrs. in the future) (VAR exp.)","I","A","sector_z.15","1","NO",0,0,26
-"ZPICXFE",491,"ZPICXFE","Expected value of picxfe in the next quarter (VAR exp.)","I","A","sector_z.16","1","NO",0,0,26
-"ZPIECI",492,"ZPIECI","Expected value of pieci in the next quarter (VAR exp.)","I","A","sector_z.17","1","NO",0,0,26
-"ZRFF10",493,"ZRFF10","Expected federal funds rate, for RG10E eq. (10-yr mat.) (VAR exp.)","I","A","sector_z.5","1","NO",0,0,26
-"ZRFF30",494,"ZRFF30","Expected federal funds rate, for RG30E eq. (30-yr mat.) (VAR exp.)","I","A","sector_z.6","1","NO",0,0,26
-"ZRFF5",495,"ZRFF5","Expected federal funds rate, for RG5E eq. (5-yr mat.) (VAR exp.)","I","A","sector_z.4","1","NO",0,0,26
-"ZVPD",496,"ZVPD","Expected growth rate of capital-output ratio, for EPD (VAR exp.)","I","A","sector_z.23","1","NO",0,0,26
-"ZVPI",497,"ZVPI","Expected growth rate of capital-output ratio, for EPI (VAR exp.)","I","A","sector_z.24","1","NO",0,0,26
-"ZVPS",498,"ZVPS","Expected growth rate of des. capital-output ratio, for EPS eq. (VAR exp.)","I","A","sector_z.25","1","NO",0,0,26
-"ZXBD",499,"ZXBD","Expected growth rate of buisiness output for EPD (VAR exp.)","I","A","sector_z.26","1","NO",0,0,26
-"ZXBI",500,"ZXBI","Expected growth rate of business output, for EPI (VAR exp.)","I","A","sector_z.27","1","NO",0,0,26
-"ZXBS",501,"ZXBS","Expected growth rate of business output, for EPS (VAR exp.)","I","A","sector_z.28","1","NO",0,0,26
-"ZYH",502,"ZYH","Expected level of real after-tax household income, for QEC eq. (VAR exp.)","I","A","sector_z.31","4","NO",0,3,26
-"ZYHP",503,"ZYHP","Expected level of real after-tax property income, for QEC eq. (VAR exp.)","I","A","sector_z.32","4","NO",0,3,26
-"ZYHPST",504,"ZYHPST","Expected trend share of property income in household income","B.7","A","sector_z.35","4","NO",0,0,26
-"ZYHST",505,"ZYHST","Expected trend ratio of household income to GDP","B.7","A","sector_z.34","4","NO",0,0,26
-"ZYHT",506,"ZYHT","Expected level of real transfer income, for QEC eq. (VAR exp.)","I","A","sector_z.33","4","NO",0,3,26
-"ZYHTST",507,"ZYHTST","Expected trend share of transfer income in household income","B.7","A","sector_z.36","4","NO",0,0,26
-"ZYNID",508,"ZYNID","Expected rate of growth of target real dividends, for YNIDN eq. (VAR exp.)","I","A","sector_z.30","1","NO",0,0,26
+"CENG",1,"CENG","Consumption of crude energy (oil, coal, natural gas),  2009 $","B.4","A","sector_c.5",4,"OT",1,0,16
+"D01Q4",2,"D01Q4","Dummy, destruction of World Trade Center","X.7","","",1,"NO",0,0,27
+"D2002",3,"D2002","Dummy,","X.7","","",1,"NO",0,0,27
+"D2003",4,"D2003","Dummy,","X.7","","",1,"NO",0,0,27
+"D69",5,"D69","Dummy, post-1968 indicator","X.2","","",1,"NO",0,0,14
+"D79A",6,"D79A","Dummy, post-1979 indicator","X.2","","",1,"NO",0,0,27
+"D8095",7,"D8095","Dummy, 1980-1995 indicator","X.2","","",1,"NO",0,0,14
+"D81",8,"D81","Dummy, post-1980 indicator","X.2","","",1,"NO",0,0,14
+"D83",9,"D83","Dummy, post-1983 indicator","X.2","","",1,"NO",0,0,27
+"D86",10,"D86","Dummy, post-1985 indicator","X.2","","",1,"NO",0,0,27
+"D87",11,"D87","Dummy, post-1986 indicator","X.2","","",1,"NO",0,0,14
+"DCON",12,"DCON","Dummy, 0 prior to 1986, 1 after 1988, with a linear trend in between","X.2","","",1,"NO",0,0,27
+"DDOCKM",13,"DDOCKM","Dock strike dummy, import equation","X.2","","",4,"NO",0,0,27
+"DDOCKX",14,"DDOCKX","Dock strike dummy, export equation","X.7","","",4,"NO",0,0,27
+"DELRFF",15,"DELRFF","Federal funds rate, first diff","I","A","sector_i.14",1,"NO",0,0,28
+"DEUC",16,"DEUC","EUC switch:  1 for including EUC, 0 for not including","X.2","","",1,"NO",0,0,1
+"DFMPRR",17,"DFMPRR","Dummy, Foreign monetary policy switch:  Exogenous real interest rate","X.2","","",1,"NO",0,0,27
+"DFPDBT",18,"DFPDBT","Fiscal policy switch:  1 for debt ratio stabilization","X.2","","",1,"NO",0,0,14
+"DFPEX",19,"DFPEX","Fiscal policy switch:  1 for exogenous personal income trend tax rates","X.2","","",1,"NO",0,0,14
+"DFPSRP",20,"DFPSRP","Fiscal policy switch:  1 for surplus ratio stabilization","X.2","","",1,"NO",0,0,14
+"DGLPRD",21,"DGLPRD","Switch to control for long-run productivity growth in the government sector","X.2","","",1,"NO",0,0,27
+"DMPALT",22,"DMPALT","Monetary policy switch: MA rule","X.2","","",1,"NO",0,0,1
+"DMPEX",23,"DMPEX","Monetary policy switch:  exogenous federal funds rate","X.2","","",1,"NO",0,0,1
+"DMPGEN",24,"DMPGEN","Monetary policy switch:  Generalized reaction function","X.2","","",1,"NO",0,0,1
+"DMPINTAY",25,"DMPINTAY","Monetary policy switch:  inertial taylor rule","X.2","","",1,"NO",0,0,1
+"DMPRR",26,"DMPRR","Monetary policy switch:  exogenous real federal funds rate","X.2","","",1,"NO",0,0,1
+"DMPSTB",27,"DMPSTB","Stabilization  switch:  0 for standard applications, 1 for stochastic simulations","X.2","","",1,"NO",0,0,1
+"DMPTAY",28,"DMPTAY","Monetary policy switch:  Taylor's reaction function","X.2","","",1,"NO",0,0,1
+"DMPTLR",29,"DMPTLR","Monetary policy switch:  Taylor's reaction function with unemployment gap","X.2","","",1,"NO",0,0,1
+"DMPTLUR",30,"DMPTLUR","Monetary policy indicator for unemployment threshold","B","A","sector_i.8",1,"NO",0,0,1
+"DMPTMAX",31,"DMPTMAX","Monetary policy indicator for both thresholds","B","A","sector_i.10",1,"NO",0,0,1
+"DMPTPI",32,"DMPTPI","Monetary policy indicator for inflation threshold","B","A","sector_i.9",1,"NO",0,0,1
+"DMPTR",33,"DMPTR","Monetary policy indicator for policy rule thresholds","B","A","sector_i.11",1,"NO",0,0,1
+"DMPTRSH",34,"DMPTRSH","Monetary policy threshold switch:  0 for no threshold,  1 for threshold","X.2","","",1,"NO",0,0,1
+"DPADJ",35,"DPADJ","Price inflation aggregation adjustment","B","A","sector_g.27",1,"NO",0,0,28
+"DPGAP",36,"DPGAP","Price inflation aggregation discrepancy","I","A","sector_g.26",1,"NO",0,0,28
+"DRSTAR",37,"DRSTAR","RSTAR updating switch: 1 is on, 0 is off","X.2","","",1,"NO",0,0,27
+"EC",38,"EC","Consumption, cw 2009$ (FRB/US definition)","I","A","sector_a.17",4,"NO",1,0,11
+"ECD",39,"ECD","Consumer expenditures on durable goods, cw 2009$","B.4","A","sector_a.2",4,"IS",1,0,6
+"ECH",40,"ECH","Consumer expenditures on housing services, cw 2009$","B.4","A","sector_a.4",4,"IS",1,0,6
+"ECNIA",41,"ECNIA","Personal consumption expenditures, cw 2009$ (NIPA definition)","I","A","sector_a.9",4,"NO",1,0,11
+"ECNIAN",42,"ECNIAN","Personal consumption expenditures, current $ (NIPA definition)","I","A","sector_a.10",4,"NO",0,2,24
+"ECO",43,"ECO","Consumer expenditures on non-durable goods and non-housing services, cw 2009$","B.4","A","sector_a.1",4,"IS",1,0,6
+"EGF",44,"EGF","Federal government consumption and gross investment, cw 2009$","I","A","sector_h.1",4,"NO",1,0,9
+"EGFI",45,"EGFI","Federal government gross investment, cw 2009$","B.4","A","sector_h.3",4,"GV",1,0,9
+"EGFIN",46,"EGFIN","Federal government gross investment, current $","I","A","sector_h.4",4,"NO",0,2,24
+"EGFIT",47,"EGFIT","Federal government gross investment, cw 2009$, trend","B.4","A","sector_h.5",4,"NO",1,0,9
+"EGFL",48,"EGFL","Federal government employee compensation, cw 2009$","B.4","A","sector_h.6",4,"GV",1,0,9
+"EGFLN",49,"EGFLN","Federal government employee compensation, current $","I","A","sector_h.7",4,"NO",0,2,24
+"EGFLT",50,"EGFLT","Federal government employee compensation, cw 2009$, trend","B.4","A","sector_h.8",4,"NO",1,0,9
+"EGFN",51,"EGFN","Federal government consumption and gross investment, current $","I","A","sector_h.2",4,"NO",0,2,24
+"EGFO",52,"EGFO","Federal government consumption ex. employee comp., cw 2009$","B.4","A","sector_h.9",4,"GV",1,0,9
+"EGFON",53,"EGFON","Federal government consumption ex. employee comp., current $","I","A","sector_h.10",4,"NO",0,2,24
+"EGFOT",54,"EGFOT","Federal government consumption ex. employee comp., cw 2009$, trend","B.4","A","sector_h.11",4,"NO",1,0,9
+"EGPDIN",55,"EGPDIN","Gross private domestic investment","I","A","sector_b.31",4,"NO",0,2,24
+"EGS",56,"EGS","S&L government consumption and gross investment, cw 2009$","I","A","sector_h.12",4,"NO",1,0,10
+"EGSI",57,"EGSI","S&L government gross investment, cw 2009$","B.4","A","sector_h.14",4,"GV",1,0,10
+"EGSIN",58,"EGSIN","S&L government gross investment, current $","I","A","sector_h.15",4,"NO",0,2,24
+"EGSIT",59,"EGSIT","S&L government gross investment, cw 2009$, trend","B.4","A","sector_h.16",4,"NO",1,0,10
+"EGSL",60,"EGSL","S&L government employee compensation, cw 2009$","B.4","A","sector_h.17",4,"GV",1,0,10
+"EGSLN",61,"EGSLN","S&L government employee compensation, current $","I","A","sector_h.18",4,"NO",0,2,24
+"EGSLT",62,"EGSLT","S&L government employee compensation, cw 2009$, trend","B.4","A","sector_h.19",4,"NO",1,0,10
+"EGSN",63,"EGSN","S&L government consumption and gross investment, current $","I","A","sector_h.13",4,"NO",0,2,24
+"EGSO",64,"EGSO","S&L government consumption ex. employee comp., cw 2009$","B.4","A","sector_h.20",4,"GV",1,0,10
+"EGSON",65,"EGSON","S&L government consumption ex. employee comp., current $","I","A","sector_h.21",4,"NO",0,2,24
+"EGSOT",66,"EGSOT","S&L government consumption ex. employee comp., cw 2009$, trend","B.4","A","sector_h.22",4,"NO",1,0,10
+"EH",67,"EH","Residential investment expenditures, cw 2009$","B.4","A","sector_a.3",4,"IS",1,0,6
+"EHN",68,"EHN","Residential investment expenditures","I","A","sector_a.11",4,"NO",0,2,24
+"EI",69,"EI","Change in private inventories, cw 2009$","I","A","sector_b.5",3,"NO",0,3,7
+"EIN",70,"EIN","Change in business inventories, current $","B","A","sector_b.28",2,"NO",0,2,24
+"EM",71,"EM","Imports of goods and services, cw 2009$","I","A","sector_c.9",4,"NO",1,0,8
+"EMN",72,"EMN","Imports of goods and services, current $","I","A","sector_c.8",4,"NO",0,2,24
+"EMO",73,"EMO","Imports of goods and services ex. petroleum, cw 2009$","B.4","A","sector_c.3",4,"IS",1,0,8
+"EMON",74,"EMON","Imports of goods and services ex. petroleum","I","A","sector_c.4",4,"NO",0,2,24
+"EMP",75,"EMP","Petroleum imports, cw 2009$","I","A","sector_c.6",4,"NO",0,3,8
+"EMPN",76,"EMPN","Petroleum imports, current $","I","A","sector_c.7",4,"NO",0,2,24
+"EMPT",77,"EMPT","Petroleum imports trend, cw 2009$","B","A","sector_d.15",4,"NO",1,0,28
+"EPD",78,"EPD","Investment in equipment, cw 2009$","B.4","A","sector_b.1",4,"IS",1,0,7
+"EPDN",79,"EPDN","Investment in equipment, current $","I","A","sector_b.25",4,"NO",0,2,24
+"EPI",80,"EPI","Investment in intellectual property, cw 2009$","B.4","A","sector_b.2",4,"IS",1,0,7
+"EPIN",81,"EPIN","Investment in intellectual property, current $","I","","sector_b.26",NA,"NO",NA,NA,24
+"EPS",82,"EPS","Investment in nonresidential structures, cw 2009$","B.4","A","sector_b.3",4,"IS",1,0,7
+"EPSN",83,"EPSN","Investment in nonresidential structures, current $","I","A","sector_b.27",4,"NO",0,2,24
+"EX",84,"EX","Exports of goods and services, cw 2009 $","B.4","A","sector_c.1",4,"IS",1,0,8
+"EXN",85,"EXN","Exports of goods and services, current $","I","A","sector_c.2",4,"NO",0,2,24
+"FCBN",86,"FCBN","US current account balance, current $","I","A","sector_c.10",2,"NO",0,2,13
+"FCBRN",87,"FCBRN","US current account balance residual, current $","I","A","sector_c.11",2,"NO",0,2,13
+"FGDP",88,"FGDP","Foreign aggregate GDP (world, bilateral export weights)","I","A","sector_j.2",4,"NO",0,1,12
+"FGDPT",89,"FGDPT","Foreign aggregate GDP (world, bilateral export weights), trend","B.4","A","sector_j.3",4,"NO",0,1,12
+"FNICN",90,"FNICN","Gross stock of claims of US residents on the rest of the world, current $","I","A","sector_c.16",2,"NO",2,0,13
+"FNILN",91,"FNILN","Gross stock of liabilities of US residents to the rest of the world, current $","I","A","sector_c.17",2,"NO",0,2,13
+"FNIN",92,"FNIN","Net stock of claims of US residents on the rest of the world, current $","I","A","sector_c.12",2,"NO",0,2,13
+"FNIRN",93,"FNIRN","Net stock of claims of US residents on the rest of the world, residual","I","A","sector_c.22",2,"NO",0,2,13
+"FPC",94,"FPC","Foreign aggregate consumer price (G39, import/export trade weights)","I","A","sector_j.7",4,"NO",0,1,13
+"FPCM",95,"FPCM","Foreign aggregate consumer price (G39, bilateral non-oil import trade weights)","I","A","sector_j.8",4,"NO",0,1,13
+"FPI10",96,"FPI10","Foreign consumer price inflation (G10)","B.4","A","sector_j.4",1,"NO",0,0,13
+"FPI10T",97,"FPI10T","Foreign consumer price inflation, trend (G10)","B.1","A","sector_j.5",1,"NO",0,0,13
+"FPIC",98,"FPIC","Foreign consumer price inflation (G39, bilateral export trade weights)","B.1","A","sector_j.6",1,"NO",0,0,13
+"FPITRG",99,"FPITRG","Foreign target consumer price inflation (G10)","X.2","","",1,"NO",0,0,13
+"FPX",100,"FPX","Nominal exchange rate (G39, import/export trade weights)","I","A","sector_j.14",4,"NO",0,1,4
+"FPXM",101,"FPXM","Nominal exchange rate (G39, bilateral import trade weights)","I","A","sector_j.15",4,"NO",0,1,4
+"FPXR",102,"FPXR","Real exchange rate (G39, import/export trade weights)","B","A","sector_j.12",4,"NO",1,0,4
+"FPXRR",103,"FPXRR","Real exchange rate residual","B.4","A","sector_j.13",4,"RW",1,0,4
+"FPXRRT",104,"FPXRRT","Real exchange rate residual, trend","X.2","","",4,"NO",0,0,4
+"FRL10",105,"FRL10","Foreign long-term interest rate (G10)","B.4","A","sector_j.11",1,"NO",0,0,13
+"FRS10",106,"FRS10","Foreign short-term interest rate (G10)","B.4","A","sector_j.9",1,"NO",0,0,13
+"FRSTAR",107,"FRSTAR","Equilibrium real short-term interest rate used in foreign Taylor rule","B","A","sector_j.10",1,"NO",0,0,13
+"FTCIN",108,"FTCIN","Corporate taxes paid to rest of world, current $","I","A","sector_c.13",4,"NO",0,2,13
+"FXGAP",109,"FXGAP","Foreign output gap (world, bilateral export weights)","B.4","A","sector_j.1",1,"RW",0,0,12
+"FYNICN",110,"FYNICN","Gross investment income received from the rest of the world, current $","I","A","sector_c.18",2,"NO",0,2,13
+"FYNILN",111,"FYNILN","Gross investment income paid to the rest of the world, current $","I","A","sector_c.19",2,"NO",0,2,13
+"FYNIN",112,"FYNIN","Net investment income received from the rest of the world, current $","I","A","sector_c.14",2,"NO",0,2,13
+"GFDBTN",113,"GFDBTN","Federal government debt stock, current $","I","A","sector_h.23",2,"NO",0,2,14
+"GFDRT",114,"GFDRT","Federal government target debt-to-GDP ratio","X.2","","",1,"NO",0,0,14
+"GFINTN",115,"GFINTN","Federal government net interest payments, current $","I","A","sector_h.24",2,"NO",0,2,14
+"GFS",116,"GFS","Federal government grants-in-aid to S&L government, deflated by PGDP","B.4","A","sector_h.25",4,"NO",0,0,14
+"GFSN",117,"GFSN","Federal government grants-in-aid to S&L government, current $","I","A","sector_h.26",4,"NO",0,2,14
+"GFSRPN",118,"GFSRPN","Federal government budget surplus, current $","I","A","sector_h.27",2,"NO",0,2,14
+"GFSRT",119,"GFSRT","Federal government target surplus-to-GDP ratio","X.2","","",1,"NO",0,0,14
+"GFSUB",120,"GFSUB","Federal government subsidies less surplus, deflated by PGDP","B.4","A","sector_h.28",3,"NO",0,0,14
+"GFSUBN",121,"GFSUBN","Federal government subsidies less surplus, current $","I","A","sector_h.29",2,"NO",0,2,14
+"GFT",122,"GFT","Federal government net transfer payments, deflated by PGDP","I","A","sector_h.30",4,"NO",0,0,14
+"GFTN",123,"GFTN","Federal government net transfer payments, current $","I","A","sector_h.31",4,"NO",0,2,14
+"GFTRD",124,"GFTRD","Deviation of ratio of federal transfers to GDP from trend ratio","B.1","A","sector_h.32",1,"GV",0,0,14
+"GFTRT",125,"GFTRT","Federal government, trend ratio of transfer payments to GDP","X.2","","",1,"NO",0,0,14
+"GSDBTN",126,"GSDBTN","S&L government debt stock, current $","I","A","sector_h.33",2,"NO",0,2,15
+"GSDRT",127,"GSDRT","S&L government target debt-to-GDP ratio","X.2","","",4,"NO",0,0,15
+"GSINTN",128,"GSINTN","S&L government net interest payments, current $","I","A","sector_h.34",2,"NO",0,2,15
+"GSSRPN",129,"GSSRPN","S&L government budget surplus, current $","I","A","sector_h.35",2,"NO",0,2,15
+"GSSRT",130,"GSSRT","State and local government, target surplus-to-GDP ratio","X.2","","",1,"NO",0,0,15
+"GSSUB",131,"GSSUB","S&L government subsidies less surplus, deflated by PGDP","I","A","sector_h.40",3,"NO",0,0,15
+"GSSUBN",132,"GSSUBN","S&L government subsidies less surplus, current $","I","A","sector_h.36",2,"NO",0,2,15
+"GST",133,"GST","S&L government net transfer payments, deflated by PGDP","I","A","sector_h.38",4,"NO",0,3,15
+"GSTN",134,"GSTN","S&L government net transfer payments, current $","I","A","sector_h.37",4,"NO",0,2,15
+"GSTRD",135,"GSTRD","Deviation of ratio of S&L transfers to GDP from trend ratio","B.1","A","sector_h.39",1,"GV",0,0,15
+"GSTRT",136,"GSTRT","S&L government, trend ratio of transfer payments to GDP","X.2","","",1,"NO",0,0,15
+"HGEMP",137,"HGEMP","Petroleum imports, cw 2009$, trend growth rate","B","A","sector_c.15",1,"NO",0,0,28
+"HGGDP",138,"HGGDP","Growth rate of GDP, cw 2009$ (annual rate)","I","A","sector_d.3",1,"NO",0,0,29
+"HGGDPT",139,"HGGDPT","Trend growth rate of XGDP, cw 2009$ (annual rate)","I","A","sector_d.24",1,"NO",0,0,18
+"HGPCDR",140,"HGPCDR","Trend growth rate of price of consumer durable goods (relative to PCNIA)","X.2","","",1,"NO",0,0,22
+"HGPDR",141,"HGPDR","Trend Price Growth of PPDR","B","A","sector_g.50",1,"NO",0,0,22
+"HGPIR",142,"HGPIR","Trend Price Growth of PPIR","B","A","sector_g.51",1,"NO",0,0,22
+"HGPKIR",143,"HGPKIR","Trend growth rate of PKIR","B","A","sector_g.52",1,"NO",0,0,22
+"HGPPSR",144,"HGPPSR","Trend growth rate of PPSR","B","A","sector_g.53",1,"NO",0,0,22
+"HGVPD",145,"HGVPD","Trend Growth of VPD","B","A","sector_b.23",1,"NO",0,0,7
+"HGVPI",146,"HGVPI","Trend growth rate of VPI","B","A","sector_b.32",1,"NO",0,0,7
+"HGVPS",147,"HGVPS","Trend growth rate of VPS","B","A","sector_b.24",1,"NO",0,0,7
+"HGX",148,"HGX","Trend growth rate of XG, cw 2009$ (annual rate)","I","A","sector_d.22",1,"NO",0,0,18
+"HGYNID",149,"HGYNID","Growth rate of real after-tax corporate profits","I","A","sector_z.37",1,"NO",0,0,28
+"HKS",150,"HKS","Growth rate of KS, cw 2009$ (compound annual rate)","I","A","sector_b.13",1,"NO",0,0,18
+"HKSR",151,"HKSR","Residual growth of capital services","X.7","","",1,"NO",0,0,18
+"HLEPT",152,"HLEPT","Trend growth rate of LEP (annual rate)","B","A","sector_e.22",1,"NO",0,0,18
+"HLPRDT",153,"HLPRDT","Trend growth rate of output per hour","I","A","sector_e.24",1,"NO",0,0,18
+"HMFPT",154,"HMFPT","Trend growth rate of multifactor productivity","B","A","sector_d.11",1,"ST",0,0,18
+"HQLFPR",155,"HQLFPR","Drift component of change in QLFPR","B","A","sector_e.13",1,"LB",0,0,18
+"HQLWW",156,"HQLWW","Trend growth rate of workweek","B","A","sector_e.5",1,"LB",0,0,18
+"HUQPCT",157,"HUQPCT","Drift term in stochastic component of trend ratio of PCNIA to PXP","B","A","sector_g.31",4,"NO",0,0,22
+"HUXB",158,"HUXB","Drift term in UXBT","B.4","A","sector_d.19",1,"NO",0,0,18
+"HXBT",159,"HXBT","Trend rate of growth of XB  , cw 2009$ (annual rate)","I","A","sector_d.23",1,"NO",0,0,18
+"JCCACN",160,"JCCACN","Consumption of fixed capital, corporate, current $","I","A","sector_f.7",4,"NO",0,2,21
+"JCCAN",161,"JCCAN","Consumption of fixed capital, current $","I","A","sector_f.8",4,"NO",0,2,21
+"JKCD",162,"JKCD","Consumption of fixed capital, consumer durables","I","A","sector_a.16",4,"NO",1,0,21
+"JRCD",163,"JRCD","Depreciation rate, consumer durables","X.3","","",1,"NO",0,0,21
+"JRH",164,"JRH","Depreciation rate, housing","X.3","","",1,"NO",0,0,21
+"JRPD",165,"JRPD","Depreciation rate, equipment","X.3","","",1,"NO",0,0,21
+"JRPI",166,"JRPI","Depreciation rate, intellectual property","X.3","","",1,"NO",0,0,21
+"JRPS",167,"JRPS","Depreciation rate, nonresidential structures","X.3","","",1,"NO",0,0,21
+"JYGFEN",168,"JYGFEN","CFC, federal government enterprises, current $","I","A","sector_f.9",4,"NO",0,2,14
+"JYGFGN",169,"JYGFGN","CFC, federal government, general, current $","I","A","sector_f.10",4,"NO",0,2,14
+"JYGSEN",170,"JYGSEN","CFC, state and local government enterprises, current $","I","A","sector_f.11",4,"NO",0,2,15
+"JYGSGN",171,"JYGSGN","CFC, state and local government, general, current $","I","A","sector_f.12",4,"NO",0,2,15
+"JYNCN",172,"JYNCN","Noncorporate business CFC, current $","I","A","sector_f.13",4,"NO",0,2,21
+"KCD",173,"KCD","Stock of consumer durables, cw 2009$","I","A","sector_a.12",4,"NO",0,3,21
+"KH",174,"KH","Stock of residential structures, cw 2009$","I","A","sector_a.13",4,"NO",0,3,21
+"KI",175,"KI","Stock of private inventories, cw 2009$","B.4","A","sector_b.4",4,"IS",1,0,7
+"KPD",176,"KPD","Capital stock - Equipment, 2009$","I","A","sector_b.10",4,"NO",0,3,21
+"KPI",177,"KPI","Capital Stock - Intellectual Property, 2009$","I","","sector_b.11",NA,"NO",NA,NA,21
+"KPS",178,"KPS","Capital stock - nonresidential structures, 2009$","I","A","sector_b.12",4,"NO",0,3,21
+"KS",179,"KS","Capital services, 2009 $","I","A","sector_b.14",4,"NO",1,0,18
+"LEF",180,"LEF","Federal civilian employment ex. gov. enterprise","I","A","sector_e.8",4,"NO",0,4,20
+"LEFT",181,"LEFT","Federal civilian employment ex. gov. enterprise, trend","B.6","A","sector_e.19",4,"NO",0,4,18
+"LEH",182,"LEH","Civilian employment (break adjusted)","I","A","sector_e.10",4,"NO",0,4,20
+"LEO",183,"LEO","Difference between household and business sector payroll employment, less gov't emp.","B","A","sector_e.7",5,"NO",1,0,20
+"LEP",184,"LEP","Employment in  business sector (employee and  self-employed)","I","A","sector_e.6",4,"NO",0,4,20
+"LEPPOT",185,"LEPPOT","Potential employment in  business sector","I","A","sector_e.21",4,"NO",0,4,18
+"LES",186,"LES","S&L government employment ex. gov. enterprise","I","A","sector_e.9",4,"NO",0,4,20
+"LEST",187,"LEST","S&L government employment ex. gov. enterprise, trend","B.4","A","sector_e.20",4,"NO",0,4,18
+"LEUC",188,"LEUC","Emergency unemployment compensation (EUC)","X.2","","",1,"NO",0,0,18
+"LF",189,"LF","Civilian labor force (break adjusted)","I","A","sector_e.14",4,"NO",0,4,20
+"LFPR",190,"LFPR","Labor force participation rate","B","A","sector_e.11",1,"LB",0,0,20
+"LHP",191,"LHP","Aggregate labor hours,  business sector (employee and  self-employed)","B","A","sector_e.1",4,"LB",1,0,20
+"LPRDT",192,"LPRDT","Trend labor productivity","I","A","sector_e.23",4,"NO",1,0,18
+"LQUALT",193,"LQUALT","Labor quality, trend level","X.1","","",4,"NO",0,0,18
+"LUR",194,"LUR","Civilian unemployment rate (break adjusted)","B","A","sector_e.15",1,"LB",0,0,20
+"LURBLS",195,"LURBLS","Civilian unemployment rate (published)","B.3","A","sector_e.16",1,"NO",0,0,20
+"LURNAT",196,"LURNAT","Natural rate of unemployment","B","A","sector_e.25",1,"LB",0,0,18
+"LURTRSH",197,"LURTRSH","Unemployment threshold","X.2","","",1,"NO",0,0,1
+"LWW",198,"LWW","Workweek,  business sector (employee and self-employed)","B.7","A","sector_e.3",4,"LB",1,0,20
+"MEI",199,"MEI","Multiplicative discrepancy for the difference between XGDI and XGDO","B","A","sector_i.39",1,"NO",0,0,28
+"MEP",200,"MEP","Multiplicative discrepancy for the difference between XGDP and XGDO","B","A","sector_i.41",1,"NO",0,0,28
+"MFPT",201,"MFPT","Multifactor productivity, trend level","B","A","sector_d.12",4,"ST",1,0,18
+"N16",202,"N16","Noninstitutional population, aged 16 and over (break adjusted)","X.1","","",4,"NO",0,0,18
+"PCDR",203,"PCDR","Price index for consumer durables, cw (relative to to PCNIA)","B.4","A","sector_g.59",4,"NO",0,0,22
+"PCENG",204,"PCENG","Price index for aggregate energy consumption","I","A","sector_g.37",4,"NO",0,1,17
+"PCENGR",205,"PCENGR","Price index for aggregate energy consumption (relative to PXB  )","B.4","A","sector_g.36",4,"PR",1,0,17
+"PCER",206,"PCER","Price index for personal consumption expenditures on energy (relative to PCXFE)","B.4","A","sector_g.38",4,"PR",1,0,17
+"PCFR",207,"PCFR","Price index for personal consumption expenditures on food (relative to PCXFE)","B.4","A","sector_g.39",4,"PR",1,0,22
+"PCFRT",208,"PCFRT","Real PCE price of food, trend","X.2","","",4,"NO",0,0,22
+"PCHR",209,"PCHR","Price index for housing services, cw (relative to to PCNIA)","B.4","A","sector_g.57",4,"NO",0,0,22
+"PCNIA",210,"PCNIA","Price index for personal consumption expenditures, cw (NIPA definition)","I","","sector_g.5",NA,"NO",NA,NA,22
+"PCOR",211,"PCOR","Price index for non-durable goods and non-housing services, cw (relative to to PCNIA)","I","A","sector_g.56",4,"NO",0,0,22
+"PCPI",212,"PCPI","Consumer price index,total","I","A","sector_g.6",4,"NO",0,1,22
+"PCPIX",213,"PCPIX","Consumer price index,excluding food and energy","I","A","sector_g.7",4,"NO",0,1,22
+"PCSTAR",214,"PCSTAR","Target consumption price level (used in RFFGEN policy rule)","X.1","","",4,"NO",0,0,22
+"PCXFE",215,"PCXFE","Price index for personal consumption expendits ex. food and energy, cw (NIPA definition)","B.4","A","sector_g.33",4,"NO",1,0,22
+"PGDP",216,"PGDP","Price index for GDP, cw","I","A","sector_g.44",4,"NO",0,1,22
+"PGFIR",217,"PGFIR","Price index for federal gov. investment, cw (relative to PXP)","B.4","A","sector_g.17",4,"OT",1,0,22
+"PGFL",218,"PGFL","Price index for federal government employee compensation, cw","I","A","sector_g.45",4,"NO",0,1,22
+"PGFOR",219,"PGFOR","Price index for federal governemnt consumption ex. emp. comp., cw (relative to PXP)","B.4","A","sector_g.18",4,"OT",1,0,22
+"PGSIR",220,"PGSIR","Price index for S&L government investment (relative to PXP)","B.4","A","sector_g.19",4,"OT",1,0,22
+"PGSL",221,"PGSL","Price index for S&L government employee compensation, cw","I","A","sector_g.46",4,"NO",0,1,22
+"PGSOR",222,"PGSOR","Price index for S&L government consumption ex. emp. comp., cw (relative to PXP)","B.4","A","sector_g.20",4,"OT",1,0,22
+"PHOUSE",223,"PHOUSE","Loan Performance House Price Index","B.4","A","sector_i.37",1,"FN",0,0,3
+"PHR",224,"PHR","Price index for residential investment, cw (relative to PXP)","B.4","A","sector_g.21",4,"OT",1,0,22
+"PIC4",225,"PIC4","Four-quarter percent change in PCE prices","I","A","sector_g.60",4,"NO",1,0,22
+"PICNGR",226,"PICNGR","Weighted growth rate of relative energy price","I","A","sector_g.54",1,"NO",0,0,17
+"PICNIA",227,"PICNIA","Inflation rate, personal consumption expenditures, cw","B","A","sector_g.4",1,"NO",0,0,22
+"PICX4",228,"PICX4","Four-quarter percent change core in PCE prices","I","A","sector_g.58",4,"NO",1,0,22
+"PICXFE",229,"PICXFE","Inflation rate, personal consumption expenditures, ex. food and energy, cw","B.4","A","sector_g.1",1,"PR",0,0,22
+"PIECI",230,"PIECI","Annualized rate of growth of EI hourly compensation","B.4","A","sector_g.2",1,"PR",0,0,22
+"PIGDP",231,"PIGDP","Inflation rate, GDP, cw","I","A","sector_g.55",1,"NO",0,0,22
+"PIPL",232,"PIPL","Rate of growth of PL","B","A","sector_g.8",1,"NO",0,0,22
+"PIPXNC",233,"PIPXNC","Inflation rate, price of adjusted final sales excluding consumption (annual rate)","B","A","sector_g.3",1,"NO",0,0,22
+"PITARG",234,"PITARG","Target rate of consumption price inflation (used in policy reaction functions)","X.2","","",1,"NO",0,0,1
+"PITRSH",235,"PITRSH","Inflation threshold","X.2","","",1,"NO",0,0,1
+"PKIR",236,"PKIR","Price index for stock of inventories, cw (relative to PXP)","X.2","","",4,"NO",0,0,22
+"PKPDR",237,"PKPDR","Ratio of price of equipment stock (KPD) to PXP","I","A","sector_g.47",4,"NO",0,1,22
+"PL",238,"PL","Compensation per hour,  business","I","A","sector_g.9",4,"NO",1,0,22
+"PLMIN",239,"PLMIN","Minimum wage","I","A","sector_g.28",4,"NO",0,1,22
+"PLMINR",240,"PLMINR","Ratio of hourly minimum wage to compensation per hour (times 100)","X.2","","",4,"NO",0,0,22
+"PMO",241,"PMO","Price index for imports ex. petroleum, cw","B.4","A","sector_g.42",4,"PR",1,0,22
+"PMP",242,"PMP","Price index for petroleum imports","I","A","sector_g.35",4,"NO",0,1,22
+"POIL",243,"POIL","Price of imported oil ($ per barrel)","I","A","sector_g.34",4,"NO",0,1,17
+"POILR",244,"POILR","Price of imported oil, relative to price index for bus. sector output","B.4","A","sector_g.32",4,"PR",1,0,17
+"POILRT",245,"POILRT","Price of imported oil, relative to price index for bus. sector output, trend","X.2","","",4,"NO",0,0,17
+"PPDR",246,"PPDR","Price level of EPD compared to PXP","B.4","A","sector_g.22",4,"OT",1,0,22
+"PPIR",247,"PPIR","Price level of EPI compared to PXP","B.4","A","sector_g.23",4,"OT",1,0,22
+"PPSR",248,"PPSR","Price index for nonresidential structures, cw (relative to PXP)","B.4","A","sector_g.24",4,"OT",1,0,22
+"PTR",249,"PTR","10-year expected PCE price inflation (Survey of Professional Forecasters)","B","A","sector_z.1",1,"NO",0,0,22
+"PWSTAR",250,"PWSTAR","Equilibrium NFB price markup","B","A","sector_g.11",1,"NO",0,0,22
+"PXB",251,"PXB","Price index for NFB output","I","A","sector_g.49",4,"NO",0,1,22
+"PXG",252,"PXG","Price index for  business output plus oil imports","I","A","sector_g.48",4,"NO",0,1,22
+"PXNC",253,"PXNC","Price of adjusted final sales excluding consumption","B.4","A","sector_g.10",4,"NO",1,0,22
+"PXP",254,"PXP","Price index for final sales plus imports less gov. labor","I","A","sector_g.16",4,"NO",1,0,22
+"PXR",255,"PXR","Price index for exports, cw (relative to PXP)","B.4","A","sector_g.25",4,"OT",1,0,22
+"QEC",256,"QEC","Desired level of consumption (FRBUS definition)","I","A","sector_a.5",4,"NO",0,3,25
+"QECD",257,"QECD","Target level of consumption of durable goods, trending component","I","A","sector_a.7",4,"NO",0,1,25
+"QECO",258,"QECO","Desired level of consumption of nondurable goods and nonhousing services","I","A","sector_a.6",4,"NO",0,1,25
+"QEH",259,"QEH","Target level of residential investment","I","A","sector_a.8",4,"NO",0,1,25
+"QEPD",260,"QEPD","Desired level of investment in equipment","I","A","sector_b.6",4,"NO",1,0,25
+"QEPI",261,"QEPI","Desired level of investment in intellectual property","I","A","sector_b.8",4,"NO",1,0,25
+"QEPS",262,"QEPS","Desired level of investment in structures","I","A","sector_b.7",4,"NO",1,0,25
+"QKIR",263,"QKIR","Desired Inventory Sales Ratio","B","A","sector_b.9",4,"NO",1,0,7
+"QLEOR",264,"QLEOR","Desired ratio of employment discrepancy to the labor force","X.2","","",4,"NO",0,0,18
+"QLEP",265,"QLEP","Desired level of  business employment","I","A","sector_e.17",4,"NO",0,4,25
+"QLF",266,"QLF","Desired level of civilian labor force","I","A","sector_e.18",4,"NO",0,4,25
+"QLFPR",267,"QLFPR","Trend labor force participation rate","I","A","sector_e.12",1,"NO",0,0,18
+"QLHP",268,"QLHP","Desired level of  business labor hours","I","A","sector_e.2",4,"NO",0,1,25
+"QLWW",269,"QLWW","Trend workweek,  business sector (employee and  self-employed)","I","A","sector_e.4",4,"NO",1,0,18
+"QPCNIA",270,"QPCNIA","Desired level of consumption price","I","A","sector_g.15",4,"NO",1,0,25
+"QPL",271,"QPL","Desired level of compensation per hour, trending component","I","A","sector_g.13",4,"NO",1,0,25
+"QPMO",272,"QPMO","Random walk component of non-oil import prices","B","A","sector_g.43",4,"NO",1,0,25
+"QPXG",273,"QPXG","Desired price level of private output ex. energy, housing, and farm","I","A","sector_g.12",4,"NO",1,0,25
+"QPXNC",274,"QPXNC","Desired level of nonconsumption price","I","A","sector_g.29",4,"NO",1,0,25
+"QPXP",275,"QPXP","Desired price level of adjusted final sales","I","A","sector_g.14",4,"NO",0,1,25
+"QYNIDN",276,"QYNIDN","Desired level of dividends","I","A","sector_f.18",4,"NO",1,0,25
+"RBBB",277,"RBBB","S&P BBB corporate bond rate","I","A","sector_i.29",1,"NO",0,0,3
+"RBBBE",278,"RBBBE","S&P BBB corporate bond rate (effective ann. yield)","I","A","sector_i.28",1,"NO",0,0,3
+"RBBBP",279,"RBBBP","S&P BBB corporate bond rate, risk/term premium","B.4","A","sector_i.27",1,"FN",0,0,3
+"RCAR",280,"RCAR","New car loan rate at finance companies","B.1","A","sector_i.30",1,"FN",0,0,3
+"RCCD",281,"RCCD","Cost of capital for consumer durables","I","A","sector_a.14",1,"NO",0,0,3
+"RCCH",282,"RCCH","Cost of capital for residential investment","I","A","sector_a.15",1,"NO",0,0,3
+"RCGAIN",283,"RCGAIN","Rate of capital gain on the non-equity portion of household wealth","B.4","A","sector_i.36",1,"FN",0,0,3
+"REQ",284,"REQ","Real expected rate of return on equity","I","A","sector_i.33",1,"NO",0,0,3
+"REQP",285,"REQP","Real expected rate of return on equity, premium component","B.4","A","sector_i.32",1,"FN",0,0,2
+"RFF",286,"RFF","Federal funds rate","I","A","sector_i.13",1,"NO",0,0,1
+"RFFALT",287,"RFFALT","Value of eff. federal funds rate given by estimated policy rule","B","A","sector_i.4",1,"NO",0,0,1
+"RFFE",288,"RFFE","Federal funds rate (effective ann. yield)","B","A","sector_i.12",1,"NO",0,0,1
+"RFFFIX",289,"RFFFIX","Federal funds rate given by fixed, pre-determined funds rate path","X.2","","",1,"NO",0,0,1
+"RFFGEN",290,"RFFGEN","Value of eff. federal funds rate given by the generalized reaction function","B","","sector_i.5",NA,"NO",0,0,1
+"RFFINTAY",291,"RFFINTAY","Value of eff. federal funds rate given by the inertial Taylor rule","B.4","A","sector_i.3",1,"NO",0,0,1
+"RFFMIN",292,"RFFMIN","Minimum nominal funds rate (set at 0 to impose zero lower bound)","X.2","","",1,"NO",0,0,1
+"RFFRULE",293,"RFFRULE","Federal funds rate (effective ann. yield)","B","A","sector_i.7",1,"NO",0,0,1
+"RFFTAY",294,"RFFTAY","Value of eff. federal funds rate given by the Taylor rule with output gap","B.4","A","sector_i.1",1,"NO",0,0,1
+"RFFTLR",295,"RFFTLR","Value of eff. federal funds rate given by the Taylor rule with unemployment gap","B.4","A","sector_i.2",1,"NO",0,0,1
+"RFNICT",296,"RFNICT","Residual in FNICN equation","X.2","","",2,"NO",0,2,18
+"RFRS10",297,"RFRS10","Real foreign short-term interest rate","X.2","","",1,"NO",0,0,27
+"RFYNIC",298,"RFYNIC","Average yield earned on gross claims of US residents on the rest of the world","B.4","A","sector_c.20",2,"FN",0,0,3
+"RFYNIL",299,"RFYNIL","Average yield earned on liabilities of US residents on the rest of the world","B.4","A","sector_c.21",2,"FN",0,0,3
+"RG10",300,"RG10","10-year Treasury bond rate","I","A","sector_i.23",1,"NO",0,0,3
+"RG10E",301,"RG10E","10-year Treasury bond rate (effective ann. yield)","I","A","sector_i.22",1,"NO",0,0,3
+"RG10P",302,"RG10P","10-year Treasury bond rate, term premium","B.4","A","sector_i.21",1,"FN",0,0,3
+"RG30",303,"RG30","30-year Treasury bond rate","I","A","sector_i.26",1,"NO",0,0,3
+"RG30E",304,"RG30E","30-year Treasury bond rate (effective ann. yield)","I","A","sector_i.25",1,"NO",0,0,3
+"RG30P",305,"RG30P","30-year Treasury bond rate, term premium","B.4","A","sector_i.24",1,"FN",0,0,3
+"RG5",306,"RG5","5-year Treasury note rate","I","A","sector_i.20",1,"NO",0,0,3
+"RG5E",307,"RG5E","5-year Treasury note rate (effective ann. yield)","I","A","sector_i.19",1,"NO",0,0,3
+"RG5P",308,"RG5P","5-year Treasury note rate. term premium","B.4","A","sector_i.18",1,"FN",0,0,3
+"RGFINT",309,"RGFINT","Average rate of interest on existing federal debt","B.1","A","sector_i.43",1,"GV",0,0,3
+"RGW",310,"RGW","Approximate average rate of interest on new federal debt","I","A","sector_i.42",1,"NO",0,0,3
+"RME",311,"RME","Interest rate on conventional mortgages (effective ann. yield)","B.1","A","sector_i.31",1,"FN",0,0,3
+"RPD",312,"RPD","After-tax real financial cost of capital for business investment","I","A","sector_b.15",1,"NO",0,0,3
+"RRFFE",313,"RRFFE","Real federal funds rate (effective ann. yield)","I","A","sector_i.15",1,"NO",0,0,1
+"RRFIX",314,"RRFIX","Real federal funds rate given by fixed, pre-determined real funds rate path","X.2","","",1,"NO",0,0,1
+"RRMET",315,"RRMET","Real mortgage rate, trend","B","A","sector_i.44",1,"NO",0,0,3
+"RRTR",316,"RRTR","Expected long-run real federal funds rate","B","A","sector_z.2",1,"NO",0,0,3
+"RSPNIA",317,"RSPNIA","Personal saving rate","I.3","A","sector_f.23",1,"NO",0,0,28
+"RSTAR",318,"RSTAR","Equilibrium real federal funds rate (for monetary policy reaction functions)","B","A","sector_i.6",1,"NO",0,0,1
+"RTB",319,"RTB","3-month Treasury bill rate","I","A","sector_i.17",1,"NO",0,0,3
+"RTBE",320,"RTBE","3-month Treasury bill rate (effective ann. yield)","B.1","A","sector_i.16",1,"FN",0,0,3
+"RTINV",321,"RTINV","User cost of capital for inventories","I","A","sector_b.19",4,"NO",0,0,3
+"RTPD",322,"RTPD","User cost of capital for equipment","I","A","sector_b.16",4,"NO",0,0,3
+"RTPI",323,"RTPI","User cost of capital for intellectual property","I","A","sector_b.17",4,"NO",0,0,3
+"RTPS",324,"RTPS","User cost of capital for nonresidential structures","I","A","sector_b.18",4,"NO",0,0,3
+"RTR",325,"RTR","Expected federal funds rate in the long run (Blue Chip)","I","A","sector_z.3",1,"NO",0,0,3
+"T47",326,"T47","Time trend, begins in 1947q1 (0 before)","X.5","","",1,"NO",0,0,27
+"TAPDAD",327,"TAPDAD","Proportion of investment in equipment using accelerated depreciation","X.2","","",1,"NO",0,0,14
+"TAPDD",328,"TAPDD","Present value of depreciation allowances for equipment","I","A","sector_b.30",1,"NO",0,0,14
+"TAPDDP",329,"TAPDDP","Proportion of investment tax credit deducted from depr. base","X.2","","",1,"NO",0,0,14
+"TAPDS",330,"TAPDS","Tax service life of equipment","X.2","","",1,"NO",0,0,14
+"TAPDT",331,"TAPDT","Investment tax credit rate for equipment","X.2","","",1,"NO",0,0,14
+"TAPSAD",332,"TAPSAD","Proportion of investment in nonresidential structures using accelerated depreciation","X.2","","",1,"NO",0,0,14
+"TAPSDA",333,"TAPSDA","Present value of depreciation allowances for nonresidential structures","I","A","sector_b.29",1,"NO",0,0,14
+"TAPSSL",334,"TAPSSL","Tax service life of nonresidential structures","X.2","","",1,"NO",0,0,14
+"TFCIN",335,"TFCIN","Federal corporate income tax accruals, current $","I","A","sector_h.41",4,"NO",0,2,14
+"TFDIV",336,"TFDIV","Federal income receipts on assets, dividends, current $","X.2","","",4,"NO",0,2,14
+"TFIBN",337,"TFIBN","Federal indirect business tax receipts, current $","I","A","sector_h.42",4,"NO",0,2,14
+"TFPN",338,"TFPN","Federal personal income tax and nontax receipts, current $","I","A","sector_h.43",4,"NO",0,2,14
+"TFSIN",339,"TFSIN","Federal social insurance tax receipts","I","A","sector_h.44",4,"NO",0,2,14
+"TRFCI",340,"TRFCI","Average federal corporate income tax rate","B.1","A","sector_h.45",1,"GV",0,0,14
+"TRFCIM",341,"TRFCIM","Marginal federal corporate income tax rate","X.2","","",1,"NO",0,0,14
+"TRFIB",342,"TRFIB","Average federal indirect business tax rate","X.2","","",1,"NO",0,0,14
+"TRFP",343,"TRFP","Average federal tax rate for personal income tax and nontax receipts","B.1","A","sector_h.46",1,"GV",0,0,14
+"TRFPM",344,"TRFPM","Marginal federal personal income tax rate (at twice median family income)","X.2","","",1,"NO",0,0,14
+"TRFPT",345,"TRFPT","Average federal tax rate for personal income tax, trend","B","A","sector_h.47",1,"NO",0,0,14
+"TRFPTX",346,"TRFPTX","Average federal tax rate for personal income tax, trend, policy setting","X.2","","",1,"NO",0,0,14
+"TRFSI",347,"TRFSI","Average federal social insurance tax rate","X.3","","",1,"NO",0,0,14
+"TRSCI",348,"TRSCI","Average S&L corporate income tax rate","B.4","A","sector_h.48",1,"GV",0,0,15
+"TRSCIT",349,"TRSCIT","Average S&L corporate income tax rate, trend","X.2","","",1,"NO",0,0,15
+"TRSIB",350,"TRSIB","Average S&L indirect business tax rate","B.4","A","sector_h.49",1,"GV",0,0,15
+"TRSIBT",351,"TRSIBT","Average S&L indirect business tax rate, trend","X.2","","",1,"NO",0,0,15
+"TRSP",352,"TRSP","Average S&L tax rate for personal income tax and nontax receipts","B.4","A","sector_h.50",1,"GV",0,0,15
+"TRSPP",353,"TRSPP","Marginal S&L tax rate on personal property","X.2","","",1,"NO",0,0,15
+"TRSPT",354,"TRSPT","Trend S&L personal income tax rate","B.2","A","sector_h.51",1,"NO",0,0,15
+"TRSPTX",355,"TRSPTX","Average state and local tax rate for personal income, trend","X.2","","",1,"NO",0,0,15
+"TRSSI",356,"TRSSI","Average S&L social insurance tax rate","B.4","A","sector_h.52",1,"GV",0,0,15
+"TRSSIT",357,"TRSSIT","Average S&L social insurance tax rate, trend","X.2","","",1,"NO",0,0,15
+"TRYH",358,"TRYH","Average tax rate on household income","I","A","sector_h.59",1,"NO",0,0,14
+"TSCIN",359,"TSCIN","S&L corporate income tax accruals, current $","I","A","sector_h.53",4,"NO",0,2,15
+"TSIBN",360,"TSIBN","S&L indirect business tax receipts, current $","I","A","sector_h.54",4,"NO",0,2,15
+"TSPN",361,"TSPN","S&L personal income tax and nontax receipts, current $","I","A","sector_h.55",4,"NO",0,2,15
+"TSSIN",362,"TSSIN","S&L social insurance tax receipts, current $","I","A","sector_h.56",4,"NO",0,2,15
+"UCES",363,"UCES","Energy share of nominal consumption expenditures","B.1","A","sector_g.40",4,"PR",1,0,28
+"UCFS",364,"UCFS","Food share of nominal consumption expenditures","B.1","A","sector_g.41",4,"PR",1,0,28
+"UEMOT",365,"UEMOT","Trend in ratio of EMON to XGDEN","X.3","","",4,"NO",0,0,16
+"UEMP",366,"UEMP","Multiplicative factor in EMP identity","X.3","","",4,"NO",0,0,16
+"UFCBR",367,"UFCBR","Multiplicative factor in FCBRN identity","X.3","","",4,"NO",0,0,13
+"UFNIR",368,"UFNIR","Multiplicative factor in FNIRN identity","X.3","","",2,"NO",0,0,13
+"UFPCM",369,"UFPCM","Multiplicative factor in FPCM identity","X.2","","",4,"NO",0,0,13
+"UFPXM",370,"UFPXM","Multiplicative factor in FPXM identity","X.3","","",4,"NO",0,0,13
+"UFTCIN",371,"UFTCIN","Multiplicative factor in FTCIN identity","X.3","","",4,"NO",0,0,13
+"UGFDBT",372,"UGFDBT","Multiplicative factor in GFDBTN identity","X.3","","",4,"NO",0,0,14
+"UGSDBT",373,"UGSDBT","Multiplicative factor in GSDBTN identity","X.3","","",4,"NO",0,0,15
+"UGSINT",374,"UGSINT","Multiplicative factor in GSINTN identity","X.2","","",1,"NO",0,0,15
+"UGSSUB",375,"UGSSUB","Multiplicative factor in GSSUB identity","X.3","","",4,"NO",0,0,15
+"UJCCA",376,"UJCCA","Multiplicative factor in JCCAN identity","X.3","","",4,"NO",0,0,21
+"UJCCAC",377,"UJCCAC","Multiplicative factor in JCCACN identity","X.3","","",4,"NO",0,0,21
+"UJYGFE",378,"UJYGFE","Multiplicative factor in JYGFEN identity","X.3","","",4,"NO",0,0,14
+"UJYGFG",379,"UJYGFG","Multiplicative factor in JYGFGN identity","X.2","","",4,"NO",0,0,14
+"UJYGSE",380,"UJYGSE","Multiplicative factor in JYGSEN identity","X.3","","",4,"NO",0,0,15
+"UJYGSG",381,"UJYGSG","Multiplicative factor in JYGSGN identity","X.3","","",4,"NO",0,0,15
+"ULEF",382,"ULEF","Multiplicative factor in LEF identity","X.3","","",4,"NO",0,0,14
+"ULES",383,"ULES","Multiplicative factor in LES identity","X.3","","",4,"NO",0,0,15
+"UPCPI",384,"UPCPI","Multiplicative factor in PCPI identity","X.4","","",4,"NO",0,0,22
+"UPCPIX",385,"UPCPIX","Multiplicative factor in PCPIX identity","X.4","","",4,"NO",0,0,22
+"UPGFL",386,"UPGFL","Multiplicative factor in PGFL identity","X.4","","",4,"NO",0,0,14
+"UPGSL",387,"UPGSL","Multiplicative factor in PGSL identity","X.3","","",4,"NO",0,0,15
+"UPKPD",388,"UPKPD","Multiplicative factor in PKPDR identity","X.3","","",4,"NO",0,0,22
+"UPMP",389,"UPMP","Multiplicative factor in PMP identity","X.3","","",4,"NO",0,0,17
+"UPXB",390,"UPXB","Multiplicative factor in PXB   identity","X.4","","",4,"NO",0,0,27
+"UQPCT",391,"UQPCT","Stochastic component of trend ratio of PCNIA to PXP","B","A","sector_g.30",4,"NO",1,0,22
+"UVEOA",392,"UVEOA","Multiplicative factor in VEOA identity","X.4","","",4,"NO",0,0,16
+"UVPD",393,"UVPD","Multiplicative factor in VPD identity","X.2","","",4,"NO",0,0,27
+"UVPI",394,"UVPI","Multiplicative factor in VPI identity","X.2","","",4,"NO",0,0,27
+"UVPS",395,"UVPS","Multiplicative factor in VPS identity","X.2","","",4,"NO",0,0,27
+"UXBT",396,"UXBT","Stochastic component of trend ratio of XGDPT to XBT","B","A","sector_d.18",4,"NO",0,0,18
+"UXENG",397,"UXENG","Multiplicative factor in XENG identity","X.3","","",4,"NO",0,0,16
+"UYD",398,"UYD","Multiplicative factor in YDN identity","X.3","","",4,"NO",0,0,23
+"UYHI",399,"UYHI","Multiplicative factor in YHIN identity","X.3","","",4,"NO",0,0,23
+"UYHLN",400,"UYHLN","Multiplicative factor in YHLN identity","X.3","","",4,"NO",0,0,23
+"UYHPTN",401,"UYHPTN","Multiplicative factor in YHPTN identity","X.3","","",4,"NO",0,0,23
+"UYHSN",402,"UYHSN","Multiplicative factor in personal saving identity (accounts for transfers to foreigners)","X.2","","",4,"NO",0,0,23
+"UYHTN",403,"UYHTN","Multiplicative factor in YHTN identity","X.3","","",4,"NO",0,0,23
+"UYL",404,"UYL","Multiplicative factor in YLN identity","X.4","","",4,"NO",0,0,23
+"UYNI",405,"UYNI","Multiplicative factor in YNIN identity","X.3","","",4,"NO",0,0,23
+"UYNICP",406,"UYNICP","Multiplicative factor in YNICPN identity","X.2","","",4,"NO",0,0,23
+"UYP",407,"UYP","Multiplicative factor in YPN identity","X.3","","",4,"NO",0,0,23
+"UYSEN",408,"UYSEN","Multiplicative factor in YSEN identity","X.3","","",4,"NO",0,0,23
+"VEO",409,"VEO","Desired energy-output ratio","I","A","sector_d.13",4,"NO",1,0,16
+"VEOA",410,"VEOA","Average energy-output ratio of existing capital stock","B","A","sector_d.14",4,"NO",0,0,16
+"VPD",411,"VPD","Desired equipment-output ratio","B","A","sector_b.20",4,"NO",1,0,7
+"VPI",412,"VPI","Desired intellectual property-output ratio","B","A","sector_b.21",4,"NO",1,0,7
+"VPS",413,"VPS","Desired structures-output ratio","B","A","sector_b.22",4,"NO",1,0,7
+"WDNFCN",414,"WDNFCN","Net financial liabilities, nonfinancial nonfarm corporations","B.4","A","sector_f.45",4,"IN",1,0,5
+"WPO",415,"WPO","Household property wealth ex. stock market, real","I","A","sector_i.40",4,"NO",0,3,5
+"WPON",416,"WPON","Household property wealth ex. stock market, current $","I","A","sector_i.38",4,"NO",0,2,5
+"WPS",417,"WPS","Household stock market wealth, real","I","A","sector_i.35",4,"NO",0,3,5
+"WPSN",418,"WPSN","Household stock market wealth, current $","I","A","sector_i.34",4,"NO",1,0,5
+"XB",419,"XB","Business output (BEA definition), cw 2009$","I","A","sector_d.8",4,"NO",1,0,11
+"XBN",420,"XBN","Business output (BEA definition), current $","I","A","sector_f.5",4,"NO",0,2,24
+"XBO",421,"XBO","Business output, adjusted for measurement error, cw  2009$","I","A","sector_d.6",4,"NO",1,0,11
+"XBT",422,"XBT","Potential business output, cw 2009$","I","A","sector_d.16",4,"NO",1,0,18
+"XENG",423,"XENG","Crude energy production, cw 2009$","I","A","sector_d.26",4,"NO",0,3,16
+"XFS",424,"XFS","Final sales of gross domestic product, cw 2009$","I","A","sector_d.1",4,"NO",1,0,11
+"XFSN",425,"XFSN","Final sales of gross domestic product, current $","I","A","sector_f.3",4,"NO",0,2,24
+"XG",426,"XG","Output of  business sector plus oil imports, cw 2009$","I","A","sector_d.9",4,"NO",1,0,11
+"XGAP",427,"XGAP","Output gap for  business plus oil imports  (100*log(actual/potential)","I","A","sector_d.20",1,"NO",0,0,19
+"XGAP2",428,"XGAP2","Output gap for GDP (100*log(actual/potential)","I","A","sector_d.21",1,"NO",0,0,19
+"XGDE",429,"XGDE","Domestic absorption, cw 2009$","I","A","sector_d.4",4,"NO",0,0,28
+"XGDEN",430,"XGDEN","Nominal Absorption, current $","I","A","sector_f.4",1,"NO",0,0,24
+"XGDI",431,"XGDI","Gross domestic income, cw 2009$","I","A","sector_d.27",4,"NO",0,3,11
+"XGDIN",432,"XGDIN","Gross domestic income, current $","I","A","sector_f.46",4,"NO",0,2,24
+"XGDO",433,"XGDO","Gross domestic product, adjusted for measurement error, cw 2009$","I","A","sector_d.28",4,"NO",0,3,11
+"XGDP",434,"XGDP","GDP, cw 2009$","I","A","sector_d.2",4,"NO",0,3,11
+"XGDPN",435,"XGDPN","GDP, current $","I","A","sector_f.2",4,"NO",0,2,24
+"XGDPT",436,"XGDPT","Potential GDP, cw 2009$","I","A","sector_d.17",4,"NO",1,0,18
+"XGDPTN",437,"XGDPTN","Potential GDP, current $","I","A","sector_d.25",4,"NO",0,1,18
+"XGN",438,"XGN","Output of  business sector plus oil imports, current $","I","A","sector_f.6",4,"NO",0,2,24
+"XGO",439,"XGO","Output of business sector plus oil imports, adjusted for measurement error, cw 2009$","I","A","sector_d.5",4,"NO",1,0,11
+"XGPOT",440,"XGPOT","Potential output of  business sector plus oil imports,  cw 2009$","B","A","sector_d.10",4,"NO",1,0,18
+"XP",441,"XP","Final sales plus imports less government labor, cw 2009$","I","A","sector_d.7",4,"NO",1,0,11
+"XPN",442,"XPN","Final sales plus imports less government labor, current $","I","A","sector_f.1",4,"NO",0,2,24
+"YCSN",443,"YCSN","Net corporate cash flow with IVA and CCA","B","A","sector_f.24",4,"NO",0,2,23
+"YDN",444,"YDN","Disposable income","I","A","sector_f.22",4,"NO",0,2,23
+"YGFSN",445,"YGFSN","Federal government saving","I","A","sector_h.57",2,"NO",0,2,23
+"YGSSN",446,"YGSSN","State and Local government saving","I","A","sector_h.58",2,"NO",0,2,23
+"YH",447,"YH","Income, household, total (real after-tax)","I","A","sector_f.28",4,"NO",0,3,23
+"YHGAP",448,"YHGAP","Income, household, total, ratio to XGDP, cyclical component (real after-tax)","I","A","sector_f.29",1,"NO",0,0,23
+"YHIBN",449,"YHIBN","Consumer interest payments to business","B.4","A","sector_f.30",4,"IN",1,0,23
+"YHIN",450,"YHIN","Income, household, net interest and rent","I","A","sector_f.31",4,"NO",0,2,23
+"YHL",451,"YHL","Income, household, labor compensation (real after-tax)","I","A","sector_f.32",4,"NO",0,3,23
+"YHLN",452,"YHLN","Income, household, labor compensation","I","A","sector_f.33",4,"NO",0,2,23
+"YHP",453,"YHP","Income, household, property (real after-tax)","I","A","sector_f.34",4,"NO",0,3,23
+"YHPCD",454,"YHPCD","Imputed income of the stock of consumer durables, 2009$","B","A","sector_a.18",4,"NO",1,0,23
+"YHPGAP",455,"YHPGAP","Income, household, property, ratio to YH, cyclical component (real after-tax)","I","A","sector_f.35",1,"NO",0,0,23
+"YHPNTN",456,"YHPNTN","Income, household, property, non-taxable component","I","A","sector_f.36",2,"NO",0,2,23
+"YHPSHR",457,"YHPSHR","Income, household, property, ratio to YH (real after-tax)","I","A","sector_f.37",4,"NO",0,0,23
+"YHPTN",458,"YHPTN","Income, household, property, taxable component","I","A","sector_f.38",4,"NO",0,2,23
+"YHSHR",459,"YHSHR","Income, household, total, ratio to XGDP (real after-tax)","I","A","sector_f.39",4,"NO",0,0,23
+"YHSN",460,"YHSN","Personal saving","I","A","sector_f.40",4,"NO",0,2,23
+"YHT",461,"YHT","Income, household, transfer (real after-tax), net basis","I","A","sector_f.41",4,"NO",0,3,23
+"YHTGAP",462,"YHTGAP","Income, household, transfer, ratio to YH, cyclical component (real after-tax)","I","A","sector_f.42",1,"NO",0,0,23
+"YHTN",463,"YHTN","Income, household, transfer payments. net basis","I","A","sector_f.43",4,"NO",0,2,23
+"YHTSHR",464,"YHTSHR","Income, household, transfer, ratio to YH (real after-tax)","I","A","sector_f.44",4,"NO",0,0,23
+"YKIN",465,"YKIN","Income from stock of inventories","I","A","sector_f.25",4,"NO",0,2,23
+"YKPDN",466,"YKPDN","Income from stock of equipment","I","A","sector_f.26",4,"NO",0,2,23
+"YKPSN",467,"YKPSN","Income from stock of nonresidential structures","I","A","sector_f.27",4,"NO",0,2,23
+"YMSDN",468,"YMSDN","Microsoft one-time dividend payout in 2004Q4","X.7","","",1,"NO",0,0,23
+"YNICPN",469,"YNICPN","Corporate profits (national income component)","I","A","sector_f.20",4,"NO",0,2,23
+"YNIDN",470,"YNIDN","Dividends (national income component)","B.4","A","sector_f.19",4,"IN",1,0,23
+"YNIIN",471,"YNIIN","Net interest and rental income (national income component)","B.4","A","sector_f.17",4,"IN",7,0,23
+"YNILN",472,"YNILN","Labor income (national income component)","I","A","sector_f.15",4,"NO",0,2,23
+"YNIN",473,"YNIN","National income","I","A","sector_f.14",4,"NO",0,2,23
+"YNISEN",474,"YNISEN","Propprietors' income (national income component)","I","A","sector_f.16",4,"NO",0,2,23
+"YPN",475,"YPN","Personal income","I","A","sector_f.21",4,"NO",0,2,23
+"ZDIVGR",476,"ZDIVGR","Expected growth rate of real dividends, for WPSN eq. (VAR exp.)","I","A","sector_z.29",1,"NO",0,0,2
+"ZECD",477,"ZECD","Expected growth rate of target durable consumption, for ECD eq. (VAR exp.)","I","A","sector_z.19",1,"NO",0,0,26
+"ZECO",478,"ZECO","Expected growth rate of target nondurables and nonhousing services, for ECO eq (VAR exp.)","I","A","sector_z.18",1,"NO",0,0,26
+"ZEH",479,"ZEH","Expected growth rate of target residential investment, for EH eq. (VAR exp.)","I","A","sector_z.21",1,"NO",0,0,26
+"ZGAP05",480,"ZGAP05","Expected output gap, for RG5E eq. (VAR exp.)","I","A","sector_z.7",1,"NO",0,0,26
+"ZGAP10",481,"ZGAP10","Expected output gap, for RG10E eq. (VAR exp.)","I","A","sector_z.8",1,"NO",0,0,26
+"ZGAP30",482,"ZGAP30","Expected output gap, for RG30E eq. (VAR exp.)","I","A","sector_z.9",1,"NO",0,0,26
+"ZGAPC2",483,"ZGAPC2","Expected output gap, for ECD eq. (VAR exp.)","I","A","sector_z.20",1,"NO",0,0,26
+"ZLHP",484,"ZLHP","Expected growth rate of target aggregate hours (VAR exp.)","I","A","sector_z.22",1,"NO",0,0,26
+"ZPI10",485,"ZPI10","Expected cons. price infl., for RCCH, RRMET, and YHPNTN eqs. (10-yr mat.) (VAR exp.)","I","A","sector_z.12",1,"NO",0,0,26
+"ZPI10F",486,"ZPI10F","Expected cons. price infl., for FPXR eq. (10-yr mat.) (VAR exp.)","I","A","sector_z.13",1,"NO",0,0,26
+"ZPI5",487,"ZPI5","Expected cons. price infl., for RCCD eq. (5-yr mat.) (VAR exp.)","I","A","sector_z.10",1,"NO",0,0,26
+"ZPIB5",488,"ZPIB5","Expected output price infl., for RPD eq. (5-yr mat.) (VAR exp.)","I","A","sector_z.11",1,"NO",0,0,26
+"ZPIC30",489,"ZPIC30","Expected cons. price infl., for REQ eq. (30-yr mat.) (VAR exp.)","I","A","sector_z.14",1,"NO",0,0,26
+"ZPIC58",490,"ZPIC58","Expected 4-qtr consumer price inflation (8 qtrs. in the future) (VAR exp.)","I","A","sector_z.15",1,"NO",0,0,26
+"ZPICXFE",491,"ZPICXFE","Expected value of picxfe in the next quarter (VAR exp.)","I","A","sector_z.16",1,"NO",0,0,26
+"ZPIECI",492,"ZPIECI","Expected value of pieci in the next quarter (VAR exp.)","I","A","sector_z.17",1,"NO",0,0,26
+"ZRFF10",493,"ZRFF10","Expected federal funds rate, for RG10E eq. (10-yr mat.) (VAR exp.)","I","A","sector_z.5",1,"NO",0,0,26
+"ZRFF30",494,"ZRFF30","Expected federal funds rate, for RG30E eq. (30-yr mat.) (VAR exp.)","I","A","sector_z.6",1,"NO",0,0,26
+"ZRFF5",495,"ZRFF5","Expected federal funds rate, for RG5E eq. (5-yr mat.) (VAR exp.)","I","A","sector_z.4",1,"NO",0,0,26
+"ZVPD",496,"ZVPD","Expected growth rate of capital-output ratio, for EPD (VAR exp.)","I","A","sector_z.23",1,"NO",0,0,26
+"ZVPI",497,"ZVPI","Expected growth rate of capital-output ratio, for EPI (VAR exp.)","I","A","sector_z.24",1,"NO",0,0,26
+"ZVPS",498,"ZVPS","Expected growth rate of des. capital-output ratio, for EPS eq. (VAR exp.)","I","A","sector_z.25",1,"NO",0,0,26
+"ZXBD",499,"ZXBD","Expected growth rate of buisiness output for EPD (VAR exp.)","I","A","sector_z.26",1,"NO",0,0,26
+"ZXBI",500,"ZXBI","Expected growth rate of business output, for EPI (VAR exp.)","I","A","sector_z.27",1,"NO",0,0,26
+"ZXBS",501,"ZXBS","Expected growth rate of business output, for EPS (VAR exp.)","I","A","sector_z.28",1,"NO",0,0,26
+"ZYH",502,"ZYH","Expected level of real after-tax household income, for QEC eq. (VAR exp.)","I","A","sector_z.31",4,"NO",0,3,26
+"ZYHP",503,"ZYHP","Expected level of real after-tax property income, for QEC eq. (VAR exp.)","I","A","sector_z.32",4,"NO",0,3,26
+"ZYHPST",504,"ZYHPST","Expected trend share of property income in household income","B.7","A","sector_z.35",4,"NO",0,0,26
+"ZYHST",505,"ZYHST","Expected trend ratio of household income to GDP","B.7","A","sector_z.34",4,"NO",0,0,26
+"ZYHT",506,"ZYHT","Expected level of real transfer income, for QEC eq. (VAR exp.)","I","A","sector_z.33",4,"NO",0,3,26
+"ZYHTST",507,"ZYHTST","Expected trend share of transfer income in household income","B.7","A","sector_z.36",4,"NO",0,0,26
+"ZYNID",508,"ZYNID","Expected rate of growth of target real dividends, for YNIDN eq. (VAR exp.)","I","A","sector_z.30",1,"NO",0,0,26

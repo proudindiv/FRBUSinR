@@ -11,9 +11,20 @@
 		
 \section{stdver{\_}varinfo}
 
+This code creates the varinfo.csv support file,
+parsing the data from the fixed format text file
+"frbus\_package/mods/stdver\_varinfo" into a data.frame.
+
 <<>>=
 raw = readLines("frbus_package/mods/stdver_varinfo")
 @
+
+Here we define the fixed length fields.
+The only reference to the original file seems to be
+in the stochsim program, to determine which are stochastic equations.
+There seems to be information in this file that is not used
+anywhere.  I've made up names for some fields to use until
+I find better information.
 
 <<>>=
 flds = c("seq","vname","vdesc","vtype","vrule","sector",
@@ -25,6 +36,9 @@ rownames(parse) = parse$flds
 (parse = subset(parse,select = -c(flds)))
 @
 
+Using the field definitions that I created above,
+I transform the file's information into a data.frame.
+
 <<>>=
 varinfo = data.frame(lapply(flds,
             function(x) (trimws(substr(raw,parse[x,"start"],
@@ -33,11 +47,37 @@ colnames(varinfo) = flds
 varinfo = varinfo[varinfo$vname!="ZZZBLANK",]
 rownames(varinfo) = as.character(varinfo[,"vname"])
 varinfo$seq = as.numeric(as.character(varinfo$seq))
+varinfo$var7 = as.numeric(as.character(varinfo$var7))
 varinfo$var8 = as.numeric(as.character(varinfo$var8))
 varinfo$var9 = as.numeric(as.character(varinfo$var9))
 varinfo$decomp = as.numeric(as.character(varinfo$decomp))
 str(varinfo)
 @
+
+I haven't figured out what most of the varinfo fields are used for
+but we can examine the values.
+
+<<>>=
+varinfo$vname
+
+table(varinfo$vtype)
+table(varinfo$vrule)
+str(varinfo$sector)
+summary(varinfo$var7)
+table(varinfo$var7)
+table(varinfo$stoch)
+table(varinfo$var8)
+table(varinfo$var9)
+table(varinfo$decomp)
+
+table(varinfo$vtype,varinfo$stoch)
+table(varinfo$var7,varinfo$var9)
+table(varinfo$var7,varinfo$stoch)
+table(varinfo$var8,varinfo$stoch)
+table(varinfo$var9,varinfo$stoch)
+@
+
+Here we create the support file from the data.frame.
 
 <<>>=
 write.csv(varinfo,"support/varinfo.csv")

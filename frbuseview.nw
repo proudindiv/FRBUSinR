@@ -8211,6 +8211,11 @@ subroutine makestats(string %trkname)
 @ %def wfcreate wfopen wfclose wfsave dbopen fetch close
 @ %def solve sspace xrun xget
 
+\section{Data File Name}
+
+<<index data file name>>=
+@ %def longbase
+
 \section{Variable Information}
 
 <<Presumed varinfo Schema>>=

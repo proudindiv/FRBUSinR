@@ -20,16 +20,16 @@ My project is at [proudindiv/FRBUSinR](https://github.com/proudindiv/FRBUSinR) o
 
 ### Contents of the FRBUSinR Repository:
 
-1. *frbus_package*, mce_solve_package, state_space_package, and data_only_package contain the contents of the zip files with the FRB/US model downloaded from the Federal Reserve site.
-1. edo_package contains the contents of the zip file of the Fed's
+1. **frbus_package**, **mce_solve_package**, **state_space_package**, and **data_only_package** contain the contents of the zip files with the FRB/US model downloaded from the Federal Reserve site.
+1. **edo_package** contains the contents of the zip file of the Fed's
 [Estimated Dynamic Optimization (EDO) Model](https://www.federalreserve.gov/econresdata/edo/edo-models-about.htm),
-which I have included as it may have clues to help me with the frbus model.  Unfortunately, the Fed's website points to the wrong file for the the EDO_variable_Listing (ZIP) and it does not seem to be available, so I've included both formats of the EDO paper in the edo_documentation directory to use instead.
-1. frbus.nw, and frbus.pdf which is derived from it, is my first reverse engineering of the variables, equations, and coefficients of the standard version of the model. The frbus.nw noweb file is a literate probram that produces copies of the contents of four of the files in srcEview (stdver_varinfo, stdver_eqs.txt, stdver_coeffs.txt, and variables.txt).
-1. frbuseview.nw, and frbuseview.pdf which is derived from it, is the start of my second reverse engineering of the model creating copies of all of the Eview program files in the srcEview directory and the setup.sh and check.sh scripts that I use with them.  This is a very early rough draft and will drastically change as I work on the model.
-1. frbusEDO.Rnw, and frbusEDO.pdf which is derived from it, contains my analysis of the Fed's EDO model and it's documentation and creates copies of the edo_package files in the srcedo directory.
-1. frbussupport.Rnw, frbussupport.pdf, support.nw, and support.pdf create support files
-1. frbusdata.Rnw, and frbusdata.pdf, will study the data used in the model.
-1. frbusmodel.Rnw, and frbusmodel.pdf, will be my modeling using the Fed's data. which will be derived from it, may possibly be my port of the FRB/US Model in the R programming language.
+which I have included as it may have clues to help me with the frbus model.  Unfortunately, the Fed's website points to the wrong file for the the EDO_variable_Listing (ZIP) and it does not seem to be available, so I've included both formats of the EDO paper in the **edo_documentation** directory to use instead.
+1. **frbus.nw**, and frbus.pdf which is derived from it, is my first reverse engineering of the variables, equations, and coefficients of the standard version of the model. The frbus.nw noweb file is a literate probram that produces copies of the contents of four of the files in srcEview (stdver_varinfo, stdver_eqs.txt, stdver_coeffs.txt, and variables.txt).
+1. **frbuseview.nw**, and frbuseview.pdf which is derived from it, is the start of my second reverse engineering of the model creating copies of all of the Eview program files in the srcEview directory.  This is a very early rough draft and will drastically change as I work on the model.
+1. **frbusEDO.Rnw**, and frbusEDO.pdf which is derived from it, contains my analysis of the Fed's EDO model and it's documentation and creates copies of the edo_package files in the srcedo directory.
+1. **frbussupport.Rnw**, frbussupport.pdf, **support.nw**, and support.pdf create support files.
+1. **frbusdata.Rnw**, and frbusdata.pdf, will study the data used in the model.
+1. **frbusmodel.Rnw**, and frbusmodel.pdf, will be my modeling using the Fed's data. which will be derived from it, may possibly be my port of the FRB/US Model in the R programming language.
 
 ### Tools Used:
 
