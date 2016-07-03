@@ -42,10 +42,11 @@ I transform the file's information into a data.frame.
 <<>>=
 varinfo = data.frame(lapply(flds,
             function(x) (trimws(substr(raw,parse[x,"start"],
-                           sum(c(parse[x,"start"],parse[x,"length"],-1)))))))
+                           sum(c(parse[x,"start"],parse[x,"length"],-1)))))),
+            stringsAsFactors = FALSE)
 colnames(varinfo) = flds
 varinfo = varinfo[varinfo$vname!="ZZZBLANK",]
-rownames(varinfo) = as.character(varinfo[,"vname"])
+rownames(varinfo) = varinfo[,"vname"]
 varinfo$seq = as.numeric(as.character(varinfo$seq))
 varinfo$var7 = as.numeric(as.character(varinfo$var7))
 varinfo$var8 = as.numeric(as.character(varinfo$var8))
@@ -58,8 +59,11 @@ I haven't figured out what most of the varinfo fields are used for
 but we can examine the values.
 
 <<>>=
+varinfo[c("CENG","PGDP"),]
 varinfo$vname
+@
 
+<<>>=
 table(varinfo$vtype)
 table(varinfo$vrule)
 str(varinfo$sector)
@@ -69,7 +73,9 @@ table(varinfo$stoch)
 table(varinfo$var8)
 table(varinfo$var9)
 table(varinfo$decomp)
+@
 
+<<>>=
 table(varinfo$vtype,varinfo$stoch)
 table(varinfo$var7,varinfo$var9)
 table(varinfo$var7,varinfo$stoch)
@@ -119,20 +125,16 @@ length(coeffs["y_emo","vec"][[1]])
 
 <<>>=
 raw = readLines("frbus_package/mods/stdver_eqs.txt")
-raw2 = paste(raw[which(raw!="" & raw!="theend")], collapse="<endline>")
-raw3 = gsub("_<endline>", "", raw2)
-raw4 = gsub("[[:space:]]+", "", raw3)
-raw5 = strsplit(raw4, "<endline>")
-raw6 = raw5[[1]]
-raw7 = toupper(gsub(":.*$", "", raw6))
-eqs = gsub("^.*:", "", raw6)
-stdver = data.frame(eqs, row.names = raw7, stringsAsFactors = FALSE)
+eqs = paste(raw[which(raw!="" & raw!="theend")], collapse="<endline>")
+eqs = gsub("_<endline>", "", eqs)
+eqs = gsub("[[:space:]]+", "", eqs)
+eqs = strsplit(eqs, "<endline>")
+eqs = eqs[[1]]
+names = toupper(gsub(":.*$", "", eqs))
+eqs = gsub("^.*:", "", eqs)
+stdver = data.frame(eqs, row.names = names, stringsAsFactors = FALSE)
 str(stdver)
-stdver["CENG","eqs"]
-stdver["PGDP","eqs"]
-@
-
-<<>>=
+stdver[c("CENG","PGDP"),"eqs"]
 @
 
 \section{Chunks}
