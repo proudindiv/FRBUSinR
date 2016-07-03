@@ -120,12 +120,16 @@ length(coeffs["y_emo","vec"][[1]])
 <<>>=
 raw = readLines("frbus_package/mods/stdver_eqs.txt")
 raw2 = paste(raw[which(raw!="" & raw!="theend")], collapse="<endline>")
-raw3 = gsub(" *_<endline> *", " ", raw2)
-raw4 = gsub("[[:space:]]+", " ", raw3)
+raw3 = gsub("_<endline>", "", raw2)
+raw4 = gsub("[[:space:]]+", "", raw3)
 raw5 = strsplit(raw4, "<endline>")
 raw6 = raw5[[1]]
-gsub(":.*$", "", raw6)
-raw6
+raw7 = toupper(gsub(":.*$", "", raw6))
+eqs = gsub("^.*:", "", raw6)
+stdver = data.frame(eqs, row.names = raw7, stringsAsFactors = FALSE)
+str(stdver)
+stdver["CENG","eqs"]
+stdver["PGDP","eqs"]
 @
 
 <<>>=
