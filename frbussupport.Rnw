@@ -92,37 +92,51 @@ write.csv(varinfo,"support/varinfo.csv")
 
 \section{stdver{\_}coeffs.txt}
 
+In a data.frame in R, all of the vectors need to have the same length.
+The largest coeffs vector has 50 elements and the smallest has one.
+That means that I need to change the coefficients files to store
+a single value with its position in the vector in a row.
+It doesn't really change the way we'll access them,
+since we already subscripted the name for access.
+I couldn't get the logic for a list of lists to work anyway.
+
 <<>>=
 raw = readLines("frbus_package/mods/stdver_coeffs.txt")
 str(raw)
 @
 
+First, remove the blank line at the top and the stop line at the end
+and split the name, number, and vector fields.
+
 <<>>=
-coeffs = lapply(raw[which(raw!="" & raw!="theend")], function(x) strsplit(x, "\t"))
-coeffs = data.frame(
-           name = unlist(lapply(coeffs, function(x) x[[1]][1])),
-           len = as.numeric(lapply(coeffs, function(x) x[[1]][2])),
-           vec = unlist(lapply(coeffs, function(x) x[[1]][3])),
-             stringsAsFactors = FALSE)
-coeffs$vec = lapply(coeffs$vec, function(x) as.numeric(strsplit(x, ",")[[1]]))
-row.names(coeffs) = coeffs$name
-coeffs["y_emo","vec"]
-coeffs["y_emo","vec"][[1]][3]
-coeffs["y_emo","len"]
-length(coeffs["y_emo","vec"][[1]])
+rows = lapply(raw[which(raw!="" & raw!="theend")], function(x) strsplit(x, "\t"))
+length(rows)
+rows[[1]]
+unlist(rows[[1]])
+unlist(rows[[1]])[2]
+unlist(rows[[1]])[3]
+as.numeric(unlist(strsplit(unlist(rows[[1]])[3], ",")))
+@
+
+Create a row for each coefficient.
+
+<<>>=
+vals = data.frame(name=character(), num=integer(),
+                  val=double(), stringsAsFactors = FALSE)
+str(vals)
+for (i in 1:length(rows)){
+    row = unlist(rows[[i]])
+    name = row[1]
+    len  = row[2]
+    obs = as.numeric(unlist(strsplit(row[3], ",")))
+    for (j in 1:len){
+        vals = rbind(vals, data.frame(name,num=j,val=obs[j],
+                                      stringsAsFactors = FALSE))}}
+str(vals)
 @
 
 <<>>=
-# rownames(coeffs)
-# coeffs$vec
-# coeffs = subset(coeffs, select=c(vec))
-# str(coeffs)
-# coeffs["y_emo"]
-# coeffs$vec["y_emo"]
-@
-
-<<>>=
-write.csv(coeffs,"support/coeffs.csv")
+write.csv(vals,"support/coeffs.csv")
 @
 
 
@@ -135,15 +149,16 @@ eqs = gsub("_<endline>", "", eqs)
 eqs = gsub("[[:space:]]+", "", eqs)
 eqs = strsplit(eqs, "<endline>")
 eqs = eqs[[1]]
-names = toupper(gsub(":.*$", "", eqs))
-eqs = gsub("^.*:", "", eqs)
-stdver = data.frame(eqs, row.names = names, stringsAsFactors = FALSE)
+name = gsub(":.*$", "", eqs)
+eq = gsub("^.*:", "", eqs)
+stdver = data.frame(name,eq, stringsAsFactors = FALSE)
+row.names(stdver) = stdver$name
 str(stdver)
-stdver[c("CENG","PGDP"),"eqs"]
+stdver[c("ceng","pgdp"),"eq"]
 @
 
 <<>>=
-write.csv(eqs,"support/eqs.csv")
+write.csv(stdver,"support/eqs.csv", row.names=FALSE)
 @
 
 
