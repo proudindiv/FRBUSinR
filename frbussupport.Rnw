@@ -121,6 +121,11 @@ length(coeffs["y_emo","vec"][[1]])
 # coeffs$vec["y_emo"]
 @
 
+<<>>=
+write.csv(coeffs,"support/coeffs.csv")
+@
+
+
 \section{stdver{\_}eqs.txt}
 
 <<>>=
@@ -136,6 +141,11 @@ stdver = data.frame(eqs, row.names = names, stringsAsFactors = FALSE)
 str(stdver)
 stdver[c("CENG","PGDP"),"eqs"]
 @
+
+<<>>=
+write.csv(eqs,"support/eqs.csv")
+@
+
 
 \section{Chunks}
 \nowebchunks
