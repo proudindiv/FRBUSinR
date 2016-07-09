@@ -72,7 +72,7 @@ from 1968q1 to 2015q2 and projected observations on all variables from
 2015q3 to roughly 100 years in the future.  For the period from 2016
 to 2018, the projections of real GDP growth, core and overall PCE
 price inflation, the unemployment rate, and the federal funds rate are
-based on the March 2016 "Economic Projections of Federal Reserve
+based on the June 2016 "Economic Projections of Federal Reserve
 Board Members and Federal Reserve Bank Presidents." Simple procedures
 are used to interpolate the annual SEP projections to quarterly
 frequency.  Other aspects of the projections included in the database are
